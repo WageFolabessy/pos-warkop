@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { DailySummary, TransactionRecord } from '@/types/pos';
+import { DailySummary, TransactionRecord, UserRole } from '@/types/pos';
 import { formatIDR, formatReceiptTime } from '@/lib/formatters';
 import {
   X,
@@ -15,11 +15,14 @@ import {
   ChevronUp,
   Trash2,
   CheckCircle2,
+  Lock,
+  ShieldCheck,
 } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
 
 interface RekapKasModalProps {
   isOpen: boolean;
+  currentRole: UserRole;
   dailySummary: DailySummary;
   transactions: TransactionRecord[];
   onClose: () => void;
@@ -29,6 +32,7 @@ interface RekapKasModalProps {
 
 export const RekapKasModal: React.FC<RekapKasModalProps> = ({
   isOpen,
+  currentRole,
   dailySummary,
   transactions,
   onClose,
@@ -53,9 +57,21 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                 <TrendingUp className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-base sm:text-lg font-bold text-white">
-                  Rekap Kas Harian
-                </h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-bold text-white">
+                    Rekap Kas Harian
+                  </h3>
+                  <span
+                    className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1 ${
+                      currentRole === 'owner'
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                        : 'bg-stone-700 text-stone-300 border border-stone-600'
+                    }`}
+                  >
+                    {currentRole === 'owner' && <ShieldCheck className="w-3 h-3 text-amber-400" />}
+                    {currentRole === 'owner' ? 'Owner' : 'Kasir'}
+                  </span>
+                </div>
                 <p className="text-xs text-stone-400 font-mono">
                   Ratu KOPI Pontianak • Laporan Penjualan
                 </p>
@@ -274,40 +290,66 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               </div>
             </div>
 
-            {/* Danger Zone: Reset Data Kas & Meja */}
-            <div className="p-4 bg-red-50/80 border border-red-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <h5 className="font-bold text-xs text-red-950 uppercase tracking-wide flex items-center gap-1.5">
-                  <RotateCcw className="w-3.5 h-3.5 text-red-700" />
-                  Zona Reset Data Kas & Meja
-                </h5>
-                <p className="text-xs text-red-800 mt-1 leading-relaxed">
-                  Kosongkan semua riwayat transaksi menjadi Rp 0 dan kosongkan seluruh meja, atau muat ulang data simulasi demo warkop.
-                </p>
-              </div>
+            {/* Danger Zone: Reset Data Kas & Meja (Hanya Role Owner) */}
+            {currentRole === 'owner' ? (
+              <div className="p-4 bg-red-50/80 border border-red-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="px-2 py-0.5 rounded-md bg-red-600 text-white text-[10px] font-bold uppercase tracking-wider">
+                      Khusus Owner
+                    </span>
+                    <h5 className="font-bold text-xs text-red-950 uppercase tracking-wide flex items-center gap-1.5">
+                      <RotateCcw className="w-3.5 h-3.5 text-red-700" />
+                      Zona Reset Data Kas & Meja
+                    </h5>
+                  </div>
+                  <p className="text-xs text-red-800 leading-relaxed">
+                    Kosongkan semua riwayat transaksi menjadi Rp 0 dan kosongkan seluruh meja, atau muat ulang data simulasi demo warkop.
+                  </p>
+                </div>
 
-              <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
-                <button
-                  id="btn-reset-all-data"
-                  onClick={() => setIsResetAllConfirmOpen(true)}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-xs transition-colors cursor-pointer whitespace-nowrap"
-                  title="Kosongkan seluruh transaksi dan meja ke Rp 0"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                  <span>Kosongkan Semua (Reset 0)</span>
-                </button>
+                <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                  <button
+                    id="btn-reset-all-data"
+                    onClick={() => setIsResetAllConfirmOpen(true)}
+                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-xs transition-colors cursor-pointer whitespace-nowrap"
+                    title="Kosongkan seluruh transaksi dan meja ke Rp 0"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Kosongkan Semua (Reset 0)</span>
+                  </button>
 
-                <button
-                  id="btn-reset-demo-data"
-                  onClick={() => setIsResetDemoConfirmOpen(true)}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-stone-50 border border-stone-300 text-stone-700 font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-xs transition-colors cursor-pointer whitespace-nowrap"
-                  title="Muat ulang data simulasi demo warkop"
-                >
-                  <RotateCcw className="w-3.5 h-3.5 text-stone-500" />
-                  <span>Muat Ulang Demo</span>
-                </button>
+                  <button
+                    id="btn-reset-demo-data"
+                    onClick={() => setIsResetDemoConfirmOpen(true)}
+                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-stone-50 border border-stone-300 text-stone-700 font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-xs transition-colors cursor-pointer whitespace-nowrap"
+                    title="Muat ulang data simulasi demo warkop"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5 text-stone-500" />
+                    <span>Muat Ulang Demo</span>
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="p-4 bg-stone-50 border border-stone-200 rounded-2xl flex items-center justify-between gap-3 text-stone-600">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-stone-200/80 flex items-center justify-center text-stone-500 shrink-0">
+                    <Lock className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-stone-800">
+                      Zona Reset & Hapus Data Terkunci
+                    </p>
+                    <p className="text-[11px] text-stone-500 mt-0.5">
+                      Hak akses untuk mengosongkan atau mereset data transaksi hanya dimiliki oleh <strong>Owner</strong>.
+                    </p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono bg-stone-200 text-stone-700 px-2.5 py-1 rounded-md font-bold uppercase tracking-wider shrink-0">
+                  Akses Kasir Terbatas
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Footer */}
@@ -331,8 +373,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
         cancelText="Batal"
         isDestructive={true}
         onConfirm={() => {
-          onResetAllData();
-          setFeedbackMessage('Semua data transaksi dan meja berhasil dikosongkan ke Rp 0!');
+          if (currentRole === 'owner') {
+            onResetAllData();
+            setFeedbackMessage('Semua data transaksi dan meja berhasil dikosongkan ke Rp 0!');
+          }
           setIsResetAllConfirmOpen(false);
         }}
         onClose={() => setIsResetAllConfirmOpen(false)}
@@ -347,8 +391,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
         cancelText="Batal"
         isDestructive={false}
         onConfirm={() => {
-          onResetDemoData();
-          setFeedbackMessage('Data simulasi demo warkop berhasil dimuat ulang!');
+          if (currentRole === 'owner') {
+            onResetDemoData();
+            setFeedbackMessage('Data simulasi demo warkop berhasil dimuat ulang!');
+          }
           setIsResetDemoConfirmOpen(false);
         }}
         onClose={() => setIsResetDemoConfirmOpen(false)}

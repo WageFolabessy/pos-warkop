@@ -61,3 +61,21 @@ export function generateOrderId(): string {
   const randNum = Math.floor(1000 + Math.random() * 9000);
   return `RK-${dateStr}-${randNum}`;
 }
+
+/**
+ * Formats an ISO date string or Date to elapsed minutes/hours.
+ * Example: "Baru saja", "4 mnt lalu", "1 jam lalu"
+ */
+export function formatElapsedTime(dateInput?: Date | string): string {
+  if (!dateInput) return 'Baru saja';
+  const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+  const now = new Date();
+  const diffMs = Math.max(0, now.getTime() - date.getTime());
+  const diffMins = Math.floor(diffMs / 60000);
+
+  if (diffMins < 1) return 'Baru saja';
+  if (diffMins < 60) return `${diffMins} mnt lalu`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours} jam lalu`;
+  return '> 1 hari';
+}

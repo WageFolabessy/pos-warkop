@@ -23,31 +23,41 @@ export function getInitialTables(): TableOrder[] {
   }
 
   // Prepopulate a couple of tables with realistic demo orders so it looks alive right away
+  const tenMinsAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+  const fiveMinsAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+  const twoMinsAgo = new Date(Date.now() - 2 * 60 * 1000).toISOString();
+
   const table3 = tables.find((t) => t.targetId === 'table-3');
   if (table3) {
     table3.status = 'belum_lunas';
+    table3.kitchenStatus = 'dimasak';
+    table3.lastUpdated = tenMinsAgo;
     table3.items = [
-      { menuItem: MENU_ITEMS[0], quantity: 2 }, // Kopi Susu Panas x2 = 12.000
-      { menuItem: MENU_ITEMS[8], quantity: 1 }, // Pisang Goreng Srikaya x1 = 8.000
+      { menuItem: MENU_ITEMS[0], quantity: 2, notes: 'Manis sedang' }, // Kopi Susu Panas x2
+      { menuItem: MENU_ITEMS[8], quantity: 1 }, // Pisang Goreng Srikaya x1
     ];
   }
 
   const table7 = tables.find((t) => t.targetId === 'table-7');
   if (table7) {
     table7.status = 'belum_lunas';
+    table7.kitchenStatus = 'menunggu';
+    table7.lastUpdated = fiveMinsAgo;
     table7.items = [
-      { menuItem: MENU_ITEMS[2], quantity: 1 }, // Kopi Susu Dingin x1 = 8.000
-      { menuItem: MENU_ITEMS[5], quantity: 1 }, // Indomie Goreng Telur x1 = 10.000
-      { menuItem: MENU_ITEMS[9], quantity: 2 }, // Bakwan Pontianak x2 = 10.000
+      { menuItem: MENU_ITEMS[2], quantity: 1, notes: 'Es sedikit' }, // Kopi Susu Dingin x1
+      { menuItem: MENU_ITEMS[5], quantity: 1, notes: 'Pedas, telur 1/2 matang' }, // Indomie Goreng Telur x1
+      { menuItem: MENU_ITEMS[9], quantity: 2 }, // Bakwan Pontianak x2
     ];
   }
 
   const takeaway = tables.find((t) => t.targetId === 'takeaway');
   if (takeaway) {
     takeaway.status = 'belum_lunas';
+    takeaway.kitchenStatus = 'menunggu';
+    takeaway.lastUpdated = twoMinsAgo;
     takeaway.items = [
-      { menuItem: MENU_ITEMS[1], quantity: 3 }, // Kopi Hitam x3 = 15.000
-      { menuItem: MENU_ITEMS[10], quantity: 1 }, // Roti Bakar x1 = 10.000
+      { menuItem: MENU_ITEMS[1], quantity: 3, notes: 'Kopi jangan terlalu pekat' }, // Kopi Hitam x3
+      { menuItem: MENU_ITEMS[10], quantity: 1 }, // Roti Bakar x1
     ];
   }
 

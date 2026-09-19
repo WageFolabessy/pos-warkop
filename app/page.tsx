@@ -13,6 +13,7 @@ import { RekapKasModal } from '@/components/RekapKasModal';
 import { TransactionRecord, UserRole } from '@/types/pos';
 import { Users, Utensils } from 'lucide-react';
 import { WaiterView } from '@/components/WaiterView';
+import { KitchenView } from '@/components/KitchenView';
 
 export default function POSHomePage() {
   const {
@@ -38,10 +39,23 @@ export default function POSHomePage() {
     settlePayment,
     resetAllData,
     resetDemoData,
+    updateKitchenStatus,
+    toggleKitchenItemDone,
   } = usePOSStore();
 
-  // Role Switcher: 'kasir' | 'pelayan'
+  // Role Switcher: 'owner' | 'kasir' | 'pelayan' | 'dapur'
   const [currentRole, setCurrentRole] = useState<UserRole>('kasir');
+
+  // Guard reset actions for owner role only
+  const handleResetAllData = () => {
+    if (currentRole !== 'owner') return;
+    resetAllData();
+  };
+
+  const handleResetDemoData = () => {
+    if (currentRole !== 'owner') return;
+    resetDemoData();
+  };
 
   // Mobile navigation view: 'tables' | 'menu' (for Cashier mode)
   const [mobileTab, setMobileTab] = useState<'tables' | 'menu'>('tables');
@@ -105,9 +119,11 @@ export default function POSHomePage() {
       />
 
       {/* =========================================================================
-          MODE PELAYAN (Waiter Ordering View - Mobile First, Tanpa Akses Finansial)
+          MODE PELAYAN (Waiter View - Mobile First, Pencatatan Pesanan)
           vs
-          MODE KASIR (Akses Penuh: Meja, Menu, Tagihan Aktif, Pembayaran, Rekap)
+          MODE DAPUR (Kitchen Display System - Antrean Minuman & Makanan Real-Time)
+          vs
+          MODE KASIR & OWNER (Akses POS Penuh: Meja, Menu, Pembayaran, Rekap)
          ========================================================================= */}
       {currentRole === 'pelayan' ? (
         <WaiterView
@@ -123,6 +139,12 @@ export default function POSHomePage() {
           onUpdateNotes={updateItemNotes}
           onSaveOrder={saveDraftToTable}
           onResetOrder={() => resetActiveTable()}
+        />
+      ) : currentRole === 'dapur' ? (
+        <KitchenView
+          tables={tables}
+          onUpdateKitchenStatus={updateKitchenStatus}
+          onToggleItemDone={toggleKitchenItemDone}
         />
       ) : (
         <>
@@ -267,14 +289,15 @@ export default function POSHomePage() {
             onClose={() => setIsReceiptOpen(false)}
           />
 
-          {/* 8. Rekap Kas Modal (Cashier Only) */}
+          {/* 8. Rekap Kas Modal (Cashier & Owner) */}
           <RekapKasModal
             isOpen={isRekapOpen}
+            currentRole={currentRole}
             dailySummary={dailySummary}
             transactions={transactions}
             onClose={() => setIsRekapOpen(false)}
-            onResetAllData={resetAllData}
-            onResetDemoData={resetDemoData}
+            onResetAllData={handleResetAllData}
+            onResetDemoData={handleResetDemoData}
           />
         </>
       )}

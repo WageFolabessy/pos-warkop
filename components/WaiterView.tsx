@@ -165,11 +165,23 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   <span className="font-bold text-sm text-stone-900 block">
                     Bungkus / Takeaway
                   </span>
-                  <span className="text-xs text-stone-500">
-                    {takeaway?.status === 'belum_lunas'
-                      ? `${takeaway.items.reduce((s, it) => s + it.quantity, 0)} item sudah dipesan`
-                      : 'Tersedia untuk pesanan bawa pulang'}
-                  </span>
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-xs text-stone-500">
+                      {takeaway?.status === 'belum_lunas'
+                        ? `${takeaway.items.reduce((s, it) => s + it.quantity, 0)} item dipesan`
+                        : 'Tersedia untuk bawa pulang'}
+                    </span>
+                    {takeaway?.kitchenStatus === 'siap_saji' && (
+                      <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.2 rounded-md">
+                        Siap Antar
+                      </span>
+                    )}
+                    {takeaway?.kitchenStatus === 'dimasak' && (
+                      <span className="text-[10px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.2 rounded-md">
+                        Diracik
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -203,11 +215,23 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                       <span className="font-bold text-base text-stone-900">
                         {tbl.label}
                       </span>
-                      <span
-                        className={`w-2 h-2 rounded-full ${
-                          isOccupied ? 'bg-amber-500' : 'bg-emerald-500'
-                        }`}
-                      />
+                      <div className="flex items-center gap-1">
+                        {tbl.kitchenStatus === 'siap_saji' && (
+                          <span className="text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded-md">
+                            Siap Antar
+                          </span>
+                        )}
+                        {tbl.kitchenStatus === 'dimasak' && (
+                          <span className="text-[9px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.5 rounded-md">
+                            Diracik
+                          </span>
+                        )}
+                        <span
+                          className={`w-2 h-2 rounded-full ${
+                            isOccupied ? 'bg-amber-500' : 'bg-emerald-500'
+                          }`}
+                        />
+                      </div>
                     </div>
 
                     <div className="mt-2">

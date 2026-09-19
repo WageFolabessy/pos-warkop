@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useSyncExternalStore } from 'react';
-import { ReceiptText, Clock, Store, UserCheck } from 'lucide-react';
+import { ReceiptText, Clock, Store, UserCheck, ShieldCheck, ChefHat } from 'lucide-react';
 import { formatIndonesianDateTime } from '@/lib/formatters';
 import { UserRole } from '@/types/pos';
 
@@ -58,17 +58,31 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
       </div>
 
-      {/* Role Switcher: [Kasir] / [Pelayan] */}
+      {/* Role Switcher: [Owner] / [Kasir] / [Pelayan] / [Dapur] */}
       <div className="flex items-center bg-stone-800/90 p-1 rounded-xl border border-stone-700/80">
+        <button
+          id="btn-role-owner"
+          onClick={() => onRoleChange('owner')}
+          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+            currentRole === 'owner'
+              ? 'bg-amber-400 text-stone-950 shadow-2xs font-bold'
+              : 'text-stone-400 hover:text-white'
+          }`}
+          title="Beralih ke Mode Owner (Akses Penuh & Reset Data)"
+        >
+          <ShieldCheck className="w-3.5 h-3.5" />
+          <span>Owner</span>
+        </button>
+
         <button
           id="btn-role-kasir"
           onClick={() => onRoleChange('kasir')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
             currentRole === 'kasir'
               ? 'bg-stone-100 text-stone-900 shadow-2xs font-bold'
               : 'text-stone-400 hover:text-white'
           }`}
-          title="Beralih ke Mode Kasir (Akses Penuh)"
+          title="Beralih ke Mode Kasir (Operasional POS & Pembayaran)"
         >
           <Store className="w-3.5 h-3.5" />
           <span>Kasir</span>
@@ -77,7 +91,7 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           id="btn-role-pelayan"
           onClick={() => onRoleChange('pelayan')}
-          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
             currentRole === 'pelayan'
               ? 'bg-amber-500 text-stone-950 shadow-2xs font-bold'
               : 'text-stone-400 hover:text-white'
@@ -86,6 +100,20 @@ export const TopBar: React.FC<TopBarProps> = ({
         >
           <UserCheck className="w-3.5 h-3.5" />
           <span>Pelayan</span>
+        </button>
+
+        <button
+          id="btn-role-dapur"
+          onClick={() => onRoleChange('dapur')}
+          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+            currentRole === 'dapur'
+              ? 'bg-orange-500 text-stone-950 shadow-2xs font-bold'
+              : 'text-stone-400 hover:text-white'
+          }`}
+          title="Beralih ke Mode Dapur (Layar Antrean KDS)"
+        >
+          <ChefHat className="w-3.5 h-3.5" />
+          <span>Dapur</span>
         </button>
       </div>
 
@@ -114,8 +142,8 @@ export const TopBar: React.FC<TopBarProps> = ({
           </span>
         </div>
 
-        {/* Rekap Kas Button (Only visible in Mode Kasir - Hidden in Mode Pelayan) */}
-        {currentRole === 'kasir' && (
+        {/* Rekap Kas Button (Visible in Mode Kasir & Mode Owner - Hidden in Mode Pelayan) */}
+        {(currentRole === 'kasir' || currentRole === 'owner') && (
           <button
             id="btn-rekap-kas"
             onClick={onOpenRekap}

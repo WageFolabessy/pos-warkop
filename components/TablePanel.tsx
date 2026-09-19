@@ -85,9 +85,21 @@ export const TablePanel: React.FC<TablePanelProps> = ({
 
           <div>
             {isTakeawayUnpaid ? (
-              <span className="font-mono font-bold text-xs text-amber-900 tabular-nums">
-                {formatIDR(takeawaySummary.totalPrice)}
-              </span>
+              <div className="flex flex-col items-end gap-1">
+                <span className="font-mono font-bold text-xs text-amber-900 tabular-nums">
+                  {formatIDR(takeawaySummary.totalPrice)}
+                </span>
+                {takeaway?.kitchenStatus === 'siap_saji' && (
+                  <span className="text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded-md">
+                    Siap Antar
+                  </span>
+                )}
+                {takeaway?.kitchenStatus === 'dimasak' && (
+                  <span className="text-[9px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.5 rounded-md">
+                    Diracik
+                  </span>
+                )}
+              </div>
             ) : (
               <span className="text-[11px] font-medium text-stone-400 bg-stone-50 px-2 py-0.5 rounded border border-stone-200">
                 Tersedia
@@ -123,11 +135,23 @@ export const TablePanel: React.FC<TablePanelProps> = ({
                   <span className="font-bold text-sm text-stone-900 tracking-tight">
                     {table.label}
                   </span>
-                  <span
-                    className={`w-1.5 h-1.5 rounded-full ${
-                      isUnpaid ? 'bg-amber-500' : 'bg-emerald-500'
-                    }`}
-                  />
+                  <div className="flex items-center gap-1.5">
+                    {table.kitchenStatus === 'siap_saji' && (
+                      <span className="text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded-md">
+                        Siap Antar
+                      </span>
+                    )}
+                    {table.kitchenStatus === 'dimasak' && (
+                      <span className="text-[9px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.5 rounded-md">
+                        Diracik
+                      </span>
+                    )}
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        isUnpaid ? 'bg-amber-500' : 'bg-emerald-500'
+                      }`}
+                    />
+                  </div>
                 </div>
 
                 {/* Content */}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { MenuItem, OrderItem, TableOrder, TransactionRecord, PaymentMethod, DailySummary } from '@/types/pos';
+import { MenuItem, OrderItem, TableOrder, TransactionRecord, PaymentMethod, DailySummary, KitchenStatus } from '@/types/pos';
 import { getInitialTables, getInitialTransactions } from '@/data/initialTables';
 import { generateOrderId } from '@/lib/formatters';
 
@@ -181,6 +181,8 @@ export function usePOSStore() {
           return {
             ...tbl,
             status: hasItems ? ('belum_lunas' as const) : ('kosong' as const),
+            kitchenStatus: hasItems ? (tbl.kitchenStatus || 'menunggu') : undefined,
+            completedItemIds: hasItems ? (tbl.completedItemIds || []) : [],
             items: draftItems.map((it) => ({ ...it })),
             lastUpdated: new Date().toISOString(),
           };
@@ -232,6 +234,8 @@ export function usePOSStore() {
           return {
             ...tbl,
             status: 'kosong' as const,
+            kitchenStatus: undefined,
+            completedItemIds: [],
             items: [],
             lastUpdated: new Date().toISOString(),
           };
@@ -307,6 +311,8 @@ export function usePOSStore() {
             return {
               ...tbl,
               status: 'kosong' as const,
+              kitchenStatus: undefined,
+              completedItemIds: [],
               items: [],
               lastUpdated: new Date().toISOString(),
             };
@@ -404,6 +410,57 @@ export function usePOSStore() {
     return draftItems.reduce((sum, item) => sum + item.quantity, 0);
   }, [draftItems]);
 
+  // Kitchen KDS: Update status of an order ('menunggu' | 'dimasak' | 'siap_saji')
+  const updateKitchenStatus = useCallback((targetId: string, status: KitchenStatus) => {
+    setTables((prevTables) => {
+      const updated = prevTables.map((tbl) => {
+        if (tbl.targetId === targetId) {
+          return {
+            ...tbl,
+            kitchenStatus: status,
+            // If marking ready, mark all items done too
+            completedItemIds: status === 'siap_saji' ? tbl.items.map((it) => it.menuItem.id) : (tbl.completedItemIds || []),
+            lastUpdated: new Date().toISOString(),
+          };
+        }
+        return tbl;
+      });
+      persistTables(updated);
+      return updated;
+    });
+  }, [persistTables]);
+
+  // Kitchen KDS: Toggle an individual item as prepared / completed
+  const toggleKitchenItemDone = useCallback((targetId: string, menuItemId: string) => {
+    setTables((prevTables) => {
+      const updated = prevTables.map((tbl) => {
+        if (tbl.targetId === targetId) {
+          const currentDone = tbl.completedItemIds || [];
+          const isDone = currentDone.includes(menuItemId);
+          const nextDone = isDone
+            ? currentDone.filter((id) => id !== menuItemId)
+            : [...currentDone, menuItemId];
+
+          const allDone = tbl.items.length > 0 && tbl.items.every((it) => nextDone.includes(it.menuItem.id));
+          const nextKitchenStatus: KitchenStatus = allDone
+            ? 'siap_saji'
+            : tbl.kitchenStatus === 'siap_saji'
+            ? 'dimasak'
+            : (tbl.kitchenStatus || 'menunggu');
+
+          return {
+            ...tbl,
+            completedItemIds: nextDone,
+            kitchenStatus: nextKitchenStatus,
+          };
+        }
+        return tbl;
+      });
+      persistTables(updated);
+      return updated;
+    });
+  }, [persistTables]);
+
   return {
     isMounted,
     tables,
@@ -428,5 +485,7 @@ export function usePOSStore() {
     settlePayment,
     resetAllData,
     resetDemoData,
+    updateKitchenStatus,
+    toggleKitchenItemDone,
   };
 }

@@ -1,6 +1,8 @@
 export type Category = 'all' | 'minuman' | 'makanan' | 'camilan';
 
-export type UserRole = 'kasir' | 'pelayan';
+export type UserRole = 'owner' | 'kasir' | 'pelayan' | 'dapur';
+
+export type KitchenStatus = 'menunggu' | 'dimasak' | 'siap_saji';
 
 export interface MenuItem {
   id: string;
@@ -27,6 +29,8 @@ export interface TableOrder {
   status: TableStatus;
   items: OrderItem[];
   lastUpdated?: string;
+  kitchenStatus?: KitchenStatus;
+  completedItemIds?: string[];
 }
 
 export type PaymentMethod = 'tunai' | 'qris';
