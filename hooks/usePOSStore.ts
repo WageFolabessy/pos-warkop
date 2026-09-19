@@ -290,7 +290,80 @@ export function usePOSStore() {
     };
   }, [transactions]);
 
-  // Reset to initial demo data
+  // Clear draft items only
+  const clearDraft = useCallback(() => {
+    setDraftItems([]);
+  }, []);
+
+  // Reset active table completely (clear draft + mark table as kosong in state and localStorage)
+  const resetActiveTable = useCallback(
+    (targetId?: string) => {
+      const idToReset = targetId || activeTargetId;
+      setDraftItems([]);
+
+      setTables((currentTables) => {
+        const updated = currentTables.map((tbl) => {
+          if (tbl.targetId === idToReset) {
+            return {
+              ...tbl,
+              status: 'kosong' as const,
+              items: [],
+              lastUpdated: new Date().toISOString(),
+            };
+          }
+          return tbl;
+        });
+        persistTables(updated);
+        return updated;
+      });
+    },
+    [activeTargetId, persistTables]
+  );
+
+  // Reset all POS data to completely empty (0 omzet, 0 transactions, all tables kosong)
+  const resetAllData = useCallback(() => {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.TABLES);
+      localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
+      localStorage.removeItem(STORAGE_KEYS.ACTIVE_TARGET);
+    } catch {
+      // ignore
+    }
+
+    const emptyTables: TableOrder[] = [
+      {
+        targetId: 'takeaway',
+        label: 'Bungkus / Takeaway',
+        isTakeaway: true,
+        status: 'kosong',
+        items: [],
+      },
+    ];
+    for (let i = 1; i <= 15; i++) {
+      emptyTables.push({
+        targetId: `table-${i}`,
+        label: `Meja ${i}`,
+        isTakeaway: false,
+        status: 'kosong',
+        items: [],
+      });
+    }
+
+    setTables(emptyTables);
+    setTransactions([]);
+    setActiveTargetId('table-1');
+    setDraftItems([]);
+
+    try {
+      localStorage.setItem(STORAGE_KEYS.TABLES, JSON.stringify(emptyTables));
+      localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.ACTIVE_TARGET, 'table-1');
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  // Reset to initial demo data (prepopulated simulation tables & transactions)
   const resetDemoData = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEYS.TABLES);
@@ -350,7 +423,10 @@ export function usePOSStore() {
     updateItemNotes,
     saveDraftToTable,
     cancelDraft,
+    clearDraft,
+    resetActiveTable,
     settlePayment,
+    resetAllData,
     resetDemoData,
   };
 }

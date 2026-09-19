@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { OrderItem, TableOrder } from '@/types/pos';
 import { formatIDR } from '@/lib/formatters';
 import { Plus, Minus, CreditCard, RotateCcw, Trash2, X } from 'lucide-react';
+import { ConfirmModal } from './ConfirmModal';
 
 interface ActiveOrderPanelProps {
   activeTable: TableOrder | null;
@@ -15,6 +16,7 @@ interface ActiveOrderPanelProps {
   onRemoveItem: (menuItemId: string) => void;
   onSaveDraft: () => void;
   onCancelDraft: () => void;
+  onResetOrder?: () => void;
   onOpenPayment: () => void;
   onClose?: () => void;
   className?: string;
@@ -30,11 +32,34 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
   onRemoveItem,
   onSaveDraft,
   onCancelDraft,
+  onResetOrder,
   onOpenPayment,
   onClose,
   className = '',
 }) => {
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const targetLabel = activeTable?.label || 'Pilih Meja';
+
+  const handleResetClick = () => {
+    // If the table was already saved in localStorage with items, ask for confirmation
+    if (activeTable && activeTable.status === 'belum_lunas' && activeTable.items.length > 0) {
+      setIsResetConfirmOpen(true);
+    } else {
+      // If items are only in draft (unsaved), clear immediately
+      if (onResetOrder) {
+        onResetOrder();
+      } else {
+        onCancelDraft();
+      }
+    }
+  };
+
+  const handleConfirmReset = () => {
+    if (onResetOrder) {
+      onResetOrder();
+    }
+    setIsResetConfirmOpen(false);
+  };
 
   return (
     <aside
@@ -55,9 +80,10 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
           {/* Bersihkan / Reset Button */}
           {draftItems.length > 0 && (
             <button
-              onClick={onCancelDraft}
+              id="btn-reset-order"
+              onClick={handleResetClick}
               className="text-xs text-stone-500 hover:text-red-600 px-2.5 py-1.5 rounded-lg border border-stone-200 bg-white hover:bg-red-50 transition-colors flex items-center gap-1 cursor-pointer"
-              title="Reset ke status tersimpan"
+              title="Reset dan kosongkan pesanan meja ini"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span className="text-[11px] font-medium">Reset</span>
@@ -208,6 +234,18 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
           )}
         </div>
       </div>
+
+      {/* Confirmation Modal for Resetting Active Table Order */}
+      <ConfirmModal
+        isOpen={isResetConfirmOpen}
+        title={`Reset Pesanan ${targetLabel}?`}
+        message={`Seluruh item pesanan pada ${targetLabel} akan dikosongkan dan status meja akan kembali menjadi kosong.`}
+        confirmText="Ya, Reset Pesanan"
+        cancelText="Batal"
+        isDestructive={true}
+        onConfirm={handleConfirmReset}
+        onClose={() => setIsResetConfirmOpen(false)}
+      />
     </aside>
   );
 };

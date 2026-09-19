@@ -13,6 +13,8 @@ import {
   Clock,
   ChevronDown,
   ChevronUp,
+  Trash2,
+  CheckCircle2,
 } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
 
@@ -21,7 +23,8 @@ interface RekapKasModalProps {
   dailySummary: DailySummary;
   transactions: TransactionRecord[];
   onClose: () => void;
-  onResetData: () => void;
+  onResetAllData: () => void;
+  onResetDemoData: () => void;
 }
 
 export const RekapKasModal: React.FC<RekapKasModalProps> = ({
@@ -29,9 +32,12 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
   dailySummary,
   transactions,
   onClose,
-  onResetData,
+  onResetAllData,
+  onResetDemoData,
 }) => {
-  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
+  const [isResetAllConfirmOpen, setIsResetAllConfirmOpen] = useState(false);
+  const [isResetDemoConfirmOpen, setIsResetDemoConfirmOpen] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
   const [expandedTxId, setExpandedTxId] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -67,6 +73,21 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
 
           {/* Body */}
           <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-5">
+            {/* Live Feedback Banner */}
+            {feedbackMessage && (
+              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-emerald-800 text-xs font-semibold animate-in fade-in duration-150">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <span>{feedbackMessage}</span>
+                </div>
+                <button
+                  onClick={() => setFeedbackMessage(null)}
+                  className="text-emerald-600 hover:text-emerald-900 p-0.5 rounded cursor-pointer"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
             {/* Top Metric Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {/* Total Omzet */}
@@ -253,25 +274,39 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               </div>
             </div>
 
-            {/* Danger Zone: Reset Demo Data */}
-            <div className="p-4 bg-red-50/80 border border-red-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            {/* Danger Zone: Reset Data Kas & Meja */}
+            <div className="p-4 bg-red-50/80 border border-red-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <h5 className="font-bold text-xs text-red-950 uppercase tracking-wide">
-                  Zona Reset Data
+                <h5 className="font-bold text-xs text-red-950 uppercase tracking-wide flex items-center gap-1.5">
+                  <RotateCcw className="w-3.5 h-3.5 text-red-700" />
+                  Zona Reset Data Kas & Meja
                 </h5>
-                <p className="text-xs text-red-800 mt-0.5">
-                  Hapus seluruh transaksi lokal dan kembalikan 15 meja ke data demo awal.
+                <p className="text-xs text-red-800 mt-1 leading-relaxed">
+                  Kosongkan semua riwayat transaksi menjadi Rp 0 dan kosongkan seluruh meja, atau muat ulang data simulasi demo warkop.
                 </p>
               </div>
 
-              <button
-                id="btn-reset-demo-data"
-                onClick={() => setIsResetConfirmOpen(true)}
-                className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow-xs transition-colors cursor-pointer whitespace-nowrap"
-              >
-                <RotateCcw className="w-3.5 h-3.5" />
-                <span>Reset Demo Data</span>
-              </button>
+              <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+                <button
+                  id="btn-reset-all-data"
+                  onClick={() => setIsResetAllConfirmOpen(true)}
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-xs transition-colors cursor-pointer whitespace-nowrap"
+                  title="Kosongkan seluruh transaksi dan meja ke Rp 0"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Kosongkan Semua (Reset 0)</span>
+                </button>
+
+                <button
+                  id="btn-reset-demo-data"
+                  onClick={() => setIsResetDemoConfirmOpen(true)}
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-stone-50 border border-stone-300 text-stone-700 font-bold px-3.5 py-2.5 rounded-xl text-xs shadow-xs transition-colors cursor-pointer whitespace-nowrap"
+                  title="Muat ulang data simulasi demo warkop"
+                >
+                  <RotateCcw className="w-3.5 h-3.5 text-stone-500" />
+                  <span>Muat Ulang Demo</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -287,20 +322,36 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
         </div>
       </div>
 
-      {/* Confirmation Modal for Reset */}
+      {/* Confirmation Modal: Reset All to 0 */}
       <ConfirmModal
-        isOpen={isResetConfirmOpen}
-        title="Reset Seluruh Data Demo?"
-        message="Tindakan ini akan mengosongkan riwayat kas dan mengembalikan status meja serta transaksi awal. Apakah Anda yakin?"
-        confirmText="Ya, Reset Data"
+        isOpen={isResetAllConfirmOpen}
+        title="Kosongkan Seluruh Data Kas & Meja?"
+        message="Semua riwayat transaksi hari ini akan dihapus menjadi Rp 0 dan seluruh 15 meja serta takeaway akan dikosongkan. Apakah Anda yakin?"
+        confirmText="Ya, Kosongkan Semua"
         cancelText="Batal"
         isDestructive={true}
         onConfirm={() => {
-          onResetData();
-          setIsResetConfirmOpen(false);
-          onClose();
+          onResetAllData();
+          setFeedbackMessage('Semua data transaksi dan meja berhasil dikosongkan ke Rp 0!');
+          setIsResetAllConfirmOpen(false);
         }}
-        onClose={() => setIsResetConfirmOpen(false)}
+        onClose={() => setIsResetAllConfirmOpen(false)}
+      />
+
+      {/* Confirmation Modal: Reload Initial Demo Data */}
+      <ConfirmModal
+        isOpen={isResetDemoConfirmOpen}
+        title="Muat Ulang Data Simulasi Demo?"
+        message="Data transaksi contoh dan status meja akan dikembalikan ke data simulasi demo warkop. Apakah Anda yakin?"
+        confirmText="Ya, Muat Ulang Demo"
+        cancelText="Batal"
+        isDestructive={false}
+        onConfirm={() => {
+          onResetDemoData();
+          setFeedbackMessage('Data simulasi demo warkop berhasil dimuat ulang!');
+          setIsResetDemoConfirmOpen(false);
+        }}
+        onClose={() => setIsResetDemoConfirmOpen(false)}
       />
     </>
   );

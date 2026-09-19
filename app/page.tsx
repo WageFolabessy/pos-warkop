@@ -34,7 +34,9 @@ export default function POSHomePage() {
     updateItemNotes,
     saveDraftToTable,
     cancelDraft,
+    resetActiveTable,
     settlePayment,
+    resetAllData,
     resetDemoData,
   } = usePOSStore();
 
@@ -120,6 +122,7 @@ export default function POSHomePage() {
           onRemoveItem={removeItemFromDraft}
           onUpdateNotes={updateItemNotes}
           onSaveOrder={saveDraftToTable}
+          onResetOrder={() => resetActiveTable()}
         />
       ) : (
         <>
@@ -188,6 +191,7 @@ export default function POSHomePage() {
               onRemoveItem={removeItemFromDraft}
               onSaveDraft={saveDraftToTable}
               onCancelDraft={cancelDraft}
+              onResetOrder={() => resetActiveTable()}
               onOpenPayment={() => setIsPaymentOpen(true)}
               className="hidden lg:flex lg:w-96 lg:shrink-0 lg:border-l"
             />
@@ -228,6 +232,10 @@ export default function POSHomePage() {
                     setIsMobileOrderOpen(false);
                   }}
                   onCancelDraft={cancelDraft}
+                  onResetOrder={() => {
+                    resetActiveTable();
+                    setIsMobileOrderOpen(false);
+                  }}
                   onOpenPayment={() => {
                     setIsMobileOrderOpen(false);
                     setIsPaymentOpen(true);
@@ -265,7 +273,8 @@ export default function POSHomePage() {
             dailySummary={dailySummary}
             transactions={transactions}
             onClose={() => setIsRekapOpen(false)}
-            onResetData={resetDemoData}
+            onResetAllData={resetAllData}
+            onResetDemoData={resetDemoData}
           />
         </>
       )}

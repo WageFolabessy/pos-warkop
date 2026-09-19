@@ -17,6 +17,7 @@ import {
   Trash2,
   ChevronRight,
   ListOrdered,
+  RotateCcw,
 } from 'lucide-react';
 
 interface WaiterViewProps {
@@ -31,6 +32,7 @@ interface WaiterViewProps {
   onRemoveItem: (menuItemId: string) => void;
   onUpdateNotes: (menuItemId: string, notes: string) => void;
   onSaveOrder: () => void;
+  onResetOrder?: () => void;
 }
 
 const CATEGORIES: { id: Category; label: string }[] = [
@@ -52,6 +54,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
   onRemoveItem,
   onUpdateNotes,
   onSaveOrder,
+  onResetOrder,
 }) => {
   // Waiter flow steps: 'tables' -> 'menu'
   const [currentStep, setCurrentStep] = useState<'tables' | 'menu'>('tables');
@@ -247,6 +250,19 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 {activeTable?.label || 'Meja'}
               </span>
 
+              {/* Reset Order Button for Waiter */}
+              {draftTotalCount > 0 && onResetOrder && (
+                <button
+                  id="waiter-top-btn-reset-order"
+                  onClick={onResetOrder}
+                  className="flex items-center gap-1 text-xs text-stone-500 hover:text-red-600 bg-stone-100 hover:bg-red-50 px-2.5 py-2 rounded-lg border border-stone-200 hover:border-red-200 transition-colors cursor-pointer min-h-10"
+                  title="Reset pesanan meja ini"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span className="text-[11px] font-medium">Reset</span>
+                </button>
+              )}
+
               {/* Button to view review drawer */}
               <button
                 id="waiter-btn-review-order"
@@ -424,12 +440,25 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   {activeTable?.label || 'Meja'} ({draftTotalCount} Item)
                 </h3>
               </div>
-              <button
-                onClick={() => setShowOrderReviewDrawer(false)}
-                className="w-8 h-8 rounded-lg bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-600 cursor-pointer"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              <div className="flex items-center gap-1.5">
+                {draftItems.length > 0 && onResetOrder && (
+                  <button
+                    id="waiter-btn-reset-order"
+                    onClick={onResetOrder}
+                    className="text-xs text-stone-500 hover:text-red-600 px-2.5 py-1.5 rounded-lg border border-stone-200 bg-white hover:bg-red-50 transition-colors flex items-center gap-1 cursor-pointer"
+                    title="Kosongkan pesanan meja ini"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    <span className="text-[11px] font-medium">Reset</span>
+                  </button>
+                )}
+                <button
+                  onClick={() => setShowOrderReviewDrawer(false)}
+                  className="w-8 h-8 rounded-lg bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-600 cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
             {/* Items list */}
