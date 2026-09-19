@@ -105,12 +105,12 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-stone-100 select-none overflow-hidden relative">
+    <div className="flex-1 flex flex-col h-full bg-gray-50 select-none overflow-hidden relative">
       {/* Toast Notification */}
       {successToast && (
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-stone-900 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2 border border-stone-700 animate-in fade-in slide-in-from-top-4 duration-200">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-          <span className="text-xs font-semibold">{successToast}</span>
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 bg-white text-gray-900 px-4 py-2.5 rounded-xl shadow-sm border border-gray-200 flex items-center gap-2 animate-in fade-in slide-in-from-top-4 duration-200">
+          <CheckCircle2 className="w-4 h-4 text-gray-500 shrink-0" />
+          <span className="text-xs font-medium">{successToast}</span>
         </div>
       )}
 
@@ -120,24 +120,6 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
          ========================================================================= */}
       {currentStep === 'tables' && (
         <div className="flex-1 flex flex-col h-full overflow-hidden">
-          {/* Sub Header */}
-          <div className="p-3.5 bg-white border-b border-stone-200 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Users className="w-4 h-4 text-stone-600" />
-              <div>
-                <h2 className="font-bold text-sm text-stone-900">
-                  Langkah 1: Pilih Meja Pelanggan
-                </h2>
-                <p className="text-[11px] text-stone-500">
-                  Pilih meja untuk mulai mencatat pesanan
-                </p>
-              </div>
-            </div>
-            <span className="text-xs font-mono bg-stone-100 text-stone-700 px-2.5 py-1 rounded-md border border-stone-200">
-              15 Meja
-            </span>
-          </div>
-
           <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
             {/* Takeaway Card */}
             <button
@@ -145,47 +127,47 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               onClick={() => handleSelectTable('takeaway')}
               className={`w-full text-left p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between min-h-14 bg-white active:scale-[0.99] ${
                 activeTargetId === 'takeaway'
-                  ? 'border-stone-900 ring-2 ring-stone-900 shadow-xs'
+                  ? 'border-gray-900 ring-2 ring-gray-900'
                   : takeaway?.status === 'belum_lunas'
-                  ? 'border-amber-500 bg-amber-50/40'
-                  : 'border-stone-200 hover:border-stone-300'
+                  ? 'border-gray-400 bg-gray-50'
+                  : 'border-gray-200 hover:border-gray-300'
               }`}
             >
               <div className="flex items-center gap-3">
                 <div
                   className={`w-9 h-9 rounded-lg flex items-center justify-center shrink-0 ${
                     takeaway?.status === 'belum_lunas'
-                      ? 'bg-amber-100 text-amber-900'
-                      : 'bg-stone-100 text-stone-600'
+                      ? 'bg-gray-200 text-gray-700'
+                      : 'bg-gray-100 text-gray-500'
                   }`}
                 >
                   <ShoppingBag className="w-4 h-4" />
                 </div>
                 <div>
-                  <span className="font-bold text-sm text-stone-900 block">
+                  <span className="font-semibold text-sm text-gray-900 block">
                     Bungkus / Takeaway
                   </span>
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-xs text-stone-500">
+                    <span className="text-xs text-gray-500">
                       {takeaway?.status === 'belum_lunas'
                         ? `${takeaway.items.reduce((s, it) => s + it.quantity, 0)} item dipesan`
                         : 'Tersedia untuk bawa pulang'}
                     </span>
                     {takeaway?.kitchenStatus === 'siap_saji' && (
-                      <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.2 rounded-md">
-                        Siap Antar
+                      <span className="text-[10px] text-gray-600 font-medium">
+                        · Siap Antar
                       </span>
                     )}
                     {takeaway?.kitchenStatus === 'dimasak' && (
-                      <span className="text-[10px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.2 rounded-md">
-                        Diracik
+                      <span className="text-[10px] text-gray-500 font-medium">
+                        · Diracik
                       </span>
                     )}
                   </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 text-stone-400">
+              <div className="flex items-center gap-1 text-gray-400">
                 <span className="text-xs font-medium">Pilih</span>
                 <ChevronRight className="w-4 h-4" />
               </div>
@@ -205,30 +187,30 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                     onClick={() => handleSelectTable(tbl.targetId)}
                     className={`text-left p-3.5 rounded-xl border transition-all cursor-pointer flex flex-col justify-between min-h-24 bg-white active:scale-[0.98] ${
                       isSelected
-                        ? 'border-stone-900 ring-2 ring-stone-900 shadow-xs'
+                        ? 'border-gray-900 ring-2 ring-gray-900'
                         : isOccupied
-                        ? 'border-amber-500 bg-amber-50/40'
-                        : 'border-stone-200 hover:border-stone-300'
+                        ? 'border-gray-400 bg-gray-50'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <span className="font-bold text-base text-stone-900">
+                      <span className="font-semibold text-base text-gray-900">
                         {tbl.label}
                       </span>
                       <div className="flex items-center gap-1">
                         {tbl.kitchenStatus === 'siap_saji' && (
-                          <span className="text-[9px] font-mono font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-1.5 py-0.5 rounded-md">
-                            Siap Antar
+                          <span className="text-[9px] text-gray-600 font-medium">
+                            Siap
                           </span>
                         )}
                         {tbl.kitchenStatus === 'dimasak' && (
-                          <span className="text-[9px] font-mono font-bold bg-blue-100 text-blue-800 border border-blue-300 px-1.5 py-0.5 rounded-md">
+                          <span className="text-[9px] text-gray-500 font-medium">
                             Diracik
                           </span>
                         )}
                         <span
                           className={`w-2 h-2 rounded-full ${
-                            isOccupied ? 'bg-amber-500' : 'bg-emerald-500'
+                            isOccupied ? 'bg-gray-900' : 'bg-gray-300'
                           }`}
                         />
                       </div>
@@ -236,11 +218,11 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
 
                     <div className="mt-2">
                       {isOccupied ? (
-                        <div className="text-xs font-medium text-amber-900">
+                        <div className="text-xs font-medium text-gray-700">
                           {totalItems} item dipesan
                         </div>
                       ) : (
-                        <div className="text-xs text-stone-500 font-medium">
+                        <div className="text-xs text-gray-500 font-medium">
                           Tersedia
                         </div>
                       )}
@@ -259,18 +241,18 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
       {currentStep === 'menu' && (
         <div className="flex-1 flex flex-col h-full overflow-hidden">
           {/* Top Bar for Waiter */}
-          <div className="p-3 bg-white border-b border-stone-200 flex items-center justify-between gap-2">
+          <div className="p-3 bg-white border-b border-gray-200 flex items-center justify-between gap-2">
             <button
               id="waiter-btn-back-tables"
               onClick={() => setCurrentStep('tables')}
-              className="flex items-center gap-1 text-xs font-semibold text-stone-700 bg-stone-100 hover:bg-stone-200 px-3 py-2 rounded-lg border border-stone-200 cursor-pointer min-h-10"
+              className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full border border-gray-200 cursor-pointer min-h-10"
             >
               <span>←</span>
               <span>Ganti Meja</span>
             </button>
 
             <div className="flex items-center gap-2">
-              <span className="font-bold text-sm text-stone-900 bg-stone-100 px-3 py-1.5 rounded-lg border border-stone-200">
+              <span className="font-semibold text-sm text-gray-900 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200">
                 {activeTable?.label || 'Meja'}
               </span>
 
@@ -279,7 +261,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 <button
                   id="waiter-top-btn-reset-order"
                   onClick={onResetOrder}
-                  className="flex items-center gap-1 text-xs text-stone-500 hover:text-red-600 bg-stone-100 hover:bg-red-50 px-2.5 py-2 rounded-lg border border-stone-200 hover:border-red-200 transition-colors cursor-pointer min-h-10"
+                  className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 bg-gray-50 hover:bg-red-50 px-2.5 py-2 rounded-full border border-gray-200 hover:border-red-200 transition-colors cursor-pointer min-h-10"
                   title="Reset pesanan meja ini"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
@@ -291,7 +273,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               <button
                 id="waiter-btn-review-order"
                 onClick={() => setShowOrderReviewDrawer(true)}
-                className="flex items-center gap-1.5 bg-stone-900 hover:bg-black text-white px-3 py-1.5 rounded-lg text-xs font-bold cursor-pointer min-h-10"
+                className="flex items-center gap-1.5 bg-[#0071e3] hover:bg-[#0077ED] text-white px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer min-h-10"
               >
                 <ListOrdered className="w-3.5 h-3.5" />
                 <span>{draftTotalCount} Item</span>
@@ -300,7 +282,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
           </div>
 
           {/* Filter & Search Bar */}
-          <div className="p-3 bg-white border-b border-stone-200 flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
+          <div className="p-3 bg-white border-b border-gray-200 flex flex-col sm:flex-row gap-2.5 items-stretch sm:items-center justify-between">
             {/* Category Filter Pills */}
             <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
               {CATEGORIES.map((cat) => {
@@ -310,10 +292,10 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                     key={cat.id}
                     id={`waiter-filter-${cat.id}`}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap cursor-pointer min-h-10 flex items-center justify-center transition-colors ${
+                    className={`px-3.5 py-2 rounded-full text-xs font-medium whitespace-nowrap cursor-pointer min-h-10 flex items-center justify-center transition-colors ${
                       isActive
-                        ? 'bg-stone-900 text-white shadow-2xs'
-                        : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                        ? 'bg-gray-900 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
                     {cat.label}
@@ -324,18 +306,18 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
 
             {/* Search Input */}
             <div className="relative min-w-50 sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
                 placeholder="Cari menu pesanan..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-8 py-2 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-stone-900 focus:bg-white text-stone-900 transition-colors min-h-10"
+                className="w-full pl-9 pr-8 py-2 text-xs bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-[#0071e3] focus:bg-white text-gray-900 transition-colors min-h-10"
               />
               {searchQuery && (
                 <button
                   onClick={() => setSearchQuery('')}
-                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-stone-400 hover:text-stone-700 cursor-pointer"
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -355,31 +337,31 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                     key={item.id}
                     id={`waiter-menu-card-${item.id}`}
                     onClick={() => onAddItem(item)}
-                    className="relative text-left bg-white border border-stone-200 hover:border-stone-400 active:scale-[0.98] p-3.5 rounded-xl shadow-2xs transition-all duration-100 flex flex-col justify-between min-h-24 sm:min-h-28 cursor-pointer select-none"
+                    className="relative text-left bg-white border border-gray-200 hover:border-gray-300 active:scale-[0.98] p-3.5 rounded-xl transition-all duration-100 flex flex-col justify-between min-h-24 sm:min-h-28 cursor-pointer select-none"
                   >
                     {/* In-Cart Badge */}
                     {inCartQty > 0 && (
-                      <span className="absolute top-2.5 right-2.5 bg-stone-900 text-white text-[11px] font-mono font-bold px-2 py-0.5 rounded-md shadow-xs">
+                      <span className="absolute top-2.5 right-2.5 bg-[#0071e3] text-white text-[11px] font-mono font-semibold px-2 py-0.5 rounded-full">
                         {inCartQty}x
                       </span>
                     )}
 
                     <div>
-                      <h3 className="font-semibold text-xs sm:text-sm text-stone-900 leading-snug pr-6">
+                      <h3 className="font-semibold text-xs sm:text-sm text-gray-900 leading-snug pr-6">
                         {item.name}
                       </h3>
 
                       {/* Notes Preview if available */}
                       {existingOrderItem?.notes && (
-                        <p className="text-[10px] text-amber-800 italic mt-1 bg-amber-50 p-1 rounded border border-amber-200/60 line-clamp-1">
+                        <p className="text-[10px] text-gray-600 italic mt-1 bg-gray-50 p-1 rounded border border-gray-200 line-clamp-1">
                           Catatan: {existingOrderItem.notes}
                         </p>
                       )}
                     </div>
 
                     {/* Card Bottom: Action & Notes Trigger */}
-                    <div className="mt-3 pt-2 border-t border-stone-100 flex items-center justify-between">
-                      <span className="text-xs text-stone-400 font-medium">
+                    <div className="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between">
+                      <span className="text-xs text-gray-400 font-medium">
                         + Ketuk isi (+1)
                       </span>
 
@@ -393,10 +375,10 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                               setEditingNotesItem(existingOrderItem);
                             }
                           }}
-                          className="flex items-center gap-1 text-[11px] font-semibold text-stone-700 hover:text-stone-900 bg-stone-100 hover:bg-stone-200 px-2 py-1 rounded-md border border-stone-300 cursor-pointer"
+                          className="flex items-center gap-1 text-[11px] font-medium text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded-full border border-gray-200 cursor-pointer"
                           title="Tambah/ubah catatan khusus"
                         >
-                          <FileText className="w-3 h-3 text-stone-500" />
+                          <FileText className="w-3 h-3 text-gray-400" />
                           <span>Catatan</span>
                         </button>
                       )}
@@ -410,17 +392,17 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
           {/* =========================================================================
               LANGKAH 3: BILAH AKSI BAWAH LAYAR (Kirim Pesanan ke Kasir)
              ========================================================================= */}
-          <div className="fixed bottom-0 left-0 right-0 p-3 bg-white border-t border-stone-200 shadow-xl z-30 flex items-center justify-between gap-3">
+          <div className="fixed bottom-0 left-0 right-0 p-3 bg-white border-t border-gray-200 z-30 flex items-center justify-between gap-3">
             <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setShowOrderReviewDrawer(true)}
                 className="text-left cursor-pointer"
               >
-                <span className="text-[10px] uppercase font-mono tracking-wider text-stone-500 block">
+                <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
                   {activeTable?.label || 'Pesanan'}
                 </span>
-                <span className="font-bold text-sm text-stone-900">
+                <span className="font-semibold text-sm text-gray-900">
                   {draftTotalCount} Item Dipilih
                 </span>
               </button>
@@ -430,7 +412,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               id="waiter-btn-send-to-cashier"
               disabled={draftTotalCount === 0}
               onClick={handleSendOrder}
-              className="flex items-center gap-2 bg-stone-900 hover:bg-black disabled:bg-stone-300 disabled:text-stone-400 text-white font-bold py-3 px-5 rounded-xl shadow-xs transition-all active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm min-h-12"
+              className="flex items-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 px-5 rounded-full transition-all active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm min-h-12"
             >
               <Send className="w-4 h-4" />
               <span>Kirim Pesanan ke Kasir</span>
@@ -443,24 +425,24 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
           MODAL DRAWER: TINJAU PESANAN & UBAH QTY/CATATAN (Waiter Sheet)
          ========================================================================= */}
       {showOrderReviewDrawer && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-xs animate-in fade-in duration-100">
+        <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/50 backdrop-blur-xs animate-in fade-in duration-100">
           <div
             className="fixed inset-0"
             onClick={() => setShowOrderReviewDrawer(false)}
           />
-          <div className="relative z-10 w-full max-h-[85vh] bg-white rounded-t-2xl overflow-hidden shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-150">
+          <div className="relative z-10 w-full max-h-[85vh] bg-white rounded-t-2xl overflow-hidden flex flex-col animate-in slide-in-from-bottom duration-150">
             {/* Grab handle */}
-            <div className="w-full flex justify-center py-2 bg-stone-50 border-b border-stone-200">
-              <div className="w-10 h-1 bg-stone-300 rounded-full" />
+            <div className="w-full flex justify-center py-2 bg-gray-50 border-b border-gray-200">
+              <div className="w-10 h-1 bg-gray-200 rounded-full" />
             </div>
 
             {/* Header */}
-            <div className="p-3.5 border-b border-stone-200 flex items-center justify-between">
+            <div className="p-3.5 border-b border-gray-200 flex items-center justify-between">
               <div>
-                <span className="text-[10px] uppercase font-mono tracking-wider text-stone-500 block">
+                <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
                   Daftar Pesanan Meja
                 </span>
-                <h3 className="font-bold text-base text-stone-900">
+                <h3 className="font-semibold text-base text-gray-900">
                   {activeTable?.label || 'Meja'} ({draftTotalCount} Item)
                 </h3>
               </div>
@@ -469,7 +451,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   <button
                     id="waiter-btn-reset-order"
                     onClick={onResetOrder}
-                    className="text-xs text-stone-500 hover:text-red-600 px-2.5 py-1.5 rounded-lg border border-stone-200 bg-white hover:bg-red-50 transition-colors flex items-center gap-1 cursor-pointer"
+                    className="text-xs text-gray-500 hover:text-red-600 px-2.5 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-red-50 transition-colors flex items-center gap-1 cursor-pointer"
                     title="Kosongkan pesanan meja ini"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
@@ -478,7 +460,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 )}
                 <button
                   onClick={() => setShowOrderReviewDrawer(false)}
-                  className="w-8 h-8 rounded-lg bg-stone-100 hover:bg-stone-200 flex items-center justify-center text-stone-600 cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-500 cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -486,9 +468,9 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
             </div>
 
             {/* Items list */}
-            <div className="flex-1 overflow-y-auto p-4 divide-y divide-stone-100 space-y-3">
+            <div className="flex-1 overflow-y-auto p-4 divide-y divide-gray-100 space-y-3">
               {draftItems.length === 0 ? (
-                <div className="py-12 text-center text-stone-400 text-xs">
+                <div className="py-12 text-center text-gray-400 text-xs">
                   Belum ada item yang dipilih untuk meja ini.
                 </div>
               ) : (
@@ -496,16 +478,16 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   <div key={it.menuItem.id} className="pt-3 first:pt-0">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <span className="font-semibold text-xs sm:text-sm text-stone-900 block">
+                        <span className="font-medium text-xs sm:text-sm text-gray-900 block">
                           {it.menuItem.name}
                         </span>
                         {/* Custom note */}
                         {it.notes ? (
-                          <div className="flex items-center gap-1 mt-1 text-[11px] text-amber-800 italic bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60">
+                          <div className="flex items-center gap-1 mt-1 text-[11px] text-gray-600 italic bg-gray-50 px-2 py-0.5 rounded border border-gray-200">
                             <span>Catatan: {it.notes}</span>
                             <button
                               onClick={() => setEditingNotesItem(it)}
-                              className="underline text-stone-600 ml-1 font-sans not-italic text-[10px] cursor-pointer"
+                              className="underline text-gray-500 ml-1 font-sans not-italic text-[10px] cursor-pointer"
                             >
                               Edit
                             </button>
@@ -513,7 +495,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                         ) : (
                           <button
                             onClick={() => setEditingNotesItem(it)}
-                            className="text-[11px] text-stone-500 hover:text-stone-800 underline mt-0.5 block cursor-pointer"
+                            className="text-[11px] text-gray-400 hover:text-gray-700 underline mt-0.5 block cursor-pointer"
                           >
                             + Tambah Catatan
                           </button>
@@ -522,19 +504,19 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
 
                       {/* Stepper (+ / - / delete) */}
                       <div className="flex items-center gap-2 shrink-0">
-                        <div className="flex items-center border border-stone-300 rounded-lg bg-stone-50 overflow-hidden">
+                        <div className="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden">
                           <button
                             onClick={() => onUpdateQuantity(it.menuItem.id, -1)}
-                            className="w-8 h-8 flex items-center justify-center text-stone-600 hover:bg-stone-200 cursor-pointer"
+                            className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 cursor-pointer"
                           >
                             <Minus className="w-3.5 h-3.5" />
                           </button>
-                          <span className="w-7 text-center font-mono font-bold text-xs text-stone-900">
+                          <span className="w-7 text-center font-mono font-semibold text-xs text-gray-900">
                             {it.quantity}
                           </span>
                           <button
                             onClick={() => onUpdateQuantity(it.menuItem.id, 1)}
-                            className="w-8 h-8 flex items-center justify-center text-stone-600 hover:bg-stone-200 cursor-pointer"
+                            className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 cursor-pointer"
                           >
                             <Plus className="w-3.5 h-3.5" />
                           </button>
@@ -542,7 +524,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
 
                         <button
                           onClick={() => onRemoveItem(it.menuItem.id)}
-                          className="w-8 h-8 flex items-center justify-center text-stone-400 hover:text-red-600 rounded-lg cursor-pointer"
+                          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-600 rounded-full cursor-pointer"
                           title="Hapus"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -555,11 +537,11 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
             </div>
 
             {/* Bottom action inside drawer */}
-            <div className="p-3.5 bg-stone-50 border-t border-stone-200">
+            <div className="p-3.5 bg-gray-50 border-t border-gray-200">
               <button
                 disabled={draftTotalCount === 0}
                 onClick={handleSendOrder}
-                className="w-full flex items-center justify-center gap-2 bg-stone-900 hover:bg-black disabled:bg-stone-300 text-white font-bold py-3 px-4 rounded-xl shadow-xs cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm min-h-12"
+                className="w-full flex items-center justify-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 px-4 rounded-full cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm min-h-12"
               >
                 <Send className="w-4 h-4" />
                 <span>Kirim Pesanan ke Kasir ({draftTotalCount} Item)</span>

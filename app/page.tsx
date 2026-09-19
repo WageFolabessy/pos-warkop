@@ -10,12 +10,13 @@ import { MobileFloatingBar } from '@/components/MobileFloatingBar';
 import { PaymentModal } from '@/components/PaymentModal';
 import { ReceiptModal } from '@/components/ReceiptModal';
 import { RekapKasModal } from '@/components/RekapKasModal';
+import { MoveTableModal } from '@/components/MoveTableModal';
 import { TransactionRecord, UserRole } from '@/types/pos';
 import { Users, Utensils } from 'lucide-react';
 import { WaiterView } from '@/components/WaiterView';
 import { KitchenView } from '@/components/KitchenView';
 
-export default function POSHomePage() {
+export default function POSPage() {
   const {
     isMounted,
     tables,
@@ -37,6 +38,14 @@ export default function POSHomePage() {
     cancelDraft,
     resetActiveTable,
     settlePayment,
+    expenses,
+    addExpense,
+    deleteExpense,
+    moveTableOrder,
+    openingCash,
+    actualCash,
+    setOpeningCash,
+    setActualCash,
     resetAllData,
     resetDemoData,
     updateKitchenStatus,
@@ -65,6 +74,7 @@ export default function POSHomePage() {
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [isRekapOpen, setIsRekapOpen] = useState(false);
+  const [isMoveTableOpen, setIsMoveTableOpen] = useState(false);
   const [latestTransaction, setLatestTransaction] = useState<TransactionRecord | null>(null);
 
   // Handle table selection on mobile (auto-navigates to menu catalog)
@@ -85,22 +95,22 @@ export default function POSHomePage() {
   // Safe SSR Hydration Guard
   if (!isMounted) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-stone-900 text-stone-100">
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-white text-gray-900">
         <div className="flex flex-col items-center mb-4">
           <div className="flex items-baseline gap-2">
-            <span className="font-serif italic text-4xl font-bold text-amber-500">
+            <span className="font-semibold text-2xl text-gray-900">
               Ratu
             </span>
-            <span className="font-black text-3xl text-white tracking-widest">
+            <span className="font-semibold text-2xl text-gray-700 tracking-wider">
               KOPI
             </span>
           </div>
-          <span className="text-xs font-mono tracking-[0.25em] text-stone-400 uppercase mt-1">
+          <span className="text-xs font-mono tracking-[0.25em] text-gray-500 uppercase mt-1">
             PONTIANAK
           </span>
         </div>
-        <div className="flex items-center gap-2 text-xs font-mono text-stone-400 tracking-wider uppercase">
-          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+        <div className="flex items-center gap-2 text-xs font-mono text-gray-500 tracking-wider uppercase">
+          <span className="w-2 h-2 rounded-full bg-gray-400 animate-pulse" />
           <span>Memuat Sistem Kasir Offline...</span>
         </div>
       </div>
@@ -108,7 +118,7 @@ export default function POSHomePage() {
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-stone-100 text-stone-900">
+    <div className="h-screen w-screen flex flex-col overflow-hidden bg-gray-50 text-gray-900">
       {/* 1. Top Bar with Role Switcher [Kasir] / [Pelayan] */}
       <TopBar
         occupiedCount={occupiedTablesCount}
@@ -149,14 +159,14 @@ export default function POSHomePage() {
       ) : (
         <>
           {/* 2. Mobile View Switcher Tabs (Only visible on screens < 1024px in Cashier mode) */}
-          <div className="no-print lg:hidden bg-stone-900 border-b border-stone-800 px-3 py-2 flex items-center gap-2 shrink-0">
+          <div className="no-print lg:hidden bg-white border-b border-gray-200 px-3 py-2 flex items-center gap-2 shrink-0">
             <button
               id="tab-mobile-tables"
               onClick={() => setMobileTab('tables')}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-bold text-xs transition-colors cursor-pointer min-h-11 ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
                 mobileTab === 'tables'
-                  ? 'bg-amber-500 text-stone-950 shadow-xs'
-                  : 'bg-stone-800 text-stone-300 hover:text-white'
+                  ? 'bg-[#0071e3] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:text-gray-900'
               }`}
             >
               <Users className="w-4 h-4" />
@@ -166,10 +176,10 @@ export default function POSHomePage() {
             <button
               id="tab-mobile-menu"
               onClick={() => setMobileTab('menu')}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-bold text-xs transition-colors cursor-pointer min-h-11 ${
+              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
                 mobileTab === 'menu'
-                  ? 'bg-amber-500 text-stone-950 shadow-xs'
-                  : 'bg-stone-800 text-stone-300 hover:text-white'
+                  ? 'bg-[#0071e3] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:text-gray-900'
               }`}
             >
               <Utensils className="w-4 h-4" />
@@ -215,6 +225,7 @@ export default function POSHomePage() {
               onCancelDraft={cancelDraft}
               onResetOrder={() => resetActiveTable()}
               onOpenPayment={() => setIsPaymentOpen(true)}
+              onOpenMoveTable={() => setIsMoveTableOpen(true)}
               className="hidden lg:flex lg:w-96 lg:shrink-0 lg:border-l"
             />
           </main>
@@ -237,8 +248,8 @@ export default function POSHomePage() {
                 onClick={() => setIsMobileOrderOpen(false)}
               />
               <div className="relative z-10 w-full max-h-[85vh] bg-white rounded-t-3xl overflow-hidden shadow-2xl flex flex-col animate-in slide-in-from-bottom duration-200">
-                <div className="w-full flex justify-center py-2 bg-stone-50 border-b border-stone-200/50">
-                  <div className="w-12 h-1.5 bg-stone-300 rounded-full" />
+                <div className="w-full flex justify-center py-2 bg-gray-50 border-b border-gray-200/50">
+                  <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
                 </div>
 
                 <ActiveOrderPanel
@@ -262,6 +273,10 @@ export default function POSHomePage() {
                     setIsMobileOrderOpen(false);
                     setIsPaymentOpen(true);
                   }}
+                  onOpenMoveTable={() => {
+                    setIsMobileOrderOpen(false);
+                    setIsMoveTableOpen(true);
+                  }}
                   onClose={() => setIsMobileOrderOpen(false)}
                   className="flex-1 overflow-hidden"
                 />
@@ -273,6 +288,7 @@ export default function POSHomePage() {
           <PaymentModal
             isOpen={isPaymentOpen}
             targetLabel={activeTable?.label || 'Pesanan'}
+            items={draftItems}
             subtotal={draftSubtotal}
             onClose={() => setIsPaymentOpen(false)}
             onConfirmPayment={settlePayment}
@@ -295,9 +311,25 @@ export default function POSHomePage() {
             currentRole={currentRole}
             dailySummary={dailySummary}
             transactions={transactions}
+            expenses={expenses}
+            openingCash={openingCash}
+            actualCash={actualCash}
             onClose={() => setIsRekapOpen(false)}
             onResetAllData={handleResetAllData}
             onResetDemoData={handleResetDemoData}
+            onAddExpense={addExpense}
+            onDeleteExpense={deleteExpense}
+            onUpdateOpeningCash={setOpeningCash}
+            onUpdateActualCash={setActualCash}
+          />
+
+          {/* 9. Move Table Modal (Cashier Only) */}
+          <MoveTableModal
+            isOpen={isMoveTableOpen}
+            currentTable={activeTable}
+            tables={tables}
+            onMoveTable={moveTableOrder}
+            onClose={() => setIsMoveTableOpen(false)}
           />
         </>
       )}

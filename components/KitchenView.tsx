@@ -131,41 +131,41 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
   }, [activeOrders]);
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden bg-stone-950 text-stone-100">
+    <div className="flex-1 flex flex-col overflow-hidden bg-gray-50 text-gray-900">
       {/* 1. Header Bar with Statistics & Filters */}
-      <div className="bg-stone-900 border-b border-stone-800 p-3 sm:p-4 shrink-0 shadow-md">
+      <div className="bg-white border-b border-gray-200 p-3 sm:p-4 shrink-0">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           {/* Title & Live Status Stats */}
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <div className="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500">
                 <ChefHat className="w-5 h-5" />
               </div>
               <div>
-                <h1 className="text-base sm:text-lg font-bold text-white tracking-tight flex items-center gap-2">
-                  Layar Dapur & Bar
-                  <span className="text-[10px] font-mono uppercase bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-full font-bold">
+                <h1 className="text-base sm:text-lg font-semibold text-gray-900 tracking-tight flex items-center gap-2">
+                  Layar Dapur &amp; Bar
+                  <span className="text-[10px] uppercase bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full font-medium">
                     KDS
                   </span>
                 </h1>
-                <p className="text-xs text-stone-400 font-mono">
-                  Antrean Pembuatan Minuman & Makanan Real-Time
+                <p className="text-xs text-gray-500">
+                  Antrean Pembuatan Minuman &amp; Makanan Real-Time
                 </p>
               </div>
             </div>
 
             {/* Quick Stat Badges */}
-            <div className="flex items-center gap-1.5 sm:gap-2 ml-1 sm:ml-4 text-xs font-semibold">
-              <span className="bg-stone-800 border border-stone-700 text-stone-300 px-2.5 py-1 rounded-lg tabular-nums">
-                Total: <strong className="text-white">{stats.total}</strong>
+            <div className="flex items-center gap-1.5 sm:gap-2 ml-1 sm:ml-4 text-xs font-medium">
+              <span className="bg-gray-50 border border-gray-200 text-gray-600 px-2.5 py-1 rounded-full tabular-nums">
+                Total: <strong className="text-gray-900 font-semibold">{stats.total}</strong>
               </span>
 
               <span
                 onClick={() => setStatusFilter(statusFilter === 'menunggu' ? 'all' : 'menunggu')}
-                className={`px-2.5 py-1 rounded-lg border tabular-nums cursor-pointer transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 rounded-full border tabular-nums cursor-pointer transition-colors flex items-center gap-1.5 ${
                   statusFilter === 'menunggu'
-                    ? 'bg-amber-500 text-stone-950 border-amber-400 font-bold'
-                    : 'bg-amber-950/40 text-amber-300 border-amber-800/60 hover:bg-amber-900/40'
+                    ? 'bg-gray-900 text-white border-gray-900 font-semibold'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                 }`}
                 title="Filter Pesanan Menunggu"
               >
@@ -175,10 +175,10 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
 
               <span
                 onClick={() => setStatusFilter(statusFilter === 'dimasak' ? 'all' : 'dimasak')}
-                className={`px-2.5 py-1 rounded-lg border tabular-nums cursor-pointer transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 rounded-full border tabular-nums cursor-pointer transition-colors flex items-center gap-1.5 ${
                   statusFilter === 'dimasak'
-                    ? 'bg-blue-500 text-white border-blue-400 font-bold'
-                    : 'bg-blue-950/40 text-blue-300 border-blue-800/60 hover:bg-blue-900/40'
+                    ? 'bg-gray-900 text-white border-gray-900 font-semibold'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                 }`}
                 title="Filter Pesanan Sedang Dimasak"
               >
@@ -188,10 +188,10 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
 
               <span
                 onClick={() => setStatusFilter(statusFilter === 'siap_saji' ? 'all' : 'siap_saji')}
-                className={`px-2.5 py-1 rounded-lg border tabular-nums cursor-pointer transition-colors flex items-center gap-1.5 ${
+                className={`px-2.5 py-1 rounded-full border tabular-nums cursor-pointer transition-colors flex items-center gap-1.5 ${
                   statusFilter === 'siap_saji'
-                    ? 'bg-emerald-500 text-stone-950 border-emerald-400 font-bold'
-                    : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60 hover:bg-emerald-900/40'
+                    ? 'bg-gray-900 text-white border-gray-900 font-semibold'
+                    : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50'
                 }`}
                 title="Filter Pesanan Siap Antar"
               >
@@ -202,13 +202,13 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
           </div>
 
           {/* Station Work Area Switcher Tabs */}
-          <div className="flex items-center gap-1 bg-stone-800/90 p-1 rounded-xl border border-stone-700/80 w-full sm:w-auto">
+          <div className="flex items-center gap-1 bg-gray-100 p-1 rounded-full border border-gray-200 w-full sm:w-auto">
             <button
               onClick={() => setStationFilter('all')}
-              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 stationFilter === 'all'
-                  ? 'bg-amber-500 text-stone-950 font-bold shadow-xs'
-                  : 'text-stone-400 hover:text-white'
+                  ? 'bg-white text-gray-900 font-semibold shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               <Filter className="w-3.5 h-3.5" />
@@ -217,10 +217,10 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
 
             <button
               onClick={() => setStationFilter('minuman')}
-              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 stationFilter === 'minuman'
-                  ? 'bg-amber-500 text-stone-950 font-bold shadow-xs'
-                  : 'text-stone-400 hover:text-white'
+                  ? 'bg-white text-gray-900 font-semibold shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               <Coffee className="w-3.5 h-3.5" />
@@ -229,10 +229,10 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
 
             <button
               onClick={() => setStationFilter('makanan')}
-              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
+              className={`flex-1 sm:flex-initial px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
                 stationFilter === 'makanan'
-                  ? 'bg-amber-500 text-stone-950 font-bold shadow-xs'
-                  : 'text-stone-400 hover:text-white'
+                  ? 'bg-white text-gray-900 font-semibold shadow-sm'
+                  : 'text-gray-500 hover:text-gray-700'
               }`}
             >
               <Utensils className="w-3.5 h-3.5" />
@@ -244,10 +244,10 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
 
       {/* 2. Batch Item Preparation Bar (Ringkasan Antrean Item Sedang Berjalan) */}
       {batchItemSummary.length > 0 && (
-        <div className="bg-stone-900/60 border-b border-stone-800/80 px-3 sm:px-6 py-2 shrink-0 overflow-x-auto">
+        <div className="bg-gray-50 border-b border-gray-200 px-3 sm:px-6 py-2 shrink-0 overflow-x-auto">
           <div className="max-w-7xl mx-auto flex items-center gap-2 text-xs">
-            <span className="text-[11px] font-mono text-stone-400 uppercase tracking-wider font-bold shrink-0 flex items-center gap-1.5 mr-1">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="text-[11px] text-gray-500 uppercase tracking-wider font-medium shrink-0 flex items-center gap-1.5 mr-1">
+              <Sparkles className="w-3.5 h-3.5 text-gray-400" />
               Antrean Item:
             </span>
             <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
@@ -256,20 +256,18 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                 return (
                   <div
                     key={item.id}
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs whitespace-nowrap border shrink-0 transition-colors ${
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs whitespace-nowrap border shrink-0 transition-colors ${
                       isAllDone
-                        ? 'bg-stone-800/40 border-stone-700/40 text-stone-500 line-through'
-                        : item.category === 'minuman'
-                        ? 'bg-amber-950/30 border-amber-800/40 text-amber-200'
-                        : 'bg-orange-950/30 border-orange-800/40 text-orange-200'
+                        ? 'bg-gray-50 border-gray-200 text-gray-400 line-through'
+                        : 'bg-white border-gray-200 text-gray-700'
                     }`}
                   >
-                    <span className="font-mono font-black text-amber-400">
+                    <span className="font-mono font-semibold text-gray-900">
                       {item.totalQty - item.doneQty}x
                     </span>
                     <span className="font-medium">{item.name}</span>
                     {item.doneQty > 0 && (
-                      <span className="text-[10px] text-stone-400">
+                      <span className="text-[10px] text-gray-400">
                         ({item.doneQty} siap)
                       </span>
                     )}
@@ -286,16 +284,16 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
         <div className="max-w-7xl mx-auto">
           {filteredOrders.length === 0 ? (
             /* Empty State */
-            <div className="h-96 flex flex-col items-center justify-center text-center p-6 bg-stone-900/40 rounded-3xl border border-stone-800/60 my-6">
-              <div className="w-16 h-16 rounded-2xl bg-stone-800/80 border border-stone-700 flex items-center justify-center text-emerald-400 mb-4 shadow-inner">
+            <div className="h-96 flex flex-col items-center justify-center text-center p-6 bg-white rounded-xl border border-gray-200 my-6">
+              <div className="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 mb-4">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-1.5">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1.5">
                 {activeOrders.length === 0
                   ? 'Semua Pesanan Selesai!'
                   : 'Tidak Ada Pesanan pada Filter Ini'}
               </h3>
-              <p className="text-xs sm:text-sm text-stone-400 max-w-md leading-relaxed">
+              <p className="text-xs sm:text-sm text-gray-500 max-w-md leading-relaxed">
                 {activeOrders.length === 0
                   ? 'Saat ini tidak ada antrean pesanan di meja maupun bungkus. Pesanan baru yang disimpan oleh pelayan atau kasir akan langsung muncul di sini.'
                   : 'Cobalah ubah filter stasiun kerja atau status di bagian atas untuk melihat pesanan lainnya.'}
@@ -303,7 +301,7 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
               {statusFilter !== 'all' && (
                 <button
                   onClick={() => setStatusFilter('all')}
-                  className="mt-4 px-4 py-2 rounded-xl bg-stone-800 hover:bg-stone-700 text-stone-200 text-xs font-bold transition-colors cursor-pointer"
+                  className="mt-4 px-4 py-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium transition-colors cursor-pointer"
                 >
                   Tampilkan Semua Status
                 </button>
@@ -319,30 +317,34 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                 return (
                   <div
                     key={order.targetId}
-                    className={`rounded-2xl border flex flex-col transition-all shadow-lg overflow-hidden ${
+                    className={`rounded-xl border flex flex-col transition-all overflow-hidden bg-white ${
                       currentStatus === 'siap_saji'
-                        ? 'bg-stone-900 border-emerald-500/70 shadow-emerald-950/20'
+                        ? 'border-gray-900'
                         : currentStatus === 'dimasak'
-                        ? 'bg-stone-900 border-blue-500/70 shadow-blue-950/20'
-                        : 'bg-stone-900 border-stone-800 hover:border-stone-700'
+                        ? 'border-gray-500'
+                        : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
                     {/* Ticket Header */}
                     <div
                       className={`p-3.5 border-b flex items-start justify-between gap-2 ${
                         currentStatus === 'siap_saji'
-                          ? 'bg-emerald-950/40 border-emerald-800/40'
+                          ? 'bg-gray-900 border-gray-800'
                           : currentStatus === 'dimasak'
-                          ? 'bg-blue-950/40 border-blue-800/40'
-                          : 'bg-stone-800/50 border-stone-800'
+                          ? 'bg-gray-100 border-gray-200'
+                          : 'bg-gray-50 border-gray-200'
                       }`}
                     >
                       <div className="flex items-center gap-2">
                         <div
-                          className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs ${
+                          className={`w-8 h-8 rounded-lg flex items-center justify-center font-semibold text-xs ${
                             order.isTakeaway
-                              ? 'bg-amber-500 text-stone-950'
-                              : 'bg-stone-800 border border-stone-700 text-white'
+                              ? currentStatus === 'siap_saji'
+                                ? 'bg-white text-gray-900'
+                                : 'bg-gray-200 text-gray-700'
+                              : currentStatus === 'siap_saji'
+                              ? 'bg-gray-700 text-white'
+                              : 'bg-gray-200 text-gray-600'
                           }`}
                         >
                           {order.isTakeaway ? (
@@ -352,24 +354,28 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                           )}
                         </div>
                         <div>
-                          <h4 className="font-bold text-sm text-white leading-tight">
+                          <h4 className={`font-semibold text-sm leading-tight ${
+                            currentStatus === 'siap_saji' ? 'text-white' : 'text-gray-900'
+                          }`}>
                             {order.label}
                           </h4>
-                          <span className="text-[11px] font-mono text-stone-400 flex items-center gap-1 mt-0.5">
+                          <span className={`text-[11px] font-mono flex items-center gap-1 mt-0.5 ${
+                            currentStatus === 'siap_saji' ? 'text-gray-400' : 'text-gray-500'
+                          }`}>
                             <Clock className="w-3 h-3" />
                             {formatElapsedTime(order.lastUpdated)}
                           </span>
                         </div>
                       </div>
 
-                      {/* Status Badge */}
+                      {/* Status Badge — text only, no colored background */}
                       <span
-                        className={`text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                        className={`text-[10px] font-medium uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                           currentStatus === 'siap_saji'
-                            ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40'
+                            ? 'bg-gray-700 text-gray-200 border-gray-600'
                             : currentStatus === 'dimasak'
-                            ? 'bg-blue-500/20 text-blue-300 border-blue-500/40'
-                            : 'bg-amber-500/20 text-amber-300 border-amber-500/40'
+                            ? 'bg-white text-gray-700 border-gray-300'
+                            : 'bg-white text-gray-500 border-gray-200'
                         }`}
                       >
                         {currentStatus === 'siap_saji'
@@ -393,18 +399,18 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                             }
                             className={`p-2.5 rounded-xl border transition-all cursor-pointer select-none ${
                               isDone
-                                ? 'bg-stone-950/40 border-stone-800 text-stone-500'
-                                : 'bg-stone-800/60 border-stone-700/60 text-stone-100 hover:bg-stone-800 hover:border-stone-600'
+                                ? 'bg-gray-50 border-gray-100 text-gray-400'
+                                : 'bg-white border-gray-200 text-gray-900 hover:bg-gray-50 hover:border-gray-300'
                             }`}
                           >
                             <div className="flex items-start justify-between gap-2">
                               {/* Quantity & Name */}
                               <div className="flex items-start gap-2.5 flex-1 min-w-0">
                                 <span
-                                  className={`w-6 h-6 rounded-md font-mono font-bold text-xs flex items-center justify-center shrink-0 ${
+                                  className={`w-6 h-6 rounded-md font-mono font-semibold text-xs flex items-center justify-center shrink-0 ${
                                     isDone
-                                      ? 'bg-stone-800 text-stone-500'
-                                      : 'bg-amber-500 text-stone-950'
+                                      ? 'bg-gray-100 text-gray-400'
+                                      : 'bg-gray-900 text-white'
                                   }`}
                                 >
                                   {item.quantity}x
@@ -412,12 +418,12 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                                 <div className="flex-1 min-w-0">
                                   <span
                                     className={`font-semibold text-xs sm:text-sm block leading-snug break-words ${
-                                      isDone ? 'line-through text-stone-500' : 'text-white'
+                                      isDone ? 'line-through text-gray-400' : 'text-gray-900'
                                     }`}
                                   >
                                     {item.menuItem.name}
                                   </span>
-                                  <span className="text-[10px] font-mono text-stone-400 capitalize">
+                                  <span className="text-[10px] text-gray-400 capitalize">
                                     {item.menuItem.category}
                                   </span>
                                 </div>
@@ -427,18 +433,18 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                               <div
                                 className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                                   isDone
-                                    ? 'bg-emerald-600 border-emerald-500 text-white'
-                                    : 'border-stone-600 bg-stone-800 text-transparent hover:border-amber-400'
+                                    ? 'bg-gray-900 border-gray-900 text-white'
+                                    : 'border-gray-300 bg-white text-transparent hover:border-gray-500'
                                 }`}
                               >
                                 <Check className="w-3 h-3 stroke-[3]" />
                               </div>
                             </div>
 
-                            {/* Special Order Notes Highlight */}
+                            {/* Special Order Notes */}
                             {item.notes && (
-                              <div className="mt-2 pt-1.5 border-t border-stone-700/50 flex items-start gap-1.5 text-amber-300 bg-amber-950/30 px-2 py-1 rounded-lg text-[11px] font-medium leading-tight">
-                                <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-400" />
+                              <div className="mt-2 pt-1.5 border-t border-gray-100 flex items-start gap-1.5 text-gray-600 bg-gray-50 px-2 py-1 rounded-lg text-[11px] font-medium leading-tight">
+                                <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5 text-gray-400" />
                                 <span>{item.notes}</span>
                               </div>
                             )}
@@ -448,13 +454,13 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                     </div>
 
                     {/* Ticket Footer Actions */}
-                    <div className="p-3 bg-stone-950/80 border-t border-stone-800 mt-auto flex items-center gap-2">
+                    <div className="p-3 bg-gray-50 border-t border-gray-200 mt-auto flex items-center gap-2">
                       {currentStatus === 'menunggu' && (
                         <button
                           onClick={() =>
                             onUpdateKitchenStatus(order.targetId, 'dimasak')
                           }
-                          className="w-full flex items-center justify-center gap-1.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-xs transition-colors cursor-pointer"
+                          className="w-full flex items-center justify-center gap-1.5 bg-[#0071e3] hover:bg-[#0077ED] active:bg-[#0064c8] text-white font-semibold py-2.5 px-3 rounded-full text-xs transition-colors cursor-pointer"
                         >
                           <Flame className="w-3.5 h-3.5" />
                           <span>Mulai Masak / Racik</span>
@@ -466,7 +472,7 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                           onClick={() =>
                             onUpdateKitchenStatus(order.targetId, 'siap_saji')
                           }
-                          className="w-full flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-bold py-2.5 px-3 rounded-xl text-xs shadow-xs transition-colors cursor-pointer"
+                          className="w-full flex items-center justify-center gap-1.5 bg-gray-900 hover:bg-black active:bg-gray-800 text-white font-semibold py-2.5 px-3 rounded-full text-xs transition-colors cursor-pointer"
                         >
                           <CheckCircle2 className="w-3.5 h-3.5" />
                           <span>Tandai Siap Antar</span>
@@ -475,15 +481,15 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
 
                       {currentStatus === 'siap_saji' && (
                         <div className="w-full flex items-center justify-between gap-2">
-                          <span className="text-xs font-semibold text-emerald-400 flex items-center gap-1.5">
-                            <CheckCircle2 className="w-4 h-4 shrink-0" />
+                          <span className="text-xs font-medium text-gray-600 flex items-center gap-1.5">
+                            <CheckCircle2 className="w-4 h-4 shrink-0 text-gray-500" />
                             <span>Siap Diantar Pelayan</span>
                           </span>
                           <button
                             onClick={() =>
                               onUpdateKitchenStatus(order.targetId, 'dimasak')
                             }
-                            className="p-2 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-400 hover:text-stone-200 text-xs transition-colors cursor-pointer"
+                            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 hover:text-gray-700 text-xs transition-colors cursor-pointer"
                             title="Kembalikan ke status dimasak jika ada tambahan"
                           >
                             <RotateCcw className="w-3.5 h-3.5" />

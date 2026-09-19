@@ -40,33 +40,33 @@ export const TopBar: React.FC<TopBarProps> = ({
   );
 
   return (
-    <header className="no-print h-14 lg:h-16 w-full bg-stone-900 text-stone-100 px-3.5 sm:px-6 flex items-center justify-between border-b border-stone-800 z-20 select-none shadow-xs">
+    <header className="no-print h-14 lg:h-16 w-full bg-white text-gray-900 px-3.5 sm:px-6 flex items-center justify-between border-b border-gray-200 z-20 select-none shadow-xs">
       {/* Commercial Minimalist Brand Identity */}
       <div className="flex items-center gap-3">
         <div className="flex flex-col">
           <div className="flex items-baseline gap-1.5 leading-none">
-            <span className="font-serif italic text-2xl sm:text-2xl font-bold text-amber-500 tracking-tight">
+            <span className="font-semibold text-xl text-gray-900 tracking-tight">
               Ratu
             </span>
-            <span className="font-black text-xl sm:text-2xl text-white tracking-widest">
+            <span className="font-semibold text-xl text-gray-600 tracking-wide">
               KOPI
             </span>
           </div>
-          <span className="text-[9px] sm:text-[10px] font-mono tracking-[0.25em] text-stone-400 uppercase mt-0.5">
+          <span className="text-[9px] sm:text-[10px] text-xs text-gray-400 tracking-wider uppercase mt-0.5">
             PONTIANAK
           </span>
         </div>
       </div>
 
       {/* Role Switcher: [Owner] / [Kasir] / [Pelayan] / [Dapur] */}
-      <div className="flex items-center bg-stone-800/90 p-1 rounded-xl border border-stone-700/80">
+      <div className="flex items-center bg-gray-100 p-1 rounded-full border border-gray-200">
         <button
           id="btn-role-owner"
           onClick={() => onRoleChange('owner')}
-          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+          className={`px-2 sm:px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
             currentRole === 'owner'
-              ? 'bg-amber-400 text-stone-950 shadow-2xs font-bold'
-              : 'text-stone-400 hover:text-white'
+              ? 'bg-gray-900 text-white shadow-2xs'
+              : 'text-gray-500 hover:text-gray-700'
           }`}
           title="Beralih ke Mode Owner (Akses Penuh & Reset Data)"
         >
@@ -77,10 +77,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           id="btn-role-kasir"
           onClick={() => onRoleChange('kasir')}
-          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+          className={`px-2 sm:px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
             currentRole === 'kasir'
-              ? 'bg-stone-100 text-stone-900 shadow-2xs font-bold'
-              : 'text-stone-400 hover:text-white'
+              ? 'bg-gray-900 text-white shadow-2xs'
+              : 'text-gray-500 hover:text-gray-700'
           }`}
           title="Beralih ke Mode Kasir (Operasional POS & Pembayaran)"
         >
@@ -91,10 +91,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           id="btn-role-pelayan"
           onClick={() => onRoleChange('pelayan')}
-          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+          className={`px-2 sm:px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
             currentRole === 'pelayan'
-              ? 'bg-amber-500 text-stone-950 shadow-2xs font-bold'
-              : 'text-stone-400 hover:text-white'
+              ? 'bg-gray-900 text-white shadow-2xs'
+              : 'text-gray-500 hover:text-gray-700'
           }`}
           title="Beralih ke Mode Pelayan (Pencatatan Pesanan)"
         >
@@ -105,10 +105,10 @@ export const TopBar: React.FC<TopBarProps> = ({
         <button
           id="btn-role-dapur"
           onClick={() => onRoleChange('dapur')}
-          className={`px-2 sm:px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+          className={`px-2 sm:px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
             currentRole === 'dapur'
-              ? 'bg-orange-500 text-stone-950 shadow-2xs font-bold'
-              : 'text-stone-400 hover:text-white'
+              ? 'bg-gray-900 text-white shadow-2xs'
+              : 'text-gray-500 hover:text-gray-700'
           }`}
           title="Beralih ke Mode Dapur (Layar Antrean KDS)"
         >
@@ -118,8 +118,8 @@ export const TopBar: React.FC<TopBarProps> = ({
       </div>
 
       {/* Center: Live Indonesian Clock (Desktop/Landscape only) */}
-      <div className="hidden xl:flex items-center gap-2 bg-stone-800/80 border border-stone-700/70 px-3.5 py-1.5 rounded-lg text-xs text-stone-300 font-mono tabular-nums shadow-xs">
-        <Clock className="w-3.5 h-3.5 text-amber-400" />
+      <div className="hidden xl:flex items-center gap-2 bg-gray-50 border border-gray-200 px-3.5 py-1.5 rounded-lg text-xs text-gray-600 font-mono tabular-nums shadow-xs">
+        <Clock className="w-3.5 h-3.5 text-gray-400" />
         <span className="tracking-wide">
           {currentDateTime || 'Memuat waktu...'}
         </span>
@@ -128,17 +128,17 @@ export const TopBar: React.FC<TopBarProps> = ({
       {/* Right Controls: Table Occupancy & Rekap Kas */}
       <div className="flex items-center gap-2 sm:gap-3">
         {/* Compact Occupancy Badge */}
-        <div className="flex items-center gap-2 bg-stone-800/80 border border-stone-700/60 px-3 py-1.5 rounded-lg text-xs">
+        <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 px-3 py-1.5 rounded-lg text-xs">
           <span
             className={`w-2 h-2 rounded-full ${
               occupiedCount > 0
-                ? 'bg-amber-400 ring-2 ring-amber-400/30'
-                : 'bg-emerald-400'
+                ? 'bg-gray-900'
+                : 'bg-gray-300'
             }`}
           />
-          <span className="font-medium text-stone-300 text-xs tabular-nums">
-            <strong className="text-white font-bold">{occupiedCount}</strong>
-            <span className="text-stone-400">/{totalTables}</span> Meja
+          <span className="font-medium text-gray-600 text-xs tabular-nums">
+            <strong className="text-gray-900 font-semibold">{occupiedCount}</strong>
+            <span className="text-gray-400">/{totalTables}</span> Meja
           </span>
         </div>
 
@@ -147,10 +147,10 @@ export const TopBar: React.FC<TopBarProps> = ({
           <button
             id="btn-rekap-kas"
             onClick={onOpenRekap}
-            className="flex items-center justify-center gap-1.5 bg-stone-800 hover:bg-stone-700 active:bg-stone-600 text-stone-200 hover:text-white border border-stone-700 min-h-10 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+            className="flex items-center justify-center gap-1.5 bg-[#0071e3] hover:bg-[#0077ED] active:bg-[#0077ED] text-white border border-transparent min-h-10 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
             title="Buka Laporan Rekap Kas Penjualan Hari Ini"
           >
-            <ReceiptText className="w-4 h-4 text-amber-400 stroke-[2]" />
+            <ReceiptText className="w-4 h-4 text-white stroke-[2]" />
             <span className="hidden sm:inline">Rekap Kas</span>
           </button>
         )}

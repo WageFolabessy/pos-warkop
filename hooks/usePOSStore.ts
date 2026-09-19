@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { MenuItem, OrderItem, TableOrder, TransactionRecord, PaymentMethod, DailySummary, KitchenStatus } from '@/types/pos';
+import { MenuItem, OrderItem, TableOrder, TransactionRecord, PaymentMethod, DailySummary, KitchenStatus, ExpenseRecord } from '@/types/pos';
 import { getInitialTables, getInitialTransactions } from '@/data/initialTables';
 import { generateOrderId } from '@/lib/formatters';
 
@@ -9,6 +9,9 @@ const STORAGE_KEYS = {
   TABLES: 'pos_warkop_ratu_tables_v1',
   TRANSACTIONS: 'pos_warkop_ratu_transactions_v1',
   ACTIVE_TARGET: 'pos_warkop_ratu_active_target_v1',
+  EXPENSES: 'pos_warkop_ratu_expenses_v1',
+  OPENING_CASH: 'pos_warkop_ratu_opening_cash_v1',
+  ACTUAL_CASH: 'pos_warkop_ratu_actual_cash_v1',
 };
 
 export function usePOSStore() {
@@ -17,6 +20,9 @@ export function usePOSStore() {
   const [activeTargetId, setActiveTargetId] = useState<string>('table-1');
   const [draftItems, setDraftItems] = useState<OrderItem[]>([]);
   const [transactions, setTransactions] = useState<TransactionRecord[]>([]);
+  const [expenses, setExpenses] = useState<ExpenseRecord[]>([]);
+  const [openingCash, setOpeningCashState] = useState<number>(0);
+  const [actualCash, setActualCashState] = useState<number | null>(null);
 
   // 1. Safe Hydration & initial load from localStorage
   useEffect(() => {
@@ -25,13 +31,22 @@ export function usePOSStore() {
         const storedTables = localStorage.getItem(STORAGE_KEYS.TABLES);
         const storedTransactions = localStorage.getItem(STORAGE_KEYS.TRANSACTIONS);
         const storedActiveTarget = localStorage.getItem(STORAGE_KEYS.ACTIVE_TARGET);
+        const storedExpenses = localStorage.getItem(STORAGE_KEYS.EXPENSES);
+        const storedOpeningCash = localStorage.getItem(STORAGE_KEYS.OPENING_CASH);
+        const storedActualCash = localStorage.getItem(STORAGE_KEYS.ACTUAL_CASH);
 
         const initialTables = storedTables ? JSON.parse(storedTables) : getInitialTables();
         const initialTransactions = storedTransactions ? JSON.parse(storedTransactions) : getInitialTransactions();
         const initialTarget = storedActiveTarget || 'table-1';
+        const initialExpenses = storedExpenses ? JSON.parse(storedExpenses) : [];
+        const initialOpeningCash = storedOpeningCash !== null ? Number(storedOpeningCash) : 0;
+        const initialActualCash = storedActualCash !== null ? Number(storedActualCash) : null;
 
         setTables(initialTables);
         setTransactions(initialTransactions);
+        setExpenses(initialExpenses);
+        setOpeningCashState(initialOpeningCash);
+        setActualCashState(initialActualCash);
         setActiveTargetId(initialTarget);
 
         // Initialize draft items with the active table's current items
@@ -45,6 +60,9 @@ export function usePOSStore() {
         const initialTransactions = getInitialTransactions();
         setTables(initialTables);
         setTransactions(initialTransactions);
+        setExpenses([]);
+        setOpeningCashState(0);
+        setActualCashState(null);
         setActiveTargetId('table-1');
         setDraftItems([...(initialTables[1]?.items || [])]);
       } finally {
@@ -72,6 +90,41 @@ export function usePOSStore() {
       localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(updatedTransactions));
     } catch (e) {
       console.error('Failed to persist transactions to localStorage', e);
+    }
+  }, []);
+
+  // Save expenses to localStorage helper
+  const persistExpenses = useCallback((updatedExpenses: ExpenseRecord[]) => {
+    setExpenses(updatedExpenses);
+    try {
+      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify(updatedExpenses));
+    } catch (e) {
+      console.error('Failed to persist expenses to localStorage', e);
+    }
+  }, []);
+
+  // Update opening cash (modal awal)
+  const setOpeningCash = useCallback((amount: number) => {
+    const safeAmount = Math.max(0, amount || 0);
+    setOpeningCashState(safeAmount);
+    try {
+      localStorage.setItem(STORAGE_KEYS.OPENING_CASH, String(safeAmount));
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  // Update actual cash counted in drawer (hitung uang fisik)
+  const setActualCash = useCallback((amount: number | null) => {
+    setActualCashState(amount);
+    try {
+      if (amount === null) {
+        localStorage.removeItem(STORAGE_KEYS.ACTUAL_CASH);
+      } else {
+        localStorage.setItem(STORAGE_KEYS.ACTUAL_CASH, String(amount));
+      }
+    } catch {
+      // ignore
     }
   }, []);
 
@@ -204,20 +257,46 @@ export function usePOSStore() {
     }
   }, [activeTable]);
 
-  // Settle payment and close tab
+  // Settle payment (supports full settlement or partial split bill)
   const settlePayment = useCallback(
-    (method: PaymentMethod, cashReceived?: number, change?: number): TransactionRecord => {
-      const orderSubtotal = draftItems.reduce(
+    (
+      method: PaymentMethod,
+      cashReceived?: number,
+      change?: number,
+      paidItems?: OrderItem[]
+    ): TransactionRecord => {
+      // If paidItems is passed and not empty, use paidItems; otherwise settle all draftItems
+      const itemsToSettle = (paidItems && paidItems.length > 0)
+        ? paidItems.filter((it) => it.quantity > 0)
+        : draftItems;
+
+      const orderSubtotal = itemsToSettle.reduce(
         (sum, item) => sum + item.menuItem.price * item.quantity,
         0
       );
 
+      // Determine remaining items on the table
+      const remainingItems: OrderItem[] = [];
+      draftItems.forEach((draftItem) => {
+        const paid = itemsToSettle.find((p) => p.menuItem.id === draftItem.menuItem.id);
+        const paidQty = paid ? paid.quantity : 0;
+        const remQty = draftItem.quantity - paidQty;
+        if (remQty > 0) {
+          remainingItems.push({
+            ...draftItem,
+            quantity: remQty,
+          });
+        }
+      });
+
+      const isFullPayment = remainingItems.length === 0;
+
       const transaction: TransactionRecord = {
         id: generateOrderId(),
-        targetLabel: activeTable ? activeTable.label : 'Meja',
+        targetLabel: activeTable ? `${activeTable.label}${!isFullPayment ? ' (Pisah Tagihan)' : ''}` : 'Meja',
         isTakeaway: activeTable ? activeTable.isTakeaway : false,
         timestamp: new Date().toISOString(),
-        items: draftItems.map((it) => ({ ...it })),
+        items: itemsToSettle.map((it) => ({ ...it })),
         subtotal: orderSubtotal,
         paymentMethod: method,
         cashReceived: method === 'tunai' ? cashReceived : undefined,
@@ -228,24 +307,39 @@ export function usePOSStore() {
       const nextTransactions = [transaction, ...transactions];
       persistTransactions(nextTransactions);
 
-      // 2. Clear table back to kosong
+      // 2. Update table state (clear if full payment, or keep remaining items if partial)
       const nextTables = tables.map((tbl) => {
         if (tbl.targetId === activeTargetId) {
-          return {
-            ...tbl,
-            status: 'kosong' as const,
-            kitchenStatus: undefined,
-            completedItemIds: [],
-            items: [],
-            lastUpdated: new Date().toISOString(),
-          };
+          if (isFullPayment) {
+            return {
+              ...tbl,
+              status: 'kosong' as const,
+              kitchenStatus: undefined,
+              completedItemIds: [],
+              items: [],
+              lastUpdated: new Date().toISOString(),
+            };
+          } else {
+            // Keep remaining items, filter completedItemIds for removed items
+            const remainingItemIds = remainingItems.map((it) => it.menuItem.id);
+            const updatedCompletedIds = (tbl.completedItemIds || []).filter((id) =>
+              remainingItemIds.includes(id)
+            );
+            return {
+              ...tbl,
+              status: 'belum_lunas' as const,
+              items: remainingItems.map((it) => ({ ...it })),
+              completedItemIds: updatedCompletedIds,
+              lastUpdated: new Date().toISOString(),
+            };
+          }
         }
         return tbl;
       });
       persistTables(nextTables);
 
-      // 3. Clear draft
-      setDraftItems([]);
+      // 3. Update draft state
+      setDraftItems(remainingItems.map((it) => ({ ...it })));
 
       return transaction;
     },
@@ -284,15 +378,108 @@ export function usePOSStore() {
     });
 
     const itemSales = Array.from(itemMap.values()).sort((a, b) => b.quantity - a.quantity);
+    const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+    const expectedCashDrawer = openingCash + cashRevenue - totalExpenses;
+    const netCashDrawer = Math.max(0, expectedCashDrawer);
+    const cashDifference = actualCash !== null ? actualCash - expectedCashDrawer : undefined;
 
     return {
       totalRevenue,
       totalTransactions: transactions.length,
       cashRevenue,
       qrisRevenue,
+      openingCash,
+      totalExpenses,
+      netCashDrawer,
+      expectedCashDrawer,
+      actualCashDrawer: actualCash ?? undefined,
+      cashDifference,
       itemSales,
     };
-  }, [transactions]);
+  }, [transactions, expenses, openingCash, actualCash]);
+
+  // Add petty cash expense
+  const addExpense = useCallback(
+    (description: string, amount: number) => {
+      if (!description.trim() || amount <= 0) return;
+      const newExpense: ExpenseRecord = {
+        id: `EXP-${Date.now()}`,
+        description: description.trim(),
+        amount,
+        timestamp: new Date().toISOString(),
+      };
+      setExpenses((prev) => {
+        const updated = [newExpense, ...prev];
+        persistExpenses(updated);
+        return updated;
+      });
+    },
+    [persistExpenses]
+  );
+
+  // Delete petty cash expense
+  const deleteExpense = useCallback(
+    (id: string) => {
+      setExpenses((prev) => {
+        const updated = prev.filter((exp) => exp.id !== id);
+        persistExpenses(updated);
+        return updated;
+      });
+    },
+    [persistExpenses]
+  );
+
+  // Move table order to another empty table
+  const moveTableOrder = useCallback(
+    (fromTargetId: string, toTargetId: string) => {
+      if (!fromTargetId || !toTargetId || fromTargetId === toTargetId) return;
+
+      setTables((currentTables) => {
+        const source = currentTables.find((t) => t.targetId === fromTargetId);
+        const target = currentTables.find((t) => t.targetId === toTargetId);
+
+        if (!source || !target || source.items.length === 0) return currentTables;
+
+        const updated = currentTables.map((tbl) => {
+          if (tbl.targetId === toTargetId) {
+            return {
+              ...tbl,
+              status: 'belum_lunas' as const,
+              items: [...source.items.map((it) => ({ ...it }))],
+              kitchenStatus: source.kitchenStatus || 'menunggu',
+              completedItemIds: source.completedItemIds ? [...source.completedItemIds] : [],
+              lastUpdated: new Date().toISOString(),
+            };
+          }
+          if (tbl.targetId === fromTargetId) {
+            return {
+              ...tbl,
+              status: 'kosong' as const,
+              items: [],
+              kitchenStatus: undefined,
+              completedItemIds: [],
+              lastUpdated: new Date().toISOString(),
+            };
+          }
+          return tbl;
+        });
+
+        persistTables(updated);
+
+        // Switch active target to new table
+        setActiveTargetId(toTargetId);
+        try {
+          localStorage.setItem(STORAGE_KEYS.ACTIVE_TARGET, toTargetId);
+        } catch {
+          // ignore
+        }
+        setDraftItems([...source.items.map((it) => ({ ...it }))]);
+
+        return updated;
+      });
+    },
+    [persistTables]
+  );
 
   // Clear draft items only
   const clearDraft = useCallback(() => {
@@ -332,6 +519,9 @@ export function usePOSStore() {
       localStorage.removeItem(STORAGE_KEYS.TABLES);
       localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
       localStorage.removeItem(STORAGE_KEYS.ACTIVE_TARGET);
+      localStorage.removeItem(STORAGE_KEYS.EXPENSES);
+      localStorage.removeItem(STORAGE_KEYS.OPENING_CASH);
+      localStorage.removeItem(STORAGE_KEYS.ACTUAL_CASH);
     } catch {
       // ignore
     }
@@ -357,12 +547,16 @@ export function usePOSStore() {
 
     setTables(emptyTables);
     setTransactions([]);
+    setExpenses([]);
+    setOpeningCashState(0);
+    setActualCashState(null);
     setActiveTargetId('table-1');
     setDraftItems([]);
 
     try {
       localStorage.setItem(STORAGE_KEYS.TABLES, JSON.stringify(emptyTables));
       localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify([]));
+      localStorage.setItem(STORAGE_KEYS.EXPENSES, JSON.stringify([]));
       localStorage.setItem(STORAGE_KEYS.ACTIVE_TARGET, 'table-1');
     } catch {
       // ignore
@@ -483,6 +677,14 @@ export function usePOSStore() {
     clearDraft,
     resetActiveTable,
     settlePayment,
+    expenses,
+    addExpense,
+    deleteExpense,
+    moveTableOrder,
+    openingCash,
+    actualCash,
+    setOpeningCash,
+    setActualCash,
     resetAllData,
     resetDemoData,
     updateKitchenStatus,

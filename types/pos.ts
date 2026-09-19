@@ -47,11 +47,24 @@ export interface TransactionRecord {
   change?: number;
 }
 
+export interface ExpenseRecord {
+  id: string; // e.g. EXP-1726812000000
+  description: string;
+  amount: number;
+  timestamp: string;
+}
+
 export interface DailySummary {
   totalRevenue: number;
   totalTransactions: number;
   cashRevenue: number;
   qrisRevenue: number;
+  openingCash: number;
+  totalExpenses: number;
+  netCashDrawer: number;
+  expectedCashDrawer: number;
+  actualCashDrawer?: number;
+  cashDifference?: number;
   itemSales: {
     menuItem: MenuItem;
     quantity: number;

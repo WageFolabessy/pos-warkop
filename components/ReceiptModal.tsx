@@ -25,16 +25,16 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-150">
       <div className="flex flex-col items-center max-h-[95vh] w-full max-w-sm">
         {/* Modal Actions Bar (Hidden during print) */}
-        <div className="no-print w-full flex items-center justify-between mb-3 bg-[#291811] text-amber-50 px-4 py-2.5 rounded-2xl shadow-lg border border-stone-800">
-          <span className="text-xs font-bold text-amber-400">
+        <div className="no-print w-full flex items-center justify-between mb-3 bg-gray-900 text-gray-100 px-4 py-2.5 rounded-2xl shadow-lg border border-gray-700">
+          <span className="text-xs font-medium text-gray-300">
             Struk Thermal 58mm
           </span>
           <button
             onClick={onClose}
-            className="w-7 h-7 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+            className="w-7 h-7 rounded-full bg-gray-700 hover:bg-gray-600 text-gray-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
             title="Tutup"
           >
             <X className="w-4 h-4" />
@@ -153,7 +153,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <button
             id="btn-cetak-struk"
             onClick={handlePrint}
-            className="flex items-center justify-center gap-2 bg-[#291811] hover:bg-[#3d2419] text-amber-400 font-bold py-3 rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-98 cursor-pointer"
+            className="flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-semibold py-3 rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-98 cursor-pointer"
           >
             <Printer className="w-4 h-4 stroke-[2.2]" />
             <span>Cetak Struk</span>
@@ -162,7 +162,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
           <button
             id="btn-selesai-struk"
             onClick={onClose}
-            className="flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-98 cursor-pointer"
+            className="flex items-center justify-center gap-1.5 bg-[#0071e3] hover:bg-[#0077ED] text-white font-semibold py-3 rounded-xl text-xs sm:text-sm shadow-md transition-all active:scale-98 cursor-pointer"
           >
             <Check className="w-4 h-4 stroke-[2.5]" />
             <span>Selesai</span>

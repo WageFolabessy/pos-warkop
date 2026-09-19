@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { OrderItem, TableOrder } from '@/types/pos';
 import { formatIDR } from '@/lib/formatters';
-import { Plus, Minus, CreditCard, RotateCcw, Trash2, X } from 'lucide-react';
+import { Plus, Minus, CreditCard, RotateCcw, Trash2, X, ArrowRightLeft } from 'lucide-react';
 import { ConfirmModal } from './ConfirmModal';
 
 interface ActiveOrderPanelProps {
@@ -18,6 +18,7 @@ interface ActiveOrderPanelProps {
   onCancelDraft: () => void;
   onResetOrder?: () => void;
   onOpenPayment: () => void;
+  onOpenMoveTable?: () => void;
   onClose?: () => void;
   className?: string;
 }
@@ -34,6 +35,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
   onCancelDraft,
   onResetOrder,
   onOpenPayment,
+  onOpenMoveTable,
   onClose,
   className = '',
 }) => {
@@ -63,26 +65,39 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
 
   return (
     <aside
-      className={`no-print flex flex-col h-full bg-white select-none border-stone-200 ${className}`}
+      className={`no-print flex flex-col h-full bg-white select-none border-gray-200 ${className}`}
     >
       {/* Header Ringkas: Target Meja + Quick Actions */}
-      <div className="p-3.5 sm:p-4 border-b border-stone-200 bg-stone-50 flex items-center justify-between">
+      <div className="p-3.5 sm:p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-wider text-stone-500 block">
+          <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
             Pesanan Aktif
           </span>
-          <h2 className="font-bold text-base sm:text-lg text-stone-900 leading-tight">
+          <h2 className="font-semibold text-base sm:text-lg text-gray-900 leading-tight">
             {targetLabel}
           </h2>
         </div>
 
         <div className="flex items-center gap-1.5">
+          {/* Pindah Meja Button (Physical tables only) */}
+          {!activeTable?.isTakeaway && draftItems.length > 0 && onOpenMoveTable && (
+            <button
+              id="btn-move-table"
+              onClick={onOpenMoveTable}
+              className="text-xs text-gray-500 hover:text-gray-700 px-2.5 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-100 transition-colors flex items-center gap-1 cursor-pointer"
+              title="Pindahkan pesanan meja ini ke meja kosong lain"
+            >
+              <ArrowRightLeft className="w-3.5 h-3.5" />
+              <span className="text-[11px] font-medium">Pindah</span>
+            </button>
+          )}
+
           {/* Bersihkan / Reset Button */}
           {draftItems.length > 0 && (
             <button
               id="btn-reset-order"
               onClick={handleResetClick}
-              className="text-xs text-stone-500 hover:text-red-600 px-2.5 py-1.5 rounded-lg border border-stone-200 bg-white hover:bg-red-50 transition-colors flex items-center gap-1 cursor-pointer"
+              className="text-xs text-gray-500 hover:text-gray-700 px-2.5 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-100 transition-colors flex items-center gap-1 cursor-pointer"
               title="Reset dan kosongkan pesanan meja ini"
             >
               <RotateCcw className="w-3.5 h-3.5" />
@@ -94,7 +109,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
           {onClose && (
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-lg bg-stone-200 hover:bg-stone-300 text-stone-700 flex items-center justify-center transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
               title="Tutup Panel"
             >
               <X className="w-4 h-4" />
@@ -104,11 +119,11 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
       </div>
 
       {/* Daftar Item - Digital Receipt Style */}
-      <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 divide-y divide-stone-100">
+      <div className="flex-1 overflow-y-auto p-3.5 sm:p-4 divide-y divide-gray-100">
         {draftItems.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-stone-400 p-6 text-center">
-            <p className="text-sm font-semibold text-stone-600">Belum ada pesanan</p>
-            <p className="text-xs text-stone-400 mt-0.5 max-w-44">
+          <div className="h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
+            <p className="text-sm font-medium text-gray-600">Belum ada pesanan</p>
+            <p className="text-xs text-gray-400 mt-0.5 max-w-44">
               Ketuk menu di katalog untuk menambahkan pesanan ke {targetLabel}
             </p>
           </div>
@@ -120,43 +135,43 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
                 {/* Row Top: Name & Line Subtotal */}
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="font-medium text-xs sm:text-sm text-stone-900 leading-snug block">
+                    <span className="font-medium text-xs sm:text-sm text-gray-900 leading-snug block">
                       {item.menuItem.name}
                     </span>
                     {/* Waiter Custom Notes */}
                     {item.notes && (
-                      <span className="text-[11px] italic text-stone-500 block mt-0.5">
+                      <span className="text-[11px] italic text-gray-500 block mt-0.5">
                         Catatan: {item.notes}
                       </span>
                     )}
                   </div>
-                  <span className="font-mono font-bold text-xs sm:text-sm text-stone-900 tabular-nums shrink-0">
+                  <span className="font-mono font-semibold text-xs sm:text-sm text-gray-900 tabular-nums shrink-0">
                     {formatIDR(lineSubtotal)}
                   </span>
                 </div>
 
                 {/* Row Bottom: Unit Price & Inline Sturdy Stepper */}
                 <div className="flex items-center justify-between mt-2">
-                  <span className="text-[11px] font-mono text-stone-500 tabular-nums">
+                  <span className="text-[11px] font-mono text-gray-500 tabular-nums">
                     @ {formatIDR(item.menuItem.price)}
                   </span>
 
                   <div className="flex items-center gap-1.5">
                     {/* Stepper */}
-                    <div className="flex items-center border border-stone-300 rounded-lg bg-stone-50 overflow-hidden">
+                    <div className="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden">
                       <button
                         onClick={() => onUpdateQuantity(item.menuItem.id, -1)}
-                        className="w-8 h-8 flex items-center justify-center text-stone-600 hover:bg-stone-200 active:bg-stone-300 transition-colors cursor-pointer"
+                        className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 active:bg-gray-200 transition-colors cursor-pointer"
                         title="Kurangi 1"
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
-                      <span className="w-7 text-center font-mono font-bold text-xs text-stone-900 tabular-nums">
+                      <span className="w-7 text-center font-mono font-semibold text-xs text-gray-900 tabular-nums">
                         {item.quantity}
                       </span>
                       <button
                         onClick={() => onUpdateQuantity(item.menuItem.id, 1)}
-                        className="w-8 h-8 flex items-center justify-center text-stone-600 hover:bg-stone-200 active:bg-stone-300 transition-colors cursor-pointer"
+                        className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 active:bg-gray-200 transition-colors cursor-pointer"
                         title="Tambah 1"
                       >
                         <Plus className="w-3.5 h-3.5" />
@@ -166,7 +181,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
                     {/* Quick remove line button */}
                     <button
                       onClick={() => onRemoveItem(item.menuItem.id)}
-                      className="w-8 h-8 flex items-center justify-center rounded-lg text-stone-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                      className="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
                       title="Hapus menu ini"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -180,18 +195,18 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
       </div>
 
       {/* Footer Tagihan & Action Buttons */}
-      <div className="p-3.5 sm:p-4 border-t border-stone-200 bg-stone-50 space-y-3">
+      <div className="p-3.5 sm:p-4 border-t border-gray-200 bg-gray-50 space-y-3">
         {/* Ringkasan Biaya */}
         <div className="space-y-1 text-xs">
-          <div className="flex justify-between text-stone-500">
+          <div className="flex justify-between text-gray-500">
             <span>Jumlah Item</span>
-            <span className="font-mono tabular-nums text-stone-700">{totalCount} item</span>
+            <span className="font-mono tabular-nums text-gray-700">{totalCount} item</span>
           </div>
-          <div className="flex justify-between items-baseline pt-2 border-t border-stone-200">
-            <span className="font-bold text-xs uppercase tracking-wide text-stone-700">
+          <div className="flex justify-between items-baseline pt-2 border-t border-gray-200">
+            <span className="font-semibold text-xs uppercase tracking-wide text-gray-700">
               Total Akhir
             </span>
-            <span className="text-xl sm:text-2xl font-black font-mono text-stone-900 tabular-nums">
+            <span className="text-xl sm:text-2xl font-semibold font-mono text-gray-900 tabular-nums">
               {formatIDR(subtotal)}
             </span>
           </div>
@@ -204,7 +219,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
             id="btn-bayar-sekarang"
             disabled={draftItems.length === 0}
             onClick={onOpenPayment}
-            className="w-full flex items-center justify-center gap-2 bg-stone-900 hover:bg-black disabled:bg-stone-300 disabled:text-stone-400 text-white font-bold py-3.5 px-4 rounded-xl shadow-xs transition-all active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed min-h-12 text-sm"
+            className="w-full flex items-center justify-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3.5 px-4 rounded-full transition-all active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed min-h-12 text-sm"
           >
             <CreditCard className="w-4 h-4" />
             <span>Bayar Sekarang ({formatIDR(subtotal)})</span>
@@ -215,7 +230,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
             id="btn-simpan-pesanan"
             disabled={!hasUnsavedChanges && draftItems.length === 0}
             onClick={onSaveDraft}
-            className="w-full flex items-center justify-center gap-1.5 border border-stone-300 hover:border-stone-400 bg-white hover:bg-stone-50 disabled:bg-stone-100 disabled:border-stone-200 disabled:text-stone-400 text-stone-700 font-semibold py-2.5 px-3 rounded-xl text-xs sm:text-sm transition-colors cursor-pointer disabled:cursor-not-allowed min-h-11"
+            className="w-full flex items-center justify-center gap-1.5 border border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400 text-gray-700 font-medium py-2.5 px-3 rounded-full text-xs sm:text-sm transition-colors cursor-pointer disabled:cursor-not-allowed min-h-11"
           >
             <span>Simpan Tagihan / Buka Meja</span>
           </button>
@@ -226,7 +241,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
               <button
                 id="btn-batal-pesanan"
                 onClick={onCancelDraft}
-                className="text-xs text-stone-500 hover:text-red-600 transition-colors cursor-pointer underline-offset-2 hover:underline"
+                className="text-xs text-gray-400 hover:text-gray-600 transition-colors cursor-pointer underline-offset-2 hover:underline"
               >
                 Batalkan Perubahan
               </button>
