@@ -1,5 +1,7 @@
 export type Category = 'all' | 'minuman' | 'makanan' | 'camilan';
 
+export type UserRole = 'kasir' | 'pelayan';
+
 export interface MenuItem {
   id: string;
   name: string;

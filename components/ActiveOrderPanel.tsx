@@ -93,9 +93,17 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
               <div key={item.menuItem.id} className="py-3 first:pt-0 last:pb-0">
                 {/* Row Top: Name & Line Subtotal */}
                 <div className="flex items-start justify-between gap-2">
-                  <span className="font-medium text-xs sm:text-sm text-stone-900 leading-snug">
-                    {item.menuItem.name}
-                  </span>
+                  <div>
+                    <span className="font-medium text-xs sm:text-sm text-stone-900 leading-snug block">
+                      {item.menuItem.name}
+                    </span>
+                    {/* Waiter Custom Notes */}
+                    {item.notes && (
+                      <span className="text-[11px] italic text-stone-500 block mt-0.5">
+                        Catatan: {item.notes}
+                      </span>
+                    )}
+                  </div>
                   <span className="font-mono font-bold text-xs sm:text-sm text-stone-900 tabular-nums shrink-0">
                     {formatIDR(lineSubtotal)}
                   </span>

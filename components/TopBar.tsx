@@ -1,12 +1,15 @@
 'use client';
 
 import React, { useSyncExternalStore } from 'react';
-import { ReceiptText, Clock } from 'lucide-react';
+import { ReceiptText, Clock, Store, UserCheck } from 'lucide-react';
 import { formatIndonesianDateTime } from '@/lib/formatters';
+import { UserRole } from '@/types/pos';
 
 interface TopBarProps {
   occupiedCount: number;
   totalTables?: number;
+  currentRole: UserRole;
+  onRoleChange: (role: UserRole) => void;
   onOpenRekap: () => void;
 }
 
@@ -26,6 +29,8 @@ function getServerClockSnapshot() {
 export const TopBar: React.FC<TopBarProps> = ({
   occupiedCount,
   totalTables = 15,
+  currentRole,
+  onRoleChange,
   onOpenRekap,
 }) => {
   const currentDateTime = useSyncExternalStore(
@@ -53,8 +58,39 @@ export const TopBar: React.FC<TopBarProps> = ({
         </div>
       </div>
 
+      {/* Role Switcher: [Kasir] / [Pelayan] */}
+      <div className="flex items-center bg-stone-800/90 p-1 rounded-xl border border-stone-700/80">
+        <button
+          id="btn-role-kasir"
+          onClick={() => onRoleChange('kasir')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+            currentRole === 'kasir'
+              ? 'bg-stone-100 text-stone-900 shadow-2xs font-bold'
+              : 'text-stone-400 hover:text-white'
+          }`}
+          title="Beralih ke Mode Kasir (Akses Penuh)"
+        >
+          <Store className="w-3.5 h-3.5" />
+          <span>Kasir</span>
+        </button>
+
+        <button
+          id="btn-role-pelayan"
+          onClick={() => onRoleChange('pelayan')}
+          className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
+            currentRole === 'pelayan'
+              ? 'bg-amber-500 text-stone-950 shadow-2xs font-bold'
+              : 'text-stone-400 hover:text-white'
+          }`}
+          title="Beralih ke Mode Pelayan (Pencatatan Pesanan)"
+        >
+          <UserCheck className="w-3.5 h-3.5" />
+          <span>Pelayan</span>
+        </button>
+      </div>
+
       {/* Center: Live Indonesian Clock (Desktop/Landscape only) */}
-      <div className="hidden lg:flex items-center gap-2 bg-stone-800/80 border border-stone-700/70 px-3.5 py-1.5 rounded-lg text-xs text-stone-300 font-mono tabular-nums shadow-xs">
+      <div className="hidden xl:flex items-center gap-2 bg-stone-800/80 border border-stone-700/70 px-3.5 py-1.5 rounded-lg text-xs text-stone-300 font-mono tabular-nums shadow-xs">
         <Clock className="w-3.5 h-3.5 text-amber-400" />
         <span className="tracking-wide">
           {currentDateTime || 'Memuat waktu...'}
@@ -78,16 +114,18 @@ export const TopBar: React.FC<TopBarProps> = ({
           </span>
         </div>
 
-        {/* Rekap Kas Button */}
-        <button
-          id="btn-rekap-kas"
-          onClick={onOpenRekap}
-          className="flex items-center justify-center gap-1.5 bg-stone-800 hover:bg-stone-700 active:bg-stone-600 text-stone-200 hover:text-white border border-stone-700 min-h-11 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
-          title="Buka Laporan Rekap Kas Penjualan Hari Ini"
-        >
-          <ReceiptText className="w-4 h-4 text-amber-400 stroke-[2]" />
-          <span className="hidden sm:inline">Rekap Kas</span>
-        </button>
+        {/* Rekap Kas Button (Only visible in Mode Kasir - Hidden in Mode Pelayan) */}
+        {currentRole === 'kasir' && (
+          <button
+            id="btn-rekap-kas"
+            onClick={onOpenRekap}
+            className="flex items-center justify-center gap-1.5 bg-stone-800 hover:bg-stone-700 active:bg-stone-600 text-stone-200 hover:text-white border border-stone-700 min-h-10 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+            title="Buka Laporan Rekap Kas Penjualan Hari Ini"
+          >
+            <ReceiptText className="w-4 h-4 text-amber-400 stroke-[2]" />
+            <span className="hidden sm:inline">Rekap Kas</span>
+          </button>
+        )}
       </div>
     </header>
   );

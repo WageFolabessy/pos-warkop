@@ -156,6 +156,20 @@ export function usePOSStore() {
     setDraftItems((prev) => prev.filter((it) => it.menuItem.id !== menuItemId));
   }, []);
 
+  // Update notes for an item in draft
+  const updateItemNotes = useCallback((menuItemId: string, notes: string) => {
+    setDraftItems((prev) => {
+      const existingIndex = prev.findIndex((it) => it.menuItem.id === menuItemId);
+      if (existingIndex === -1) return prev;
+      const next = [...prev];
+      next[existingIndex] = {
+        ...next[existingIndex],
+        notes: notes.trim() || undefined,
+      };
+      return next;
+    });
+  }, []);
+
   // Commit draft to active table tab and persist
   const saveDraftToTable = useCallback(() => {
     if (!activeTargetId) return;
@@ -333,6 +347,7 @@ export function usePOSStore() {
     addItemToDraft,
     updateQuantity,
     removeItemFromDraft,
+    updateItemNotes,
     saveDraftToTable,
     cancelDraft,
     settlePayment,

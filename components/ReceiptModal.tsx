@@ -93,7 +93,12 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
               return (
                 <div key={item.menuItem.id} className="space-y-0.5 text-[11px]">
                   <div className="font-bold text-stone-900">{item.menuItem.name}</div>
-                  <div className="flex justify-between text-stone-700 pl-2">
+                  {item.notes && (
+                    <div className="text-[10px] italic text-stone-600 pl-2">
+                      * {item.notes}
+                    </div>
+                  )}
+                  <div className="flex justify-between text-stone-700 pl-2 font-mono tabular-nums">
                     <span>
                       {item.quantity} x {formatIDR(item.menuItem.price)}
                     </span>
