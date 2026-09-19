@@ -68,10 +68,10 @@ export const TopBar: React.FC<TopBarProps> = ({
               ? 'bg-gray-900 text-white shadow-2xs'
               : 'text-gray-500 hover:text-gray-700'
           }`}
-          title="Beralih ke Mode Owner (Akses Penuh & Reset Data)"
+          title="Beralih ke Mode Pemilik (Akses Penuh & Atur Ulang Data)"
         >
           <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Owner</span>
+          <span>Pemilik</span>
         </button>
 
         <button

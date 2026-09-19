@@ -145,7 +145,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 </div>
                 <div>
                   <span className="font-semibold text-sm text-gray-900 block">
-                    Bungkus / Takeaway
+                    Bungkus (Bawa Pulang)
                   </span>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="text-xs text-gray-500">
@@ -262,10 +262,10 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   id="waiter-top-btn-reset-order"
                   onClick={onResetOrder}
                   className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-600 bg-gray-50 hover:bg-red-50 px-2.5 py-2 rounded-full border border-gray-200 hover:border-red-200 transition-colors cursor-pointer min-h-10"
-                  title="Reset pesanan meja ini"
+                  title="Kosongkan pesanan meja ini"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span className="text-[11px] font-medium">Reset</span>
+                  <span className="text-[11px] font-medium">Kosongkan</span>
                 </button>
               )}
 
@@ -455,7 +455,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                     title="Kosongkan pesanan meja ini"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    <span className="text-[11px] font-medium">Reset</span>
+                    <span className="text-[11px] font-medium">Kosongkan</span>
                   </button>
                 )}
                 <button

@@ -214,7 +214,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 }`}
               >
                 <Split className="w-3.5 h-3.5" />
-                <span>Pisah Tagihan (Split Bill)</span>
+                <span>Pisah Tagihan</span>
               </button>
             </div>
           </div>
@@ -248,7 +248,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     onClick={handleClearAllSplit}
                     className="text-gray-500 hover:text-gray-700 underline cursor-pointer"
                   >
-                    Reset
+                    Atur Ulang
                   </button>
                 </div>
               </div>
@@ -366,7 +366,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 }`}
               >
                 <Banknote className="w-4 h-4" />
-                <span>Tunai (Cash)</span>
+                <span>Tunai</span>
               </button>
 
               <button
@@ -527,7 +527,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               </div>
 
               <div className="text-xs text-gray-500 max-w-xs">
-                Scan QRIS melalui GoPay, OVO, DANA, BCA, Livin, atau aplikasi perbankan lainnya.
+                Pindai QRIS melalui GoPay, OVO, DANA, BCA, Livin, atau aplikasi perbankan lainnya.
               </div>
             </div>
           )}

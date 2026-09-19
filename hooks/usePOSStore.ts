@@ -529,7 +529,7 @@ export function usePOSStore() {
     const emptyTables: TableOrder[] = [
       {
         targetId: 'takeaway',
-        label: 'Bungkus / Takeaway',
+        label: 'Bungkus (Bawa Pulang)',
         isTakeaway: true,
         status: 'kosong',
         items: [],

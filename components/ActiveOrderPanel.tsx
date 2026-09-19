@@ -98,10 +98,10 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
               id="btn-reset-order"
               onClick={handleResetClick}
               className="text-xs text-gray-500 hover:text-gray-700 px-2.5 py-1.5 rounded-full border border-gray-200 bg-white hover:bg-gray-100 transition-colors flex items-center gap-1 cursor-pointer"
-              title="Reset dan kosongkan pesanan meja ini"
+              title="Kosongkan pesanan meja ini"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span className="text-[11px] font-medium">Reset</span>
+              <span className="text-[11px] font-medium">Kosongkan</span>
             </button>
           )}
 
@@ -253,9 +253,9 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
       {/* Confirmation Modal for Resetting Active Table Order */}
       <ConfirmModal
         isOpen={isResetConfirmOpen}
-        title={`Reset Pesanan ${targetLabel}?`}
+        title={`Kosongkan Pesanan ${targetLabel}?`}
         message={`Seluruh item pesanan pada ${targetLabel} akan dikosongkan dan status meja akan kembali menjadi kosong.`}
-        confirmText="Ya, Reset Pesanan"
+        confirmText="Ya, Kosongkan Pesanan"
         cancelText="Batal"
         isDestructive={true}
         onConfirm={handleConfirmReset}

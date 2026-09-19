@@ -73,7 +73,7 @@ export const TablePanel: React.FC<TablePanelProps> = ({
             </div>
             <div>
               <span className="font-semibold text-xs sm:text-sm text-gray-900 block leading-tight">
-                Bungkus / Takeaway
+                Bungkus (Bawa Pulang)
               </span>
               <span className="text-[11px] text-gray-500 block">
                 {isTakeawayUnpaid

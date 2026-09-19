@@ -147,7 +147,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   </h3>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-medium uppercase tracking-wider flex items-center gap-1 bg-gray-100 text-gray-600 border border-gray-200">
                     {currentRole === 'owner' && <ShieldCheck className="w-3 h-3 text-gray-500" />}
-                    {currentRole === 'owner' ? 'Owner' : 'Kasir'}
+                    {currentRole === 'owner' ? 'Pemilik' : 'Kasir'}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500">
@@ -338,7 +338,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     onClick={handleResetActualCash}
                     className="text-xs text-gray-500 hover:text-gray-700 underline cursor-pointer self-start sm:self-auto"
                   >
-                    Reset Hitungan
+                    Atur Ulang Hitungan
                   </button>
                 )}
               </div>
@@ -424,7 +424,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               <div className="p-3.5 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
                   <ArrowDownRight className="w-3.5 h-3.5 text-gray-400" />
-                  Pengeluaran Kas Kecil (Petty Cash / Biaya Harian)
+                  Pengeluaran Kas Kecil / Biaya Harian
                 </h4>
                 <span className="text-xs font-medium text-gray-500">
                   Total: {formatIDR(totalExpenses)}
@@ -651,11 +651,11 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-medium uppercase tracking-wider">
-                      Khusus Owner
+                      Khusus Pemilik
                     </span>
                     <h5 className="font-semibold text-xs text-red-950 uppercase tracking-wide flex items-center gap-1.5">
                       <RotateCcw className="w-3.5 h-3.5 text-red-700" />
-                      Zona Reset Data Kas &amp; Meja
+                      Zona Atur Ulang Data Kas &amp; Meja
                     </h5>
                   </div>
                   <p className="text-xs text-red-800 leading-relaxed">
@@ -671,7 +671,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     title="Kosongkan seluruh transaksi dan meja ke Rp 0"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>Kosongkan Semua (Reset 0)</span>
+                    <span>Kosongkan Semua (Nol)</span>
                   </button>
 
                   <button
@@ -693,10 +693,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   </div>
                   <div>
                     <p className="text-xs font-medium text-gray-800">
-                      Zona Reset &amp; Hapus Data Terkunci
+                      Zona Atur Ulang &amp; Hapus Data Terkunci
                     </p>
                     <p className="text-[11px] text-gray-500 mt-0.5">
-                      Hak akses untuk mengosongkan atau mereset data transaksi hanya dimiliki oleh <strong>Owner</strong>.
+                      Hak akses untuk mengosongkan atau mengatur ulang data transaksi hanya dimiliki oleh <strong>Pemilik</strong>.
                     </p>
                   </div>
                 </div>
@@ -739,7 +739,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
           <h2 className="font-bold text-sm tracking-wider uppercase">RATU KOPI</h2>
           <p className="text-[10px]">Jl. Gajah Mada No. 88, Pontianak</p>
           <p className="text-[10px] font-bold mt-1 uppercase tracking-wider">
-            *** REKAP KAS HARIAN (Z-REPORT) ***
+            *** REKAP KAS HARIAN (LAPORAN PENUTUPAN) ***
           </p>
           <p className="text-[9px] text-gray-600 mt-0.5">
             Dicetak: {formatReceiptTime(new Date().toISOString())}
@@ -770,7 +770,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
             <span>{formatIDR(dailySummary.qrisRevenue)}</span>
           </div>
           <div className="flex justify-between text-[10px]">
-            <span>Kas Keluar (Petty):</span>
+            <span>Kas Keluar (Kas Kecil):</span>
             <span>- {formatIDR(totalExpenses)}</span>
           </div>
           <div className="flex justify-between text-xs font-bold pt-1 border-t border-dashed border-black">
@@ -840,7 +840,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               <p className="border-t border-dotted border-black pt-0.5">(...................)</p>
             </div>
             <div>
-              <p>Owner Warkop,</p>
+              <p>Pemilik Warkop,</p>
               <div className="h-10" />
               <p className="border-t border-dotted border-black pt-0.5">(...................)</p>
             </div>
@@ -855,7 +855,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
       <ConfirmModal
         isOpen={isResetAllConfirmOpen}
         title="Kosongkan Seluruh Data Kas & Meja?"
-        message="Semua riwayat transaksi hari ini akan dihapus menjadi Rp 0 dan seluruh 15 meja serta takeaway akan dikosongkan. Apakah Anda yakin?"
+        message="Semua riwayat transaksi hari ini akan dihapus menjadi Rp 0 dan seluruh 15 meja serta pesanan bungkus akan dikosongkan. Apakah Anda yakin?"
         confirmText="Ya, Kosongkan Semua"
         cancelText="Batal"
         isDestructive={true}

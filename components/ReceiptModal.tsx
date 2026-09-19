@@ -71,7 +71,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
               <span className="font-semibold">{formatReceiptTime(transaction.timestamp)}</span>
             </div>
             <div className="flex justify-between">
-              <span>No. Order:</span>
+              <span>No. Pesanan:</span>
               <span className="font-semibold">{transaction.id}</span>
             </div>
             <div className="flex justify-between">
@@ -118,7 +118,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
             <div className="flex justify-between pt-1 border-t border-dotted border-stone-300">
               <span>Cara Bayar:</span>
               <span className="font-bold uppercase">
-                {transaction.paymentMethod === 'tunai' ? 'TUNAI (CASH)' : 'QRIS (NON-TUNAI)'}
+                {transaction.paymentMethod === 'tunai' ? 'TUNAI' : 'QRIS (NON-TUNAI)'}
               </span>
             </div>
 
