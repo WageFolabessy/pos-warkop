@@ -1,0 +1,105 @@
+import { MenuItem } from '@/types/pos';
+
+export const MENU_ITEMS: MenuItem[] = [
+  // Minuman
+  {
+    id: 'kopi-susu-panas',
+    name: 'Kopi Susu Panas',
+    price: 6000,
+    category: 'minuman',
+    description: 'Kopi robusta Pontianak dengan susu kental manis legit',
+    badge: 'Favorit',
+    iconName: 'Coffee',
+  },
+  {
+    id: 'kopi-hitam',
+    name: 'Kopi Hitam / Kopi O',
+    price: 5000,
+    category: 'minuman',
+    description: 'Kopi hitam saring pekat khas warkop Gajah Mada',
+    badge: 'Klasik',
+    iconName: 'Coffee',
+  },
+  {
+    id: 'kopi-susu-dingin',
+    name: 'Kopi Susu Dingin',
+    price: 8000,
+    category: 'minuman',
+    description: 'Kopi susu dingin segar pelepas dahaga cuaca khatulistiwa',
+    badge: 'Best Seller',
+    iconName: 'CupSoda',
+  },
+  {
+    id: 'es-teh-manis',
+    name: 'Es Teh Manis',
+    price: 4000,
+    category: 'minuman',
+    description: 'Teh melati seduh wangi dengan es batu melimpah',
+    iconName: 'GlassWater',
+  },
+  {
+    id: 'teh-tarik-panas',
+    name: 'Teh Tarik Panas',
+    price: 7000,
+    category: 'minuman',
+    description: 'Teh tarik busa lembut racikan tradisional khas Melayu',
+    iconName: 'Sparkles',
+  },
+
+  // Makanan
+  {
+    id: 'indomie-goreng-telur',
+    name: 'Indomie Goreng Telur',
+    price: 10000,
+    category: 'makanan',
+    description: 'Indomie goreng legendaris dengan telur ceplok/dadar renyah',
+    badge: 'Paling Laris',
+    iconName: 'UtensilsCrossed',
+  },
+  {
+    id: 'indomie-rebus-telur-kornet',
+    name: 'Indomie Rebus Telur Kornet',
+    price: 13000,
+    category: 'makanan',
+    description: 'Kuah kari/ayam bawang gurih dengan kornet sapi & telur setengah matang',
+    badge: 'Mantap',
+    iconName: 'Soup',
+  },
+  {
+    id: 'nasi-goreng-kampung',
+    name: 'Nasi Goreng Kampung',
+    price: 14000,
+    category: 'makanan',
+    description: 'Nasi goreng bumbu cabai rawit terasi dengan telur dan kerupuk',
+    badge: 'Kenyang',
+    iconName: 'ChefHat',
+  },
+
+  // Camilan
+  {
+    id: 'pisang-goreng-srikaya',
+    name: 'Pisang Goreng Srikaya',
+    price: 8000,
+    category: 'camilan',
+    description: 'Pisang kepok goreng garing dicelup selai srikaya khas Pontianak',
+    badge: 'Khas Pontianak',
+    iconName: 'Flame',
+  },
+  {
+    id: 'bakwan-pontianak',
+    name: 'Bakwan Pontianak',
+    price: 5000,
+    category: 'camilan',
+    description: 'Bakwan sayur mangkok renyah dengan topping rebon/udang',
+    badge: 'Gurih',
+    iconName: 'Cookie',
+  },
+  {
+    id: 'roti-bakar-cokelat-keju',
+    name: 'Roti Bakar Cokelat Keju',
+    price: 10000,
+    category: 'camilan',
+    description: 'Roti tawar tebal panggang mentega dengan meises cokelat & keju parut',
+    iconName: 'Sandwich',
+  },
+];
