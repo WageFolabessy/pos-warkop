@@ -5,7 +5,7 @@ export interface MenuItem {
   name: string;
   price: number;
   category: 'minuman' | 'makanan' | 'camilan';
-  description: string;
+  description?: string;
   badge?: string;
   iconName: string;
 }

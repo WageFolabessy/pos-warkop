@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { formatIDR } from '@/lib/formatters';
-import { ShoppingBag, Receipt, ChevronUp } from 'lucide-react';
+import { ChevronUp } from 'lucide-react';
 
 interface MobileFloatingBarProps {
   targetLabel: string;
@@ -15,7 +15,6 @@ interface MobileFloatingBarProps {
 
 export const MobileFloatingBar: React.FC<MobileFloatingBarProps> = ({
   targetLabel,
-  isTakeaway,
   totalCount,
   subtotal,
   hasUnsavedChanges,
@@ -26,37 +25,28 @@ export const MobileFloatingBar: React.FC<MobileFloatingBarProps> = ({
       <button
         id="btn-floating-bill-bar"
         onClick={onOpenDrawer}
-        className="pointer-events-auto w-full bg-[#291811] text-amber-50 rounded-2xl p-3 sm:p-3.5 shadow-2xl border border-amber-600/40 flex items-center justify-between active:scale-98 transition-all duration-150 cursor-pointer ring-2 ring-black/20"
+        className="pointer-events-auto w-full bg-stone-900 text-stone-100 rounded-2xl p-3.5 shadow-xl border border-stone-800 flex items-center justify-between active:scale-[0.99] transition-all duration-100 cursor-pointer"
       >
         {/* Left: Target & Item count */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-xl bg-amber-500 text-stone-950 flex items-center justify-center shrink-0 shadow-xs">
-            {isTakeaway ? (
-              <ShoppingBag className="w-5 h-5 stroke-[2.2]" />
-            ) : (
-              <Receipt className="w-5 h-5 stroke-[2.2]" />
+        <div className="text-left">
+          <div className="flex items-center gap-1.5 leading-none">
+            <span className="font-bold text-sm sm:text-base text-white">
+              {targetLabel}
+            </span>
+            {hasUnsavedChanges && (
+              <span className="w-2 h-2 rounded-full bg-blue-400" />
             )}
           </div>
-          <div className="text-left">
-            <div className="flex items-center gap-1.5 leading-none">
-              <span className="font-extrabold text-sm sm:text-base text-amber-300">
-                {targetLabel}
-              </span>
-              {hasUnsavedChanges && (
-                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-              )}
-            </div>
-            <p className="text-xs text-stone-300 mt-1">
-              <strong className="text-white font-bold">{totalCount}</strong> Item •{' '}
-              <span className="text-amber-400 font-black">{formatIDR(subtotal)}</span>
-            </p>
-          </div>
+          <p className="text-xs text-stone-400 mt-1 font-mono tabular-nums">
+            <strong className="text-white font-semibold">{totalCount}</strong> item •{' '}
+            <span className="text-amber-400 font-bold">{formatIDR(subtotal)}</span>
+          </p>
         </div>
 
         {/* Right: CTA Button */}
-        <div className="flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold px-3.5 py-2 rounded-xl text-xs sm:text-sm shadow-xs shrink-0">
+        <div className="flex items-center gap-1.5 bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-3.5 py-2 rounded-xl text-xs sm:text-sm border border-stone-700 shrink-0">
           <span>Lihat Tagihan</span>
-          <ChevronUp className="w-4 h-4 stroke-[2.5]" />
+          <ChevronUp className="w-4 h-4" />
         </div>
       </button>
     </div>

@@ -38,27 +38,27 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
 
   return (
     <>
-      <div className="no-print fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-150">
-        <div className="w-full max-w-4xl bg-[#FAF7F2] rounded-3xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col max-h-[90vh]">
+      <div className="no-print fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-100">
+        <div className="w-full max-w-4xl bg-stone-100 rounded-2xl shadow-2xl border border-stone-200 overflow-hidden flex flex-col max-h-[90vh]">
           {/* Header */}
-          <div className="p-4 sm:p-5 bg-[#291811] text-amber-50 flex items-center justify-between border-b border-stone-800">
+          <div className="p-4 sm:p-5 bg-stone-900 text-stone-100 flex items-center justify-between border-b border-stone-800">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
-                <TrendingUp className="w-5 h-5 stroke-[2.2]" />
+              <div className="w-9 h-9 rounded-lg bg-stone-800 border border-stone-700 flex items-center justify-center text-amber-400">
+                <TrendingUp className="w-4 h-4" />
               </div>
               <div>
-                <h3 className="text-lg sm:text-xl font-black text-white">
-                  Rekap Kas Penjualan Hari Ini
+                <h3 className="text-base sm:text-lg font-bold text-white">
+                  Rekap Kas Harian
                 </h3>
-                <p className="text-xs text-amber-200/80 font-medium">
-                  Ratu KOPI Pontianak • Laporan Kasir & Penjualan Harian
+                <p className="text-xs text-stone-400 font-mono">
+                  Ratu KOPI Pontianak • Laporan Penjualan
                 </p>
               </div>
             </div>
 
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-lg bg-stone-800 hover:bg-stone-700 text-stone-300 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               title="Tutup"
             >
               <X className="w-4 h-4" />
@@ -66,51 +66,51 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
           </div>
 
           {/* Body */}
-          <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-6">
+          <div className="p-4 sm:p-6 overflow-y-auto flex-1 space-y-5">
             {/* Top Metric Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {/* Total Omzet */}
-              <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block mb-1">
+              <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500 block mb-1">
                   Total Omzet
                 </span>
-                <span className="text-lg sm:text-xl font-black text-[#291811]">
+                <span className="text-lg sm:text-xl font-mono font-bold text-stone-900 tabular-nums">
                   {formatIDR(dailySummary.totalRevenue)}
                 </span>
               </div>
 
               {/* Total Transaksi */}
-              <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-xs">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500 block mb-1">
+              <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs">
+                <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500 block mb-1">
                   Total Transaksi
                 </span>
-                <span className="text-lg sm:text-xl font-black text-stone-900">
-                  {dailySummary.totalTransactions} <span className="text-xs font-semibold text-stone-500">Struk</span>
+                <span className="text-lg sm:text-xl font-mono font-bold text-stone-900 tabular-nums">
+                  {dailySummary.totalTransactions} <span className="text-xs font-sans font-normal text-stone-500">Struk</span>
                 </span>
               </div>
 
               {/* Tunai Split */}
-              <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-xs">
+              <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500">
                     Kas Tunai
                   </span>
-                  <Banknote className="w-3.5 h-3.5 text-amber-600" />
+                  <Banknote className="w-3.5 h-3.5 text-stone-400" />
                 </div>
-                <span className="text-base sm:text-lg font-black text-amber-800">
+                <span className="text-base sm:text-lg font-mono font-bold text-stone-900 tabular-nums">
                   {formatIDR(dailySummary.cashRevenue)}
                 </span>
               </div>
 
               {/* QRIS Split */}
-              <div className="bg-white p-4 rounded-2xl border border-stone-200 shadow-xs">
+              <div className="bg-white p-4 rounded-xl border border-stone-200 shadow-2xs">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-stone-500">
                     QRIS
                   </span>
-                  <QrCode className="w-3.5 h-3.5 text-emerald-600" />
+                  <QrCode className="w-3.5 h-3.5 text-stone-400" />
                 </div>
-                <span className="text-base sm:text-lg font-black text-emerald-800">
+                <span className="text-base sm:text-lg font-mono font-bold text-stone-900 tabular-nums">
                   {formatIDR(dailySummary.qrisRevenue)}
                 </span>
               </div>

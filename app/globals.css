@@ -1,22 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #FAF7F2;
-  --foreground: #291811;
-  --espresso: #291811;
-  --espresso-dark: #1B0F0B;
-  --espresso-surface: #38241B;
-  --cream-card: #FFFFFF;
-  --amber-warkop: #D97706;
-  --amber-light: #FEF3C7;
-  --emerald-warkop: #059669;
-  --emerald-light: #D1FAE5;
+  --background: #f5f5f4;
+  --foreground: #1c1917;
+  --espresso: #1c1917;
+  --espresso-dark: #0c0a09;
+  --cream-card: #ffffff;
+  --amber-brand: #d97706;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-variant-numeric: tabular-nums;
   margin: 0;
   padding: 0;
   overflow: hidden;

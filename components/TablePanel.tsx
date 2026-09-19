@@ -3,7 +3,7 @@
 import React from 'react';
 import { TableOrder } from '@/types/pos';
 import { formatIDR } from '@/lib/formatters';
-import { ShoppingBag, Users, CheckCircle2, Clock3 } from 'lucide-react';
+import { ShoppingBag, Users } from 'lucide-react';
 
 interface TablePanelProps {
   tables: TableOrder[];
@@ -33,100 +33,73 @@ export const TablePanel: React.FC<TablePanelProps> = ({
 
   const takeawaySummary = takeaway ? getTableSummary(takeaway) : { totalItems: 0, totalPrice: 0 };
   const isTakeawayActive = activeTargetId === 'takeaway';
+  const isTakeawayUnpaid = takeaway?.status === 'belum_lunas';
 
   return (
     <aside
-      className={`no-print flex flex-col h-full bg-[#F4EFEA] select-none ${className}`}
+      className={`no-print flex flex-col h-full bg-stone-100 select-none ${className}`}
     >
       {/* Panel Header */}
-      <div className="p-3 sm:p-3.5 border-b border-stone-200/80 bg-stone-100/70">
-        <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-stone-700 flex items-center gap-1.5">
-          <Users className="w-4 h-4 text-amber-700" />
-          Daftar Meja & Pesanan
+      <div className="p-3.5 border-b border-stone-200 bg-white flex items-center justify-between">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
+          <Users className="w-3.5 h-3.5 text-stone-500" />
+          Daftar Meja
         </h2>
+        <span className="text-[11px] font-mono text-stone-400">
+          {physicalTables.filter((t) => t.status === 'belum_lunas').length}/15 Terisi
+        </span>
       </div>
 
-      {/* Prominent Takeaway Top Card */}
-      <div className="p-3 sm:p-3.5 border-b border-stone-200/60">
+      {/* Horizontal Compact Takeaway Card */}
+      <div className="p-3 border-b border-stone-200">
         <button
           id="btn-target-takeaway"
           onClick={() => onSelectTarget('takeaway')}
-          className={`w-full text-left p-3.5 sm:p-4 rounded-2xl transition-all duration-150 cursor-pointer border relative overflow-hidden min-h-16 flex items-center ${
+          className={`w-full text-left p-3 rounded-xl transition-all duration-100 cursor-pointer border flex items-center justify-between min-h-12 bg-white ${
             isTakeawayActive
-              ? 'bg-[#291811] text-amber-50 border-amber-600 shadow-md ring-2 ring-amber-500/50'
-              : takeaway?.status === 'belum_lunas'
-              ? 'bg-amber-50 border-amber-300 text-stone-900 hover:bg-amber-100/80 shadow-xs'
-              : 'bg-white border-stone-200 text-stone-800 hover:border-amber-400 hover:bg-stone-50 shadow-xs'
+              ? 'border-stone-900 ring-2 ring-stone-900 shadow-xs'
+              : isTakeawayUnpaid
+              ? 'border-amber-500 bg-amber-50/50 hover:bg-amber-50'
+              : 'border-stone-200 hover:border-stone-300'
           }`}
         >
-          <div className="flex items-center justify-between w-full">
-            <div className="flex items-center gap-3">
-              <div
-                className={`p-2.5 rounded-xl shrink-0 ${
-                  isTakeawayActive
-                    ? 'bg-amber-500 text-stone-950'
-                    : takeaway?.status === 'belum_lunas'
-                    ? 'bg-amber-500 text-stone-950'
-                    : 'bg-stone-100 text-stone-700'
-                }`}
-              >
-                <ShoppingBag className="w-5 h-5 stroke-[2.2]" />
-              </div>
-              <div>
-                <h3
-                  className={`font-bold text-sm sm:text-base ${
-                    isTakeawayActive ? 'text-amber-300' : 'text-stone-900'
-                  }`}
-                >
-                  Bungkus / Takeaway
-                </h3>
-                <p
-                  className={`text-xs ${
-                    isTakeawayActive
-                      ? 'text-stone-300'
-                      : takeaway?.status === 'belum_lunas'
-                      ? 'text-amber-800 font-semibold'
-                      : 'text-stone-600'
-                  }`}
-                >
-                  {takeaway?.status === 'belum_lunas'
-                    ? `${takeawaySummary.totalItems} item • ${formatIDR(takeawaySummary.totalPrice)}`
-                    : 'Siap isi pesanan bawa pulang'}
-                </p>
-              </div>
-            </div>
-
-            {/* Status Badge */}
-            <span
-              className={`text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shrink-0 ${
-                takeaway?.status === 'belum_lunas'
-                  ? isTakeawayActive
-                    ? 'bg-amber-400 text-stone-950'
-                    : 'bg-amber-200 text-amber-900'
-                  : isTakeawayActive
-                  ? 'bg-stone-700 text-stone-200'
-                  : 'bg-emerald-100 text-emerald-800'
+          <div className="flex items-center gap-2.5">
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                isTakeawayUnpaid ? 'bg-amber-100 text-amber-900' : 'bg-stone-100 text-stone-600'
               }`}
             >
-              {takeaway?.status === 'belum_lunas' ? (
-                <>
-                  <Clock3 className="w-3.5 h-3.5" />
-                  <span>Belum Lunas</span>
-                </>
-              ) : (
-                <>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Kosong</span>
-                </>
-              )}
-            </span>
+              <ShoppingBag className="w-4 h-4" />
+            </div>
+            <div>
+              <span className="font-bold text-xs sm:text-sm text-stone-900 block leading-tight">
+                Bungkus / Takeaway
+              </span>
+              <span className="text-[11px] text-stone-500 block">
+                {isTakeawayUnpaid
+                  ? `${takeawaySummary.totalItems} item pesanan`
+                  : 'Pesanan dibawa pulang'}
+              </span>
+            </div>
+          </div>
+
+          <div>
+            {isTakeawayUnpaid ? (
+              <span className="font-mono font-bold text-xs text-amber-900 tabular-nums">
+                {formatIDR(takeawaySummary.totalPrice)}
+              </span>
+            ) : (
+              <span className="text-[11px] font-medium text-stone-400 bg-stone-50 px-2 py-0.5 rounded border border-stone-200">
+                Tersedia
+              </span>
+            )}
           </div>
         </button>
       </div>
 
-      {/* 15 Table Grid Cards */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-3.5 space-y-2.5">
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+      {/* 15 Table Grid Cards - Modern Commercial Layout */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+        <div className="grid grid-cols-2 gap-2">
           {physicalTables.map((table) => {
             const { totalItems, totalPrice } = getTableSummary(table);
             const isSelected = activeTargetId === table.targetId;
@@ -137,64 +110,41 @@ export const TablePanel: React.FC<TablePanelProps> = ({
                 key={table.targetId}
                 id={`btn-target-${table.targetId}`}
                 onClick={() => onSelectTarget(table.targetId)}
-                className={`text-left p-3 sm:p-3.5 rounded-2xl transition-all duration-150 cursor-pointer border flex flex-col justify-between min-h-24 relative active:scale-98 ${
+                className={`text-left p-3 rounded-xl transition-all duration-100 cursor-pointer border flex flex-col justify-between min-h-22 bg-white active:scale-[0.98] ${
                   isSelected
-                    ? 'bg-[#291811] text-amber-50 border-amber-600 shadow-md ring-2 ring-amber-500/50'
+                    ? 'border-stone-900 ring-2 ring-stone-900 shadow-xs'
                     : isUnpaid
-                    ? 'bg-amber-50/90 border-amber-300 text-stone-900 hover:bg-amber-100/90 shadow-xs'
-                    : 'bg-white border-stone-200 text-stone-800 hover:border-amber-300 hover:bg-stone-50 shadow-xs'
+                    ? 'border-amber-500 bg-amber-50/40 hover:bg-amber-50/70'
+                    : 'border-stone-200 hover:border-stone-300'
                 }`}
               >
-                {/* Table Number & Status Pill */}
+                {/* Header: Table Label + Status Dot (6px) */}
                 <div className="flex items-center justify-between w-full">
-                  <span
-                    className={`font-black text-sm sm:text-base tracking-tight ${
-                      isSelected ? 'text-amber-400' : 'text-stone-900'
-                    }`}
-                  >
+                  <span className="font-bold text-sm text-stone-900 tracking-tight">
                     {table.label}
                   </span>
-
                   <span
-                    className={`w-2.5 h-2.5 rounded-full ${
-                      isUnpaid
-                        ? 'bg-amber-500 animate-pulse ring-2 ring-amber-300'
-                        : 'bg-emerald-500'
+                    className={`w-1.5 h-1.5 rounded-full ${
+                      isUnpaid ? 'bg-amber-500' : 'bg-emerald-500'
                     }`}
-                    title={isUnpaid ? 'Belum Lunas' : 'Kosong'}
                   />
                 </div>
 
-                {/* Subtitle / Price Breakdown */}
-                <div className="mt-1">
+                {/* Content */}
+                <div className="mt-2">
                   {isUnpaid ? (
                     <div>
-                      <span
-                        className={`text-[10px] font-semibold px-1.5 py-0.2 rounded ${
-                          isSelected
-                            ? 'bg-amber-400 text-stone-950'
-                            : 'bg-amber-200 text-amber-900'
-                        }`}
-                      >
-                        {totalItems} item
-                      </span>
-                      <p
-                        className={`text-xs font-bold mt-1 truncate ${
-                          isSelected ? 'text-stone-100' : 'text-amber-900'
-                        }`}
-                      >
+                      <div className="font-mono font-bold text-xs sm:text-sm text-stone-900 tabular-nums leading-tight">
                         {formatIDR(totalPrice)}
-                      </p>
+                      </div>
+                      <div className="text-[11px] text-stone-500 font-medium mt-0.5">
+                        {totalItems} item
+                      </div>
                     </div>
                   ) : (
-                    <p
-                      className={`text-[11px] font-medium flex items-center gap-1 ${
-                        isSelected ? 'text-stone-300' : 'text-stone-600'
-                      }`}
-                    >
-                      <CheckCircle2 className="w-3 h-3 text-emerald-500" />
-                      Kosong
-                    </p>
+                    <div className="text-xs text-stone-500 font-medium">
+                      Tersedia
+                    </div>
                   )}
                 </div>
               </button>

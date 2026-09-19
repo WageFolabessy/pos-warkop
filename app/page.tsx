@@ -11,7 +11,7 @@ import { PaymentModal } from '@/components/PaymentModal';
 import { ReceiptModal } from '@/components/ReceiptModal';
 import { RekapKasModal } from '@/components/RekapKasModal';
 import { TransactionRecord } from '@/types/pos';
-import { Crown, Coffee, Users, Utensils } from 'lucide-react';
+import { Users, Utensils } from 'lucide-react';
 
 export default function POSHomePage() {
   const {
@@ -52,25 +52,34 @@ export default function POSHomePage() {
     setMobileTab('menu');
   };
 
+  // Compute in-cart counter badge for each menu item
+  const cartItemCounts = React.useMemo(() => {
+    const counts: Record<string, number> = {};
+    draftItems.forEach((item) => {
+      counts[item.menuItem.id] = (counts[item.menuItem.id] || 0) + item.quantity;
+    });
+    return counts;
+  }, [draftItems]);
+
   // Safe SSR Hydration Guard
   if (!isMounted) {
     return (
-      <div className="h-screen w-screen flex flex-col items-center justify-center bg-[#291811] text-amber-50">
-        <div className="flex items-center gap-3 mb-4 animate-bounce">
-          <div className="w-12 h-12 rounded-2xl bg-linear-to-br from-amber-500 to-amber-700 flex items-center justify-center text-amber-950 shadow-lg">
-            <Crown className="w-7 h-7 stroke-[2.5]" />
-          </div>
-          <div>
-            <span className="font-serif italic text-3xl font-bold text-amber-500">
+      <div className="h-screen w-screen flex flex-col items-center justify-center bg-stone-900 text-stone-100">
+        <div className="flex flex-col items-center mb-4">
+          <div className="flex items-baseline gap-2">
+            <span className="font-serif italic text-4xl font-bold text-amber-500">
               Ratu
             </span>
-            <span className="font-black text-3xl text-stone-100 ml-1">
+            <span className="font-black text-3xl text-white tracking-widest">
               KOPI
             </span>
           </div>
+          <span className="text-xs font-mono tracking-[0.25em] text-stone-400 uppercase mt-1">
+            PONTIANAK
+          </span>
         </div>
-        <div className="flex items-center gap-2 text-xs font-semibold text-amber-200/80 tracking-widest uppercase">
-          <Coffee className="w-4 h-4 text-amber-400 animate-spin" />
+        <div className="flex items-center gap-2 text-xs font-mono text-stone-400 tracking-wider uppercase">
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
           <span>Memuat Sistem Kasir Offline...</span>
         </div>
       </div>
@@ -78,7 +87,7 @@ export default function POSHomePage() {
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col overflow-hidden bg-[#FAF7F2] text-[#291811]">
+    <div className="h-screen w-screen flex flex-col overflow-hidden bg-stone-100 text-stone-900">
       {/* 1. Top Bar */}
       <TopBar
         occupiedCount={occupiedTablesCount}
@@ -87,30 +96,30 @@ export default function POSHomePage() {
       />
 
       {/* 2. Mobile View Switcher Tabs (Only visible on screens < 1024px) */}
-      <div className="no-print lg:hidden bg-[#291811] border-b border-stone-800 px-3 py-2 flex items-center gap-2 shrink-0">
+      <div className="no-print lg:hidden bg-stone-900 border-b border-stone-800 px-3 py-2 flex items-center gap-2 shrink-0">
         <button
           id="tab-mobile-tables"
           onClick={() => setMobileTab('tables')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-bold text-xs transition-all cursor-pointer min-h-11 ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-bold text-xs transition-colors cursor-pointer min-h-11 ${
             mobileTab === 'tables'
-              ? 'bg-amber-500 text-stone-950 shadow-sm'
-              : 'bg-stone-900/90 text-stone-300 hover:text-white'
+              ? 'bg-amber-500 text-stone-950 shadow-xs'
+              : 'bg-stone-800 text-stone-300 hover:text-white'
           }`}
         >
-          <Users className="w-4 h-4 stroke-[2.2]" />
+          <Users className="w-4 h-4" />
           <span>Daftar Meja ({tables.filter((t) => !t.isTakeaway && t.status === 'belum_lunas').length}/15)</span>
         </button>
 
         <button
           id="tab-mobile-menu"
           onClick={() => setMobileTab('menu')}
-          className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-bold text-xs transition-all cursor-pointer min-h-11 ${
+          className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-bold text-xs transition-colors cursor-pointer min-h-11 ${
             mobileTab === 'menu'
-              ? 'bg-amber-500 text-stone-950 shadow-sm'
-              : 'bg-stone-900/90 text-stone-300 hover:text-white'
+              ? 'bg-amber-500 text-stone-950 shadow-xs'
+              : 'bg-stone-800 text-stone-300 hover:text-white'
           }`}
         >
-          <Utensils className="w-4 h-4 stroke-[2.2]" />
+          <Utensils className="w-4 h-4" />
           <span>Katalog Menu ({activeTable?.label || 'Meja'})</span>
         </button>
       </div>
@@ -138,6 +147,7 @@ export default function POSHomePage() {
           onSelectItem={addItemToDraft}
           activeTargetLabel={activeTable?.label}
           onBackToTables={() => setMobileTab('tables')}
+          cartItemCounts={cartItemCounts}
           className={`${
             mobileTab === 'menu' ? 'w-full flex' : 'hidden'
           } lg:flex lg:flex-1`}
