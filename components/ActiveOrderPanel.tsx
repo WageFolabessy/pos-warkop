@@ -70,9 +70,33 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
       {/* Header Ringkas: Target Meja + Quick Actions */}
       <div className="p-3.5 sm:p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
         <div>
-          <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
-            Pesanan
-          </span>
+          <div className="flex items-center gap-1.5">
+            <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
+              Pesanan
+            </span>
+            {activeTable && activeTable.items.length > 0 && activeTable.status === 'belum_lunas' && (
+              <>
+                {activeTable.kitchenStatus === 'siap_saji' && (
+                  <span className="text-[10px] font-semibold bg-gray-200 text-gray-800 border border-gray-300 px-1.5 py-0.2 rounded-full">
+                    Siap Antar
+                  </span>
+                )}
+                {activeTable.kitchenStatus === 'dimasak' && (
+                  <span className="text-[10px] font-medium bg-white text-gray-700 border border-gray-200 px-1.5 py-0.2 rounded-full">
+                    {(() => {
+                      const done = activeTable.items.filter((it) => (activeTable.completedItemIds || []).includes(it.menuItem.id)).length;
+                      return done > 0 ? `${done}/${activeTable.items.length} Siap` : 'Diracik';
+                    })()}
+                  </span>
+                )}
+                {activeTable.kitchenStatus === 'menunggu' && (
+                  <span className="text-[10px] font-medium bg-white text-gray-500 border border-gray-200 px-1.5 py-0.2 rounded-full">
+                    Menunggu Dapur
+                  </span>
+                )}
+              </>
+            )}
+          </div>
           <h2 className="font-semibold text-base sm:text-lg text-gray-900 leading-tight">
             {targetLabel}
           </h2>
@@ -130,14 +154,22 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
         ) : (
           draftItems.map((item) => {
             const lineSubtotal = item.menuItem.price * item.quantity;
+            const isItemDone = activeTable?.completedItemIds?.includes(item.menuItem.id);
             return (
               <div key={item.menuItem.id} className="py-3 first:pt-0 last:pb-0">
                 {/* Row Top: Name & Line Subtotal */}
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <span className="font-medium text-xs sm:text-sm text-gray-900 leading-snug block">
-                      {item.menuItem.name}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="font-medium text-xs sm:text-sm text-gray-900 leading-snug block">
+                        {item.menuItem.name}
+                      </span>
+                      {isItemDone && (
+                        <span className="text-[10px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 px-1.5 py-0.2 rounded shrink-0">
+                          Siap
+                        </span>
+                      )}
+                    </div>
                     {/* Waiter Custom Notes */}
                     {item.notes && (
                       <span className="text-[11px] italic text-gray-500 block mt-0.5">

@@ -90,13 +90,16 @@ export const TablePanel: React.FC<TablePanelProps> = ({
                   {formatIDR(takeawaySummary.totalPrice)}
                 </span>
                 {takeaway?.kitchenStatus === 'siap_saji' && (
-                  <span className="text-gray-600 text-[9px] font-medium">
+                  <span className="text-gray-700 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-semibold">
                     Siap Antar
                   </span>
                 )}
                 {takeaway?.kitchenStatus === 'dimasak' && (
-                  <span className="text-gray-500 text-[9px] font-medium">
-                    Diracik
+                  <span className="text-gray-600 bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-medium">
+                    {(() => {
+                      const done = takeaway.items.filter((it) => (takeaway.completedItemIds || []).includes(it.menuItem.id)).length;
+                      return done > 0 ? `${done}/${takeaway.items.length} Siap` : 'Diracik';
+                    })()}
                   </span>
                 )}
               </div>
@@ -116,6 +119,7 @@ export const TablePanel: React.FC<TablePanelProps> = ({
             const { totalItems, totalPrice } = getTableSummary(table);
             const isSelected = activeTargetId === table.targetId;
             const isUnpaid = table.status === 'belum_lunas';
+            const doneCount = table.items.filter((it) => (table.completedItemIds || []).includes(it.menuItem.id)).length;
 
             return (
               <button
@@ -137,13 +141,13 @@ export const TablePanel: React.FC<TablePanelProps> = ({
                   </span>
                   <div className="flex items-center gap-1.5">
                     {table.kitchenStatus === 'siap_saji' && (
-                      <span className="text-gray-600 text-[9px] font-medium">
+                      <span className="text-gray-700 bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-semibold">
                         Siap Antar
                       </span>
                     )}
                     {table.kitchenStatus === 'dimasak' && (
-                      <span className="text-gray-500 text-[9px] font-medium">
-                        Diracik
+                      <span className="text-gray-600 bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded text-[9px] font-medium">
+                        {doneCount > 0 ? `${doneCount}/${table.items.length} Siap` : 'Diracik'}
                       </span>
                     )}
                     <span

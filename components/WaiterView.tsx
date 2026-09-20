@@ -159,13 +159,16 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                         : 'Bawa pulang'}
                     </span>
                     {takeaway?.kitchenStatus === 'siap_saji' && (
-                      <span className="text-[10px] text-gray-600 font-medium">
-                        · Siap Antar
+                      <span className="text-[10px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">
+                        Siap Antar
                       </span>
                     )}
                     {takeaway?.kitchenStatus === 'dimasak' && (
-                      <span className="text-[10px] text-gray-500 font-medium">
-                        · Diracik
+                      <span className="text-[10px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded">
+                        {(() => {
+                          const done = takeaway.items.filter((it) => (takeaway.completedItemIds || []).includes(it.menuItem.id)).length;
+                          return done > 0 ? `${done}/${takeaway.items.length} Siap` : 'Diracik';
+                        })()}
                       </span>
                     )}
                   </div>
@@ -184,6 +187,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 const totalItems = tbl.items.reduce((sum, it) => sum + it.quantity, 0);
                 const isOccupied = tbl.status === 'belum_lunas';
                 const isSelected = activeTargetId === tbl.targetId;
+                const doneCount = tbl.items.filter((it) => (tbl.completedItemIds || []).includes(it.menuItem.id)).length;
 
                 return (
                   <button
@@ -204,13 +208,13 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                       </span>
                       <div className="flex items-center gap-1">
                         {tbl.kitchenStatus === 'siap_saji' && (
-                          <span className="text-[9px] text-gray-600 font-medium">
+                          <span className="text-[9px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">
                             Siap
                           </span>
                         )}
                         {tbl.kitchenStatus === 'dimasak' && (
-                          <span className="text-[9px] text-gray-500 font-medium">
-                            Diracik
+                          <span className="text-[9px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded">
+                            {doneCount > 0 ? `${doneCount}/${tbl.items.length} Siap` : 'Diracik'}
                           </span>
                         )}
                         <span
@@ -479,13 +483,22 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   Belum ada item dipilih.
                 </div>
               ) : (
-                draftItems.map((it) => (
-                  <div key={it.menuItem.id} className="pt-3 first:pt-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <span className="font-medium text-xs sm:text-sm text-gray-900 block">
-                          {it.menuItem.name}
-                        </span>
+                draftItems.map((it) => {
+                  const isItemDone = (activeTable?.completedItemIds || []).includes(it.menuItem.id);
+                  return (
+                    <div key={it.menuItem.id} className="pt-3 first:pt-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="font-medium text-xs sm:text-sm text-gray-900 block">
+                              {it.menuItem.name}
+                            </span>
+                            {isItemDone && (
+                              <span className="text-[10px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 px-1.5 py-0.2 rounded shrink-0">
+                                Siap antar
+                              </span>
+                            )}
+                          </div>
                         {/* Custom note */}
                         {it.notes ? (
                           <div className="flex items-center gap-1 mt-1 text-[11px] text-gray-600 italic bg-gray-50 px-2 py-0.5 rounded border border-gray-200">
@@ -537,9 +550,10 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                       </div>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
+                );
+              })
+            )}
+          </div>
 
             {/* Bottom action inside drawer */}
             <div className="p-3.5 bg-gray-50 border-t border-gray-200">
