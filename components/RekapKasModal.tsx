@@ -701,7 +701,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
         {/* Header Struk Rekap */}
         <div className="text-center pb-2 border-b border-dashed border-black">
           <h2 className="font-bold text-sm tracking-wider uppercase">RATU KOPI</h2>
-          <p className="text-[10px]">Jl. Gajah Mada No. 88, Pontianak</p>
+          <p className="text-[10px]">Jl. Puyuh No. 12, Pontianak</p>
           <p className="text-[10px] font-bold mt-1 uppercase tracking-wider">
             *** REKAP KAS HARIAN (LAPORAN PENUTUPAN) ***
           </p>
