@@ -55,12 +55,11 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
             <h1 className="text-lg font-black tracking-wider uppercase">
               RATU KOPI
             </h1>
-            <p className="text-[11px] font-bold">PONTIANAK</p>
             <p className="text-[10px] text-stone-600 mt-0.5">
-              Jl. Gajah Mada No. 88, Pontianak
+              Jl. Puyuh No. 12, Pontianak
             </p>
             <p className="text-[10px] text-stone-600">
-              Telp / WA: 0812-5555-8899
+              Telp / WA: 089692070270
             </p>
           </div>
 
@@ -141,7 +140,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({
             <p className="font-bold uppercase tracking-wide text-stone-900">
               Terima Kasih Atas Kunjungannya!
             </p>
-            <p className="italic">Kopi Mantap, Jiwa Tenang</p>
+            <p className="italic">Kopi & Karaoke</p>
             <p className="text-[9px] text-stone-400 pt-1">
               *** LUNAS ***
             </p>

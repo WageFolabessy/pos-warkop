@@ -483,7 +483,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               {/* Simulated QR Code Card */}
               <div className="p-4 bg-white border border-gray-200 rounded-xl flex flex-col items-center">
                 <div className="text-[10px] font-mono font-medium tracking-widest text-gray-900 border-b border-gray-200 pb-1 mb-2 w-full uppercase">
-                  RATU KOPI PONTIANAK
+                  RATU KOPI
                 </div>
                 <div className="w-44 h-44 bg-white p-2 border border-gray-200 rounded-lg flex items-center justify-center relative">
                   <svg

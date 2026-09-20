@@ -11,7 +11,7 @@ _2️⃣ Pilih Nomor Meja_
 → Ada juga pilihan untuk pesanan _Bungkus / Bawa Pulang_.
 
 _3️⃣ Pilih Menu & Catatan Khusus_
-→ Tinggal ketuk kartu menu, misalnya _Kopi Susu Panas_ atau _Bakwan Pontianak_.
+→ Tinggal ketuk kartu menu, misalnya _Kopi Susu Panas_ atau _Bakwan_.
 → Sekali ketuk, porsinya langsung bertambah.
 
 _Catatan Khusus:_

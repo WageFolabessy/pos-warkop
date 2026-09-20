@@ -71,7 +71,7 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     id: 'bakwan-pontianak',
-    name: 'Bakwan Pontianak',
+    name: 'Bakwan',
     price: 5000,
     category: 'cemilan',
     iconName: 'Cookie',

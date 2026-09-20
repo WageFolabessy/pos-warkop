@@ -46,7 +46,7 @@ export function getInitialTables(): TableOrder[] {
     table7.items = [
       { menuItem: MENU_ITEMS[2], quantity: 1, notes: 'Es sedikit' }, // Kopi Susu Dingin x1
       { menuItem: MENU_ITEMS[5], quantity: 1, notes: 'Pedas, telur 1/2 matang' }, // Indomie Goreng Telur x1
-      { menuItem: MENU_ITEMS[9], quantity: 2 }, // Bakwan Pontianak x2
+      { menuItem: MENU_ITEMS[9], quantity: 2 }, // Bakwan x2
     ];
   }
 
