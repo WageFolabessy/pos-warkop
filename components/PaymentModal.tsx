@@ -526,8 +526,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 </div>
               </div>
 
-              <div className="text-xs text-gray-500 max-w-xs">
-                Pindai QRIS melalui GoPay, OVO, DANA, BCA, Livin, atau aplikasi perbankan lainnya.
+              <div className="text-xs text-gray-500">
+                Pindai QRIS menggunakan e-wallet atau mobile banking.
               </div>
             </div>
           )}

@@ -151,7 +151,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   </span>
                 </div>
                 <p className="text-xs text-gray-500">
-                  Ratu KOPI Pontianak • Laporan Penjualan &amp; Kas
+                  Laporan Kas &amp; Penjualan
                 </p>
               </div>
             </div>
@@ -280,12 +280,9 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                 className="p-3.5 bg-gray-50 rounded-xl border border-gray-200 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 animate-in fade-in duration-150"
               >
                 <div className="flex-1">
-                  <label className="block text-xs font-semibold text-gray-700 mb-0.5">
-                    Modal Awal Kasir Pagi Hari (Uang Pecahan/Receh Kembalian)
+                  <label className="block text-xs font-semibold text-gray-700">
+                    Modal Awal
                   </label>
-                  <p className="text-[11px] text-gray-500">
-                    Masukkan nominal uang kembalian yang ada di laci saat warkop baru buka.
-                  </p>
                 </div>
                 <div className="relative w-full sm:w-48">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 font-mono">
@@ -306,7 +303,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     type="submit"
                     className="px-4 py-2 bg-[#0071e3] hover:bg-[#0077ED] text-white text-xs font-semibold rounded-full transition-colors cursor-pointer min-h-10 whitespace-nowrap"
                   >
-                    Simpan Modal
+                    Simpan
                   </button>
                   <button
                     type="button"
@@ -319,17 +316,14 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               </form>
             )}
 
-            {/* SEKSI 1: Hitung Fisik Uang di Laci (Cek Selisih Kasir) */}
+            {/* SEKSI 1: Hitung Uang di Laci */}
             <div className="bg-white rounded-xl border border-gray-200 p-4 sm:p-5 space-y-3">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                 <div>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-900 flex items-center gap-1.5">
                     <Wallet className="w-3.5 h-3.5 text-gray-600" />
-                    Hitung Fisik Uang di Laci (Cek Selisih Saat Tutup Kasir)
+                    Hitung Uang di Laci
                   </h4>
-                  <p className="text-[11px] text-gray-500">
-                    Kasir menghitung lembaran uang &amp; koin di laci kasir, lalu ketikkan totalnya di bawah.
-                  </p>
                 </div>
 
                 {actualCash !== null && (
@@ -338,7 +332,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     onClick={handleResetActualCash}
                     className="text-xs text-gray-500 hover:text-gray-700 underline cursor-pointer self-start sm:self-auto"
                   >
-                    Atur Ulang Hitungan
+                    Atur Ulang
                   </button>
                 )}
               </div>
@@ -352,7 +346,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     type="number"
                     min={0}
                     step={1000}
-                    placeholder="Ketik total uang fisik yang dihitung di laci..."
+                    placeholder="Ketik total uang di laci..."
                     value={inputActualCash}
                     onChange={(e) => setInputActualCash(e.target.value)}
                     className="w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-[#0071e3] focus:bg-white text-gray-900 font-mono tabular-nums min-h-11"
@@ -364,7 +358,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   disabled={inputActualCash.trim() === ''}
                   className="px-5 py-2.5 bg-gray-900 hover:bg-black disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold text-xs rounded-full transition-colors cursor-pointer min-h-11 whitespace-nowrap"
                 >
-                  Cek &amp; Simpan Selisih
+                  Simpan
                 </button>
               </form>
 
@@ -395,10 +389,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                       </span>
                       <span className="text-[11px] opacity-80">
                         {cashDiff === 0
-                          ? 'Jumlah uang fisik di laci persis sama dengan hitungan sistem.'
+                          ? 'Jumlah uang di laci sesuai dengan hitungan sistem.'
                           : cashDiff < 0
-                          ? 'Uang fisik di laci lebih sedikit daripada yang seharusnya tercatat.'
-                          : 'Uang fisik di laci lebih banyak daripada yang seharusnya tercatat.'}
+                          ? 'Uang di laci lebih sedikit dari hitungan sistem.'
+                          : 'Uang di laci lebih banyak dari hitungan sistem.'}
                       </span>
                     </div>
                   </div>
@@ -419,12 +413,12 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               )}
             </div>
 
-            {/* SEKSI 2: Catat & Riwayat Pengeluaran Kas Kecil (Petty Cash) */}
+            {/* SEKSI 2: Catat & Riwayat Pengeluaran */}
             <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
               <div className="p-3.5 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
                   <ArrowDownRight className="w-3.5 h-3.5 text-gray-400" />
-                  Pengeluaran Kas Kecil / Biaya Harian
+                  Pengeluaran
                 </h4>
                 <span className="text-xs font-medium text-gray-500">
                   Total: {formatIDR(totalExpenses)}
@@ -439,7 +433,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                 >
                   <input
                     type="text"
-                    placeholder="Keterangan pengeluaran (cth: Es batu 2 karung, Galon, Gas LPG)..."
+                    placeholder="Keterangan..."
                     value={expenseDesc}
                     onChange={(e) => setExpenseDesc(e.target.value)}
                     className="flex-1 px-3.5 py-2 text-xs bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-[#0071e3] focus:bg-white text-gray-900 min-h-10"
@@ -473,7 +467,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               <div className="divide-y divide-gray-100 max-h-48 overflow-y-auto">
                 {expenses.length === 0 ? (
                   <div className="py-6 text-center text-xs text-gray-400">
-                    Belum ada pengeluaran kas kecil yang dicatat hari ini.
+                    Belum ada pengeluaran.
                   </div>
                 ) : (
                   expenses.map((exp) => (
@@ -502,7 +496,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                             type="button"
                             onClick={() => onDeleteExpense(exp.id)}
                             className="p-1 rounded-full text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-                            title="Hapus catatan pengeluaran ini"
+                            title="Hapus"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
@@ -519,10 +513,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               <div className="p-3.5 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
                   <Receipt className="w-3.5 h-3.5 text-gray-400" />
-                  Rincian Penjualan Menu Hari Ini
+                  Penjualan Menu
                 </h4>
                 <span className="text-xs font-medium text-gray-500">
-                  {dailySummary.itemSales.length} jenis menu terjual
+                  {dailySummary.itemSales.length} menu
                 </span>
               </div>
 
@@ -532,7 +526,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     <tr>
                       <th className="py-2.5 px-4">Nama Menu</th>
                       <th className="py-2.5 px-4">Kategori</th>
-                      <th className="py-2.5 px-4 text-center">Qty Terjual</th>
+                      <th className="py-2.5 px-4 text-center">Qty</th>
                       <th className="py-2.5 px-4 text-right">Subtotal</th>
                     </tr>
                   </thead>
@@ -540,7 +534,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     {dailySummary.itemSales.length === 0 ? (
                       <tr>
                         <td colSpan={4} className="py-6 text-center text-gray-400">
-                          Belum ada data penjualan hari ini.
+                          Belum ada penjualan.
                         </td>
                       </tr>
                     ) : (
@@ -553,7 +547,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                             {sale.menuItem.category}
                           </td>
                           <td className="py-2.5 px-4 text-center font-medium text-gray-700">
-                            {sale.quantity} porsi
+                            {sale.quantity}
                           </td>
                           <td className="py-2.5 px-4 text-right font-semibold text-gray-900">
                             {formatIDR(sale.subtotal)}
@@ -571,14 +565,14 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               <div className="p-3.5 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
                 <h4 className="text-xs font-semibold uppercase tracking-wider text-gray-700 flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5 text-gray-400" />
-                  Riwayat Struk &amp; Transaksi ({transactions.length})
+                  Riwayat Transaksi ({transactions.length})
                 </h4>
               </div>
 
               <div className="divide-y divide-gray-100 max-h-60 overflow-y-auto">
                 {transactions.length === 0 ? (
                   <div className="py-6 text-center text-xs text-gray-400">
-                    Belum ada riwayat transaksi.
+                    Belum ada transaksi.
                   </div>
                 ) : (
                   transactions.map((tx) => {
@@ -645,64 +639,35 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               </div>
             </div>
 
-            {/* SEKSI 5: Danger Zone: Reset Data Kas & Meja (Hanya Role Owner) */}
-            {currentRole === 'owner' ? (
-              <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="px-2 py-0.5 rounded-full bg-red-600 text-white text-[10px] font-medium uppercase tracking-wider">
-                      Khusus Pemilik
-                    </span>
-                    <h5 className="font-semibold text-xs text-red-950 uppercase tracking-wide flex items-center gap-1.5">
-                      <RotateCcw className="w-3.5 h-3.5 text-red-700" />
-                      Zona Atur Ulang Data Kas &amp; Meja
-                    </h5>
-                  </div>
-                  <p className="text-xs text-red-800 leading-relaxed">
-                    Kosongkan semua riwayat transaksi, modal awal &amp; pengeluaran menjadi Rp 0 dan kosongkan seluruh meja, atau muat ulang data simulasi demo warkop.
-                  </p>
+            {/* Reset Data (Khusus Pemilik) */}
+            {currentRole === 'owner' && (
+              <div className="p-3.5 bg-gray-50 border border-gray-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <RotateCcw className="w-4 h-4 text-gray-500" />
+                  <span className="font-semibold text-xs text-gray-900">
+                    Reset Data
+                  </span>
                 </div>
 
                 <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
                   <button
                     id="btn-reset-all-data"
                     onClick={() => setIsResetAllConfirmOpen(true)}
-                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold px-3.5 py-2.5 rounded-full text-xs transition-colors cursor-pointer whitespace-nowrap"
-                    title="Kosongkan seluruh transaksi dan meja ke Rp 0"
+                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white font-semibold px-3.5 py-2 rounded-full text-xs transition-colors cursor-pointer whitespace-nowrap"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
-                    <span>Kosongkan Semua (Nol)</span>
+                    <span>Kosongkan Semua</span>
                   </button>
 
                   <button
                     id="btn-reset-demo-data"
                     onClick={() => setIsResetDemoConfirmOpen(true)}
-                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 font-medium px-3.5 py-2.5 rounded-full text-xs transition-colors cursor-pointer whitespace-nowrap"
-                    title="Muat ulang data simulasi demo warkop"
+                    className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-medium px-3.5 py-2 rounded-full text-xs transition-colors cursor-pointer whitespace-nowrap"
                   >
                     <RotateCcw className="w-3.5 h-3.5 text-gray-500" />
-                    <span>Muat Ulang Demo</span>
+                    <span>Muat Demo</span>
                   </button>
                 </div>
-              </div>
-            ) : (
-              <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between gap-3 text-gray-600">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 shrink-0">
-                    <Lock className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-medium text-gray-800">
-                      Zona Atur Ulang &amp; Hapus Data Terkunci
-                    </p>
-                    <p className="text-[11px] text-gray-500 mt-0.5">
-                      Hak akses untuk mengosongkan atau mengatur ulang data transaksi hanya dimiliki oleh <strong>Pemilik</strong>.
-                    </p>
-                  </div>
-                </div>
-                <span className="text-[10px] bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full font-medium uppercase tracking-wider shrink-0 border border-gray-200">
-                  Akses Kasir Terbatas
-                </span>
               </div>
             )}
           </div>
@@ -713,17 +678,16 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
               id="btn-print-recap"
               onClick={handlePrintRecap}
               className="flex items-center gap-1.5 px-4 py-2.5 rounded-full border border-gray-200 bg-white hover:bg-gray-100 text-gray-800 font-semibold text-xs sm:text-sm transition-colors cursor-pointer"
-              title="Cetak struk rekap harian ke printer 58mm"
             >
               <Printer className="w-4 h-4 text-gray-600" />
-              <span>Cetak Struk Rekap (58mm)</span>
+              <span>Cetak Struk</span>
             </button>
 
             <button
               onClick={onClose}
               className="px-5 py-2.5 rounded-full bg-[#0071e3] hover:bg-[#0077ED] text-white font-semibold text-xs sm:text-sm transition-colors cursor-pointer"
             >
-              Tutup Rekap
+              Tutup
             </button>
           </div>
         </div>
@@ -854,15 +818,15 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
       {/* Confirmation Modal: Reset All to 0 */}
       <ConfirmModal
         isOpen={isResetAllConfirmOpen}
-        title="Kosongkan Seluruh Data Kas & Meja?"
-        message="Semua riwayat transaksi hari ini akan dihapus menjadi Rp 0 dan seluruh 15 meja serta pesanan bungkus akan dikosongkan. Apakah Anda yakin?"
-        confirmText="Ya, Kosongkan Semua"
+        title="Kosongkan Semua Data?"
+        message="Semua transaksi dan meja akan dikosongkan ke Rp 0."
+        confirmText="Kosongkan"
         cancelText="Batal"
         isDestructive={true}
         onConfirm={() => {
           if (currentRole === 'owner') {
             onResetAllData();
-            setFeedbackMessage('Semua data transaksi dan meja berhasil dikosongkan ke Rp 0!');
+            setFeedbackMessage('Semua data berhasil dikosongkan.');
           }
           setIsResetAllConfirmOpen(false);
         }}
@@ -872,15 +836,15 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
       {/* Confirmation Modal: Reload Initial Demo Data */}
       <ConfirmModal
         isOpen={isResetDemoConfirmOpen}
-        title="Muat Ulang Data Simulasi Demo?"
-        message="Data transaksi contoh dan status meja akan dikembalikan ke data simulasi demo warkop. Apakah Anda yakin?"
-        confirmText="Ya, Muat Ulang Demo"
+        title="Muat Data Demo?"
+        message="Data transaksi dan meja akan diatur ulang ke mode demo."
+        confirmText="Muat Demo"
         cancelText="Batal"
         isDestructive={false}
         onConfirm={() => {
           if (currentRole === 'owner') {
             onResetDemoData();
-            setFeedbackMessage('Data simulasi demo warkop berhasil dimuat ulang!');
+            setFeedbackMessage('Data demo berhasil dimuat.');
           }
           setIsResetDemoConfirmOpen(false);
         }}

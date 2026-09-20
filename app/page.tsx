@@ -1,20 +1,20 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { usePOSStore } from '@/hooks/usePOSStore';
-import { TopBar } from '@/components/TopBar';
-import { TablePanel } from '@/components/TablePanel';
-import { MenuCatalogPanel } from '@/components/MenuCatalogPanel';
-import { ActiveOrderPanel } from '@/components/ActiveOrderPanel';
-import { MobileFloatingBar } from '@/components/MobileFloatingBar';
-import { PaymentModal } from '@/components/PaymentModal';
-import { ReceiptModal } from '@/components/ReceiptModal';
-import { RekapKasModal } from '@/components/RekapKasModal';
-import { MoveTableModal } from '@/components/MoveTableModal';
-import { TransactionRecord, UserRole } from '@/types/pos';
-import { Users, Utensils } from 'lucide-react';
-import { WaiterView } from '@/components/WaiterView';
-import { KitchenView } from '@/components/KitchenView';
+import React, { useState } from "react";
+import { usePOSStore } from "@/hooks/usePOSStore";
+import { TopBar } from "@/components/TopBar";
+import { TablePanel } from "@/components/TablePanel";
+import { MenuCatalogPanel } from "@/components/MenuCatalogPanel";
+import { ActiveOrderPanel } from "@/components/ActiveOrderPanel";
+import { MobileFloatingBar } from "@/components/MobileFloatingBar";
+import { PaymentModal } from "@/components/PaymentModal";
+import { ReceiptModal } from "@/components/ReceiptModal";
+import { RekapKasModal } from "@/components/RekapKasModal";
+import { MoveTableModal } from "@/components/MoveTableModal";
+import { TransactionRecord, UserRole } from "@/types/pos";
+import { Users, Utensils } from "lucide-react";
+import { WaiterView } from "@/components/WaiterView";
+import { KitchenView } from "@/components/KitchenView";
 
 export default function POSPage() {
   const {
@@ -53,21 +53,21 @@ export default function POSPage() {
   } = usePOSStore();
 
   // Role Switcher: 'owner' | 'kasir' | 'pelayan' | 'dapur'
-  const [currentRole, setCurrentRole] = useState<UserRole>('kasir');
+  const [currentRole, setCurrentRole] = useState<UserRole>("kasir");
 
   // Guard reset actions for owner role only
   const handleResetAllData = () => {
-    if (currentRole !== 'owner') return;
+    if (currentRole !== "owner") return;
     resetAllData();
   };
 
   const handleResetDemoData = () => {
-    if (currentRole !== 'owner') return;
+    if (currentRole !== "owner") return;
     resetDemoData();
   };
 
   // Mobile navigation view: 'tables' | 'menu' (for Cashier mode)
-  const [mobileTab, setMobileTab] = useState<'tables' | 'menu'>('tables');
+  const [mobileTab, setMobileTab] = useState<"tables" | "menu">("tables");
   const [isMobileOrderOpen, setIsMobileOrderOpen] = useState(false);
 
   // Modals state
@@ -75,19 +75,21 @@ export default function POSPage() {
   const [isReceiptOpen, setIsReceiptOpen] = useState(false);
   const [isRekapOpen, setIsRekapOpen] = useState(false);
   const [isMoveTableOpen, setIsMoveTableOpen] = useState(false);
-  const [latestTransaction, setLatestTransaction] = useState<TransactionRecord | null>(null);
+  const [latestTransaction, setLatestTransaction] =
+    useState<TransactionRecord | null>(null);
 
   // Handle table selection on mobile (auto-navigates to menu catalog)
   const handleSelectTargetMobile = (targetId: string) => {
     selectTarget(targetId);
-    setMobileTab('menu');
+    setMobileTab("menu");
   };
 
   // Compute in-cart counter badge for each menu item
   const cartItemCounts = React.useMemo(() => {
     const counts: Record<string, number> = {};
     draftItems.forEach((item) => {
-      counts[item.menuItem.id] = (counts[item.menuItem.id] || 0) + item.quantity;
+      counts[item.menuItem.id] =
+        (counts[item.menuItem.id] || 0) + item.quantity;
     });
     return counts;
   }, [draftItems]);
@@ -98,16 +100,11 @@ export default function POSPage() {
       <div className="h-screen w-screen flex flex-col items-center justify-center bg-white text-gray-900">
         <div className="flex flex-col items-center mb-4">
           <div className="flex items-baseline gap-2">
-            <span className="font-semibold text-2xl text-gray-900">
-              Ratu
-            </span>
+            <span className="font-semibold text-2xl text-gray-900">Ratu</span>
             <span className="font-semibold text-2xl text-gray-700 tracking-wider">
               KOPI
             </span>
           </div>
-          <span className="text-xs font-mono tracking-[0.25em] text-gray-500 uppercase mt-1">
-            PONTIANAK
-          </span>
         </div>
         <div className="flex items-center gap-2 text-xs font-mono text-gray-500 tracking-wider uppercase">
           <span className="w-2 h-2 rounded-full bg-gray-400 animate-pulse" />
@@ -135,7 +132,7 @@ export default function POSPage() {
           vs
           MODE KASIR & OWNER (Akses POS Penuh: Meja, Menu, Pembayaran, Rekap)
          ========================================================================= */}
-      {currentRole === 'pelayan' ? (
+      {currentRole === "pelayan" ? (
         <WaiterView
           tables={tables}
           activeTargetId={activeTargetId}
@@ -150,7 +147,7 @@ export default function POSPage() {
           onSaveOrder={saveDraftToTable}
           onResetOrder={() => resetActiveTable()}
         />
-      ) : currentRole === 'dapur' ? (
+      ) : currentRole === "dapur" ? (
         <KitchenView
           tables={tables}
           onUpdateKitchenStatus={updateKitchenStatus}
@@ -162,29 +159,41 @@ export default function POSPage() {
           <div className="no-print lg:hidden bg-white border-b border-gray-200 px-3 py-2 flex items-center gap-2 shrink-0">
             <button
               id="tab-mobile-tables"
-              onClick={() => setMobileTab('tables')}
+              onClick={() => setMobileTab("tables")}
               className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 px-2.5 sm:px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
-                mobileTab === 'tables'
-                  ? 'bg-[#0071e3] text-white'
-                  : 'bg-gray-100 text-gray-600 hover:text-gray-900'
+                mobileTab === "tables"
+                  ? "bg-[#0071e3] text-white"
+                  : "bg-gray-100 text-gray-600 hover:text-gray-900"
               }`}
             >
               <Users className="w-4 h-4 shrink-0" />
-              <span className="truncate">Meja ({tables.filter((t) => !t.isTakeaway && t.status === 'belum_lunas').length}/15)</span>
+              <span className="truncate">
+                Meja (
+                {
+                  tables.filter(
+                    (t) => !t.isTakeaway && t.status === "belum_lunas",
+                  ).length
+                }
+                /15)
+              </span>
             </button>
 
             <button
               id="tab-mobile-menu"
-              onClick={() => setMobileTab('menu')}
+              onClick={() => setMobileTab("menu")}
               className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 px-2.5 sm:px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
-                mobileTab === 'menu'
-                  ? 'bg-[#0071e3] text-white'
-                  : 'bg-gray-100 text-gray-600 hover:text-gray-900'
+                mobileTab === "menu"
+                  ? "bg-[#0071e3] text-white"
+                  : "bg-gray-100 text-gray-600 hover:text-gray-900"
               }`}
             >
               <Utensils className="w-4 h-4 shrink-0" />
               <span className="truncate">
-                Menu ({activeTable?.isTakeaway ? 'Bungkus' : (activeTable?.label || 'Meja')})
+                Menu (
+                {activeTable?.isTakeaway
+                  ? "Bungkus"
+                  : activeTable?.label || "Meja"}
+                )
               </span>
             </button>
           </div>
@@ -199,7 +208,7 @@ export default function POSPage() {
                 handleSelectTargetMobile(targetId);
               }}
               className={`${
-                mobileTab === 'tables' ? 'w-full flex' : 'hidden'
+                mobileTab === "tables" ? "w-full flex" : "hidden"
               } lg:w-80 lg:shrink-0 lg:border-r lg:flex`}
             />
 
@@ -207,10 +216,10 @@ export default function POSPage() {
             <MenuCatalogPanel
               onSelectItem={addItemToDraft}
               activeTargetLabel={activeTable?.label}
-              onBackToTables={() => setMobileTab('tables')}
+              onBackToTables={() => setMobileTab("tables")}
               cartItemCounts={cartItemCounts}
               className={`${
-                mobileTab === 'menu' ? 'w-full flex' : 'hidden'
+                mobileTab === "menu" ? "w-full flex" : "hidden"
               } lg:flex lg:flex-1`}
             />
 
@@ -234,7 +243,7 @@ export default function POSPage() {
 
           {/* 4. Mobile Floating Bill Bar (< 1024px) */}
           <MobileFloatingBar
-            targetLabel={activeTable?.label || 'Pesanan'}
+            targetLabel={activeTable?.label || "Pesanan"}
             isTakeaway={activeTable?.isTakeaway || false}
             totalCount={draftTotalCount}
             subtotal={draftSubtotal}
@@ -289,7 +298,7 @@ export default function POSPage() {
           {/* 6. Payment Modal (Cashier Only) */}
           <PaymentModal
             isOpen={isPaymentOpen}
-            targetLabel={activeTable?.label || 'Pesanan'}
+            targetLabel={activeTable?.label || "Pesanan"}
             items={draftItems}
             subtotal={draftSubtotal}
             onClose={() => setIsPaymentOpen(false)}

@@ -253,9 +253,9 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
       {/* Confirmation Modal for Resetting Active Table Order */}
       <ConfirmModal
         isOpen={isResetConfirmOpen}
-        title={`Kosongkan Pesanan ${targetLabel}?`}
-        message={`Seluruh item pesanan pada ${targetLabel} akan dikosongkan dan status meja akan kembali menjadi kosong.`}
-        confirmText="Ya, Kosongkan Pesanan"
+        title={`Kosongkan ${targetLabel}?`}
+        message={`Semua pesanan pada ${targetLabel} akan dihapus.`}
+        confirmText="Kosongkan"
         cancelText="Batal"
         isDestructive={true}
         onConfirm={handleConfirmReset}

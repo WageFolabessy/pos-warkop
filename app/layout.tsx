@@ -2,8 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ratu KOPI Pontianak - POS Kasir Warkop",
-  description: "Aplikasi kasir tablet ramah pengguna untuk Warkop Ratu KOPI Pontianak",
+  title: "Ratu KOPI - POS Kasir Warkop",
+  description: "Aplikasi kasir tablet ramah pengguna untuk Warkop Ratu KOPI",
 };
 
 export const viewport: Viewport = {

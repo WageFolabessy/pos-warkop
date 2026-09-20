@@ -82,13 +82,13 @@ export const ItemNotesModal: React.FC<ItemNotesModalProps> = ({
         <div className="p-4 space-y-3.5">
           <div>
             <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1">
-              Instruksi / Permintaan Khusus
+              Catatan
             </label>
             <textarea
               rows={3}
               value={noteText}
               onChange={(e) => setNoteText(e.target.value)}
-              placeholder="Contoh: Kopi O manis sedang, sedikit es..."
+              placeholder="Catatan khusus..."
               className="w-full p-3 text-xs sm:text-sm bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:bg-white text-gray-900 resize-none"
             />
           </div>
@@ -96,7 +96,7 @@ export const ItemNotesModal: React.FC<ItemNotesModalProps> = ({
           {/* Quick suggestions */}
           <div>
             <span className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wide mb-1.5">
-              Pilihan Cepat Warkop
+              Pilihan Cepat
             </span>
             <div className="flex flex-wrap gap-1.5">
               {QUICK_NOTES.map((sug) => (
@@ -120,7 +120,7 @@ export const ItemNotesModal: React.FC<ItemNotesModalProps> = ({
             onClick={() => setNoteText('')}
             className="text-xs text-gray-400 hover:text-red-600 transition-colors cursor-pointer px-2 py-1"
           >
-            Hapus Catatan
+            Hapus
           </button>
 
           <div className="flex items-center gap-2">

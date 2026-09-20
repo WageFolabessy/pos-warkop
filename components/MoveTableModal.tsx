@@ -51,7 +51,7 @@ export const MoveTableModal: React.FC<MoveTableModalProps> = ({
                 Pindah Meja
               </h3>
               <p className="text-xs text-gray-500">
-                Pindahkan seluruh pesanan dari <strong className="text-gray-900 font-semibold">{currentTable.label}</strong>
+                Dari <strong className="text-gray-900 font-semibold">{currentTable.label}</strong>
               </p>
             </div>
           </div>
@@ -69,17 +69,14 @@ export const MoveTableModal: React.FC<MoveTableModalProps> = ({
         <div className="p-4 sm:p-5 overflow-y-auto flex-1 space-y-4">
           <div>
             <span className="block text-xs font-semibold uppercase tracking-wider text-gray-600 mb-2">
-              Pilih Meja Tujuan (Yang Masih Kosong)
+              Pilih Meja Tujuan
             </span>
 
             {availableTables.length === 0 ? (
               <div className="p-6 text-center bg-gray-50 rounded-xl border border-gray-200 space-y-2">
                 <AlertCircle className="w-6 h-6 text-gray-400 mx-auto" />
                 <p className="text-xs font-medium text-gray-700">
-                  Tidak ada meja kosong yang tersedia
-                </p>
-                <p className="text-[11px] text-gray-400">
-                  Semua meja fisik lainnya saat ini sedang terisi pelanggan.
+                  Tidak ada meja kosong
                 </p>
               </div>
             ) : (
@@ -119,7 +116,7 @@ export const MoveTableModal: React.FC<MoveTableModalProps> = ({
           {currentTable.items.length > 0 && (
             <div className="p-3 bg-gray-50 rounded-xl border border-gray-200 text-xs text-gray-600 space-y-1">
               <span className="font-medium text-gray-800 block">
-                Ringkasan pesanan yang dipindahkan ({currentTable.items.reduce((s, it) => s + it.quantity, 0)} item):
+                Pesanan ({currentTable.items.reduce((s, it) => s + it.quantity, 0)} item):
               </span>
               <p className="text-[11px] text-gray-500 line-clamp-2">
                 {currentTable.items.map((it) => `${it.quantity}x ${it.menuItem.name}`).join(', ')}
@@ -144,7 +141,7 @@ export const MoveTableModal: React.FC<MoveTableModalProps> = ({
             onClick={handleConfirm}
             className="flex items-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold px-5 py-2.5 rounded-full text-xs transition-colors cursor-pointer disabled:cursor-not-allowed"
           >
-            <span>Pindahkan ke {selectedTableObj?.label || 'Meja'}</span>
+            <span>Pindah ke {selectedTableObj?.label || 'Meja'}</span>
           </button>
         </div>
       </div>

@@ -295,15 +295,15 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
               <div className="w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-400 mb-4">
                 <CheckCircle2 className="w-8 h-8" />
               </div>
-              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-1.5">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">
                 {activeOrders.length === 0
-                  ? 'Semua Pesanan Selesai!'
-                  : 'Tidak Ada Pesanan pada Filter Ini'}
+                  ? 'Semua Pesanan Selesai'
+                  : 'Tidak Ada Pesanan'}
               </h3>
-              <p className="text-xs sm:text-sm text-gray-500 max-w-md leading-relaxed">
+              <p className="text-xs text-gray-500 max-w-sm">
                 {activeOrders.length === 0
-                  ? 'Saat ini tidak ada antrean pesanan di meja maupun bungkus. Pesanan baru yang disimpan oleh pelayan atau kasir akan langsung muncul di sini.'
-                  : 'Cobalah ubah filter stasiun kerja atau status di bagian atas untuk melihat pesanan lainnya.'}
+                  ? 'Tidak ada antrean pesanan saat ini.'
+                  : 'Tidak ada pesanan untuk filter yang dipilih.'}
               </p>
               {statusFilter !== 'all' && (
                 <button
