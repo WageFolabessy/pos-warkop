@@ -43,10 +43,10 @@ export const TablePanel: React.FC<TablePanelProps> = ({
       <div className="p-3.5 border-b border-gray-200 bg-white flex items-center justify-between">
         <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-600 flex items-center gap-1.5">
           <Users className="w-3.5 h-3.5 text-gray-400" />
-          Daftar Meja
+          Meja
         </h2>
         <span className="text-[11px] font-mono text-gray-400">
-          {physicalTables.filter((t) => t.status === 'belum_lunas').length}/15 Terisi
+          {physicalTables.filter((t) => t.status === 'belum_lunas').length}/15
         </span>
       </div>
 
@@ -73,12 +73,12 @@ export const TablePanel: React.FC<TablePanelProps> = ({
             </div>
             <div>
               <span className="font-semibold text-xs sm:text-sm text-gray-900 block leading-tight">
-                Bungkus (Bawa Pulang)
+                Bungkus
               </span>
               <span className="text-[11px] text-gray-500 block">
                 {isTakeawayUnpaid
-                  ? `${takeawaySummary.totalItems} item pesanan`
-                  : 'Pesanan dibawa pulang'}
+                  ? `${takeawaySummary.totalItems} item`
+                  : 'Bawa pulang'}
               </span>
             </div>
           </div>

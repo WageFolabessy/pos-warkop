@@ -26,28 +26,28 @@ const ROLES = [
   {
     id: 'owner' as const,
     label: 'Pemilik',
-    desc: 'Akses penuh & atur data',
+    desc: 'Akses penuh',
     icon: ShieldCheck,
     title: 'Beralih ke Mode Pemilik (Akses Penuh & Atur Ulang Data)',
   },
   {
     id: 'kasir' as const,
     label: 'Kasir',
-    desc: 'Operasional POS & bayar',
+    desc: 'Kasir & bayar',
     icon: Store,
     title: 'Beralih ke Mode Kasir (Operasional POS & Pembayaran)',
   },
   {
     id: 'pelayan' as const,
     label: 'Pelayan',
-    desc: 'Pencatatan pesanan meja',
+    desc: 'Catat pesanan',
     icon: UserCheck,
     title: 'Beralih ke Mode Pelayan (Pencatatan Pesanan)',
   },
   {
     id: 'dapur' as const,
     label: 'Dapur',
-    desc: 'Layar antrean pesanan KDS',
+    desc: 'Antrean pesanan',
     icon: ChefHat,
     title: 'Beralih ke Mode Dapur (Layar Antrean KDS)',
   },
@@ -185,7 +185,7 @@ export const TopBar: React.FC<TopBarProps> = ({
             />
             <div className="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-56 sm:w-64 bg-white rounded-2xl shadow-xl border border-gray-200 p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
               <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                Mode Pengguna
+                Peran
               </div>
               <div className="space-y-0.5">
                 {ROLES.map((role) => {

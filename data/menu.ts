@@ -61,26 +61,26 @@ export const MENU_ITEMS: MenuItem[] = [
     iconName: 'ChefHat',
   },
 
-  // Camilan
+  // Cemilan
   {
     id: 'pisang-goreng-srikaya',
     name: 'Pisang Goreng Srikaya',
     price: 8000,
-    category: 'camilan',
+    category: 'cemilan',
     iconName: 'Flame',
   },
   {
     id: 'bakwan-pontianak',
     name: 'Bakwan Pontianak',
     price: 5000,
-    category: 'camilan',
+    category: 'cemilan',
     iconName: 'Cookie',
   },
   {
     id: 'roti-bakar-cokelat-keju',
     name: 'Roti Bakar Cokelat Keju',
     price: 10000,
-    category: 'camilan',
+    category: 'cemilan',
     iconName: 'Sandwich',
   },
 ];

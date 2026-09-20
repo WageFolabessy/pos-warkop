@@ -53,6 +53,7 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
           if (stationFilter === 'makanan') {
             return (
               item.menuItem.category === 'makanan' ||
+              item.menuItem.category === 'cemilan' ||
               item.menuItem.category === 'camilan'
             );
           }
@@ -88,7 +89,13 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
       order.items.forEach((item) => {
         const cat = item.menuItem.category;
         if (stationFilter === 'minuman' && cat !== 'minuman') return;
-        if (stationFilter === 'makanan' && cat !== 'makanan' && cat !== 'camilan') return;
+        if (
+          stationFilter === 'makanan' &&
+          cat !== 'makanan' &&
+          cat !== 'cemilan' &&
+          cat !== 'camilan'
+        )
+          return;
 
         if (!summaryMap[item.menuItem.id]) {
           summaryMap[item.menuItem.id] = {
@@ -143,13 +150,13 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
               </div>
               <div>
                 <h1 className="text-base sm:text-lg font-semibold text-gray-900 tracking-tight flex items-center gap-2">
-                  Layar Dapur &amp; Bar
+                  Dapur
                   <span className="text-[10px] uppercase bg-gray-100 text-gray-600 border border-gray-200 px-2 py-0.5 rounded-full font-medium">
                     KDS
                   </span>
                 </h1>
                 <p className="text-xs text-gray-500">
-                  Antrean Pembuatan Minuman &amp; Makanan Real-Time
+                  Antrean Pesanan Real-Time
                 </p>
               </div>
             </div>
@@ -196,7 +203,7 @@ export const KitchenView: React.FC<KitchenViewProps> = ({
                 title="Filter Pesanan Siap Antar"
               >
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Siap Antar ({stats.siapSaji})</span>
+                <span>Siap ({stats.siapSaji})</span>
               </span>
             </div>
           </div>

@@ -170,7 +170,7 @@ export default function POSPage() {
               }`}
             >
               <Users className="w-4 h-4 shrink-0" />
-              <span className="truncate">Daftar Meja ({tables.filter((t) => !t.isTakeaway && t.status === 'belum_lunas').length}/15)</span>
+              <span className="truncate">Meja ({tables.filter((t) => !t.isTakeaway && t.status === 'belum_lunas').length}/15)</span>
             </button>
 
             <button
@@ -184,7 +184,7 @@ export default function POSPage() {
             >
               <Utensils className="w-4 h-4 shrink-0" />
               <span className="truncate">
-                Katalog Menu ({activeTable?.isTakeaway ? 'Bungkus' : (activeTable?.label || 'Meja')})
+                Menu ({activeTable?.isTakeaway ? 'Bungkus' : (activeTable?.label || 'Meja')})
               </span>
             </button>
           </div>

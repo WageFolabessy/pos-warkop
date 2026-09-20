@@ -8,9 +8,9 @@ import { Search, X, ArrowLeft } from 'lucide-react';
 
 const CATEGORIES: { id: Category; label: string }[] = [
   { id: 'all', label: 'Semua' },
-  { id: 'minuman', label: 'Kopi & Minuman' },
+  { id: 'minuman', label: 'Minuman' },
   { id: 'makanan', label: 'Makanan' },
-  { id: 'camilan', label: 'Camilan' },
+  { id: 'cemilan', label: 'Cemilan' },
 ];
 
 interface MenuCatalogPanelProps {
@@ -33,7 +33,11 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
 
   const filteredItems = useMemo(() => {
     return MENU_ITEMS.filter((item) => {
-      const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+      const isCemilanMatch =
+        (selectedCategory === 'cemilan' || selectedCategory === 'camilan') &&
+        (item.category === 'cemilan' || item.category === 'camilan');
+      const matchesCategory =
+        selectedCategory === 'all' || item.category === selectedCategory || isCemilanMatch;
       const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
@@ -52,11 +56,11 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
             className="flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-100/60 px-3 py-1.5 rounded-full border border-gray-200 cursor-pointer min-h-9"
           >
             <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Daftar Meja</span>
+            <span>Meja</span>
           </button>
 
           <div className="flex items-center gap-1.5 text-xs font-medium text-gray-700 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-200">
-            <span>Target: {activeTargetLabel || 'Meja'}</span>
+            <span>{activeTargetLabel || 'Meja'}</span>
           </div>
         </div>
       )}
@@ -90,7 +94,7 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
           <input
             id="menu-search-input"
             type="text"
-            placeholder="Cari nama menu..."
+            placeholder="Cari menu..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-8 py-2 text-xs bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-[#0071e3] focus:bg-white text-gray-900 transition-colors min-h-10"

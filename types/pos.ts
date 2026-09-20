@@ -1,4 +1,4 @@
-export type Category = 'all' | 'minuman' | 'makanan' | 'camilan';
+export type Category = 'all' | 'minuman' | 'makanan' | 'cemilan' | 'camilan';
 
 export type UserRole = 'owner' | 'kasir' | 'pelayan' | 'dapur';
 
@@ -8,7 +8,7 @@ export interface MenuItem {
   id: string;
   name: string;
   price: number;
-  category: 'minuman' | 'makanan' | 'camilan';
+  category: 'minuman' | 'makanan' | 'cemilan' | 'camilan';
   description?: string;
   badge?: string;
   iconName: string;

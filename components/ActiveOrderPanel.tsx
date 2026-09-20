@@ -71,7 +71,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
       <div className="p-3.5 sm:p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
         <div>
           <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
-            Pesanan Aktif
+            Pesanan
           </span>
           <h2 className="font-semibold text-base sm:text-lg text-gray-900 leading-tight">
             {targetLabel}
@@ -101,7 +101,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
               title="Kosongkan pesanan meja ini"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span className="text-[11px] font-medium">Kosongkan</span>
+              <span className="text-[11px] font-medium">Reset</span>
             </button>
           )}
 
@@ -124,7 +124,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
           <div className="h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
             <p className="text-sm font-medium text-gray-600">Belum ada pesanan</p>
             <p className="text-xs text-gray-400 mt-0.5 max-w-44">
-              Ketuk menu di katalog untuk menambahkan pesanan ke {targetLabel}
+              Pilih menu untuk memesan ke {targetLabel}
             </p>
           </div>
         ) : (
@@ -199,12 +199,12 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
         {/* Ringkasan Biaya */}
         <div className="space-y-1 text-xs">
           <div className="flex justify-between text-gray-500">
-            <span>Jumlah Item</span>
+            <span>Item</span>
             <span className="font-mono tabular-nums text-gray-700">{totalCount} item</span>
           </div>
           <div className="flex justify-between items-baseline pt-2 border-t border-gray-200">
             <span className="font-semibold text-xs uppercase tracking-wide text-gray-700">
-              Total Akhir
+              Total
             </span>
             <span className="text-xl sm:text-2xl font-semibold font-mono text-gray-900 tabular-nums">
               {formatIDR(subtotal)}
@@ -214,7 +214,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
 
         {/* Hirarki Tombol Aksi */}
         <div className="space-y-2 pt-1">
-          {/* Tombol Utama (Primary): Bayar Sekarang */}
+          {/* Tombol Utama (Primary): Bayar */}
           <button
             id="btn-bayar-sekarang"
             disabled={draftItems.length === 0}
@@ -222,20 +222,20 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
             className="w-full flex items-center justify-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3.5 px-4 rounded-full transition-all active:scale-[0.99] cursor-pointer disabled:cursor-not-allowed min-h-12 text-sm"
           >
             <CreditCard className="w-4 h-4" />
-            <span>Bayar Sekarang ({formatIDR(subtotal)})</span>
+            <span>Bayar ({formatIDR(subtotal)})</span>
           </button>
 
-          {/* Tombol Sekunder: Simpan Tagihan / Buka Meja */}
+          {/* Tombol Sekunder: Simpan Pesanan */}
           <button
             id="btn-simpan-pesanan"
             disabled={!hasUnsavedChanges && draftItems.length === 0}
             onClick={onSaveDraft}
             className="w-full flex items-center justify-center gap-1.5 border border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 disabled:bg-gray-100 disabled:border-gray-200 disabled:text-gray-400 text-gray-700 font-medium py-2.5 px-3 rounded-full text-xs sm:text-sm transition-colors cursor-pointer disabled:cursor-not-allowed min-h-11"
           >
-            <span>Simpan Tagihan / Buka Meja</span>
+            <span>Simpan Pesanan</span>
           </button>
 
-          {/* Tombol Batal/Reset (Ghost text link) */}
+          {/* Tombol Batal (Ghost text link) */}
           {hasUnsavedChanges && (
             <div className="text-center pt-1">
               <button
@@ -243,7 +243,7 @@ export const ActiveOrderPanel: React.FC<ActiveOrderPanelProps> = ({
                 onClick={onCancelDraft}
                 className="text-xs text-gray-400 hover:text-gray-600 transition-colors cursor-pointer underline-offset-2 hover:underline"
               >
-                Batalkan Perubahan
+                Batal
               </button>
             </div>
           )}

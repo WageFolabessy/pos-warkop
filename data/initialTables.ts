@@ -5,7 +5,7 @@ export function getInitialTables(): TableOrder[] {
   const tables: TableOrder[] = [
     {
       targetId: 'takeaway',
-      label: 'Bungkus (Bawa Pulang)',
+      label: 'Bungkus',
       isTakeaway: true,
       status: 'kosong',
       items: [],
@@ -97,7 +97,7 @@ export function getInitialTransactions(): TransactionRecord[] {
     },
     {
       id: `RK-${dateStr}-1003`,
-      targetLabel: 'Bungkus (Bawa Pulang)',
+      targetLabel: 'Bungkus',
       isTakeaway: true,
       timestamp: new Date(Date.now() - 3600000 * 0.8).toISOString(),
       items: [

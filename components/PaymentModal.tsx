@@ -201,7 +201,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                     : 'text-gray-500 hover:text-gray-700'
                 }`}
               >
-                <span>Bayar Semua ({formatIDR(subtotal)})</span>
+                <span>Semua ({formatIDR(subtotal)})</span>
               </button>
 
               <button
@@ -228,10 +228,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-xs font-semibold text-gray-900 block">
-                    Pilih Pesanan yang Ingin Dibayar
+                    Pilih Item yang Dibayar
                   </span>
                   <span className="text-[11px] text-gray-500">
-                    Hanya item yang dipilih yang akan dilunasi dan dicetak di struk.
+                    Hanya item terpilih yang dilunasi.
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[11px]">
@@ -550,8 +550,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           >
             <span>
               {paymentMode === 'split'
-                ? `Lunasi Sebagian (${formatIDR(effectiveSubtotal)})`
-                : 'Konfirmasi & Lunasi'}
+                ? `Bayar ${formatIDR(effectiveSubtotal)}`
+                : 'Bayar'}
             </span>
             <ArrowRight className="w-4 h-4" />
           </button>

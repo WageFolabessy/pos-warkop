@@ -45,7 +45,7 @@ export const MobileFloatingBar: React.FC<MobileFloatingBarProps> = ({
 
         {/* Right: CTA Button */}
         <div className="flex items-center gap-1.5 bg-[#0071e3] hover:bg-[#0077ED] text-white font-semibold px-3.5 py-2 rounded-full text-xs sm:text-sm border border-transparent shrink-0">
-          <span>Lihat Tagihan</span>
+          <span>Tagihan</span>
           <ChevronUp className="w-4 h-4" />
         </div>
       </button>

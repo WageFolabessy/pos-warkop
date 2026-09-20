@@ -40,7 +40,7 @@ const CATEGORIES: { id: Category; label: string }[] = [
   { id: 'all', label: 'Semua' },
   { id: 'minuman', label: 'Minuman' },
   { id: 'makanan', label: 'Makanan' },
-  { id: 'camilan', label: 'Camilan' },
+  { id: 'cemilan', label: 'Cemilan' },
 ];
 
 export const WaiterView: React.FC<WaiterViewProps> = ({
@@ -80,7 +80,11 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
   // Filtered menu items
   const filteredItems = useMemo(() => {
     return MENU_ITEMS.filter((item) => {
-      const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+      const isCemilanMatch =
+        (selectedCategory === 'cemilan' || selectedCategory === 'camilan') &&
+        (item.category === 'cemilan' || item.category === 'camilan');
+      const matchesCategory =
+        selectedCategory === 'all' || item.category === selectedCategory || isCemilanMatch;
       const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
@@ -146,13 +150,13 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 </div>
                 <div>
                   <span className="font-semibold text-sm text-gray-900 block">
-                    Bungkus (Bawa Pulang)
+                    Bungkus
                   </span>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="text-xs text-gray-500">
                       {takeaway?.status === 'belum_lunas'
-                        ? `${takeaway.items.reduce((s, it) => s + it.quantity, 0)} item dipesan`
-                        : 'Tersedia untuk bawa pulang'}
+                        ? `${takeaway.items.reduce((s, it) => s + it.quantity, 0)} item`
+                        : 'Bawa pulang'}
                     </span>
                     {takeaway?.kitchenStatus === 'siap_saji' && (
                       <span className="text-[10px] text-gray-600 font-medium">
@@ -220,7 +224,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                     <div className="mt-2">
                       {isOccupied ? (
                         <div className="text-xs font-medium text-gray-700">
-                          {totalItems} item dipesan
+                          {totalItems} item
                         </div>
                       ) : (
                         <div className="text-xs text-gray-500 font-medium">
@@ -249,7 +253,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               className="flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-full border border-gray-200 cursor-pointer min-h-10"
             >
               <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
-              <span>Ganti Meja</span>
+              <span>Meja</span>
             </button>
 
             <div className="flex items-center gap-2">
@@ -266,7 +270,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   title="Kosongkan pesanan meja ini"
                 >
                   <RotateCcw className="w-3.5 h-3.5" />
-                  <span className="text-[11px] font-medium">Kosongkan</span>
+                  <span className="text-[11px] font-medium">Reset</span>
                 </button>
               )}
 
@@ -277,7 +281,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 className="flex items-center gap-1.5 bg-[#0071e3] hover:bg-[#0077ED] text-white px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer min-h-10"
               >
                 <ListOrdered className="w-3.5 h-3.5" />
-                <span>{draftTotalCount} Item</span>
+                <span>{draftTotalCount} item</span>
               </button>
             </div>
           </div>
@@ -310,7 +314,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Cari menu pesanan..."
+                placeholder="Cari menu..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-9 pr-8 py-2 text-xs bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-[#0071e3] focus:bg-white text-gray-900 transition-colors min-h-10"
@@ -441,10 +445,10 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
             <div className="p-3.5 border-b border-gray-200 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
-                  Daftar Pesanan Meja
+                  Pesanan
                 </span>
                 <h3 className="font-semibold text-base text-gray-900">
-                  {activeTable?.label || 'Meja'} ({draftTotalCount} Item)
+                  {activeTable?.label || 'Meja'} ({draftTotalCount} item)
                 </h3>
               </div>
               <div className="flex items-center gap-1.5">
@@ -456,7 +460,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                     title="Kosongkan pesanan meja ini"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />
-                    <span className="text-[11px] font-medium">Kosongkan</span>
+                    <span className="text-[11px] font-medium">Reset</span>
                   </button>
                 )}
                 <button
@@ -472,7 +476,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
             <div className="flex-1 overflow-y-auto p-4 divide-y divide-gray-100 space-y-3">
               {draftItems.length === 0 ? (
                 <div className="py-12 text-center text-gray-400 text-xs">
-                  Belum ada item yang dipilih untuk meja ini.
+                  Belum ada item dipilih.
                 </div>
               ) : (
                 draftItems.map((it) => (
@@ -545,7 +549,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 className="w-full flex items-center justify-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 px-4 rounded-full cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm min-h-12"
               >
                 <Send className="w-4 h-4" />
-                <span>Kirim Pesanan ke Kasir ({draftTotalCount} Item)</span>
+                <span>Kirim Pesanan ({draftTotalCount})</span>
               </button>
             </div>
           </div>
