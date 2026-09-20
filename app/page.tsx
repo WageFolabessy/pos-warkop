@@ -163,27 +163,29 @@ export default function POSPage() {
             <button
               id="tab-mobile-tables"
               onClick={() => setMobileTab('tables')}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
+              className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 px-2.5 sm:px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
                 mobileTab === 'tables'
                   ? 'bg-[#0071e3] text-white'
                   : 'bg-gray-100 text-gray-600 hover:text-gray-900'
               }`}
             >
-              <Users className="w-4 h-4" />
-              <span>Daftar Meja ({tables.filter((t) => !t.isTakeaway && t.status === 'belum_lunas').length}/15)</span>
+              <Users className="w-4 h-4 shrink-0" />
+              <span className="truncate">Daftar Meja ({tables.filter((t) => !t.isTakeaway && t.status === 'belum_lunas').length}/15)</span>
             </button>
 
             <button
               id="tab-mobile-menu"
               onClick={() => setMobileTab('menu')}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
+              className={`flex-1 min-w-0 flex items-center justify-center gap-1.5 sm:gap-2 py-2 px-2.5 sm:px-3 rounded-xl font-semibold text-xs transition-colors cursor-pointer min-h-11 ${
                 mobileTab === 'menu'
                   ? 'bg-[#0071e3] text-white'
                   : 'bg-gray-100 text-gray-600 hover:text-gray-900'
               }`}
             >
-              <Utensils className="w-4 h-4" />
-              <span>Katalog Menu ({activeTable?.label || 'Meja'})</span>
+              <Utensils className="w-4 h-4 shrink-0" />
+              <span className="truncate">
+                Katalog Menu ({activeTable?.isTakeaway ? 'Bungkus' : (activeTable?.label || 'Meja')})
+              </span>
             </button>
           </div>
 
