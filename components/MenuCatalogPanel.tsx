@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { MenuItem, Category } from '@/types/pos';
 import { MENU_ITEMS } from '@/data/menu';
 import { formatIDR } from '@/lib/formatters';
-import { Search, X } from 'lucide-react';
+import { Search, X, ArrowLeft } from 'lucide-react';
 
 const CATEGORIES: { id: Category; label: string }[] = [
   { id: 'all', label: 'Semua' },
@@ -51,7 +51,7 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
             onClick={onBackToTables}
             className="flex items-center gap-1.5 text-xs font-medium text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-100/60 px-3 py-1.5 rounded-full border border-gray-200 cursor-pointer min-h-9"
           >
-            <span>←</span>
+            <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>Daftar Meja</span>
           </button>
 
