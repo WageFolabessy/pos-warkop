@@ -1,6 +1,11 @@
-'use client';
+"use client";
 
-import React, { useSyncExternalStore, useState, useEffect, useRef } from 'react';
+import React, {
+  useSyncExternalStore,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import {
   ReceiptText,
   Clock,
@@ -10,9 +15,9 @@ import {
   ChefHat,
   ChevronDown,
   Check,
-} from 'lucide-react';
-import { formatIndonesianDateTime } from '@/lib/formatters';
-import { UserRole } from '@/types/pos';
+} from "lucide-react";
+import { formatIndonesianDateTime } from "@/lib/formatters";
+import { UserRole } from "@/types/pos";
 
 interface TopBarProps {
   occupiedCount: number;
@@ -24,32 +29,32 @@ interface TopBarProps {
 
 const ROLES = [
   {
-    id: 'owner' as const,
-    label: 'Pemilik',
-    desc: 'Akses penuh',
+    id: "owner" as const,
+    label: "Pemilik",
+    desc: "Akses penuh",
     icon: ShieldCheck,
-    title: 'Beralih ke Mode Pemilik (Akses Penuh & Atur Ulang Data)',
+    title: "Beralih ke Mode Pemilik (Akses Penuh & Atur Ulang Data)",
   },
   {
-    id: 'kasir' as const,
-    label: 'Kasir',
-    desc: 'Kasir & bayar',
+    id: "kasir" as const,
+    label: "Kasir",
+    desc: "Kasir & bayar",
     icon: Store,
-    title: 'Beralih ke Mode Kasir (Operasional POS & Pembayaran)',
+    title: "Beralih ke Mode Kasir (Operasional POS & Pembayaran)",
   },
   {
-    id: 'pelayan' as const,
-    label: 'Pelayan',
-    desc: 'Catat pesanan',
+    id: "pelayan" as const,
+    label: "Pelayan",
+    desc: "Catat pesanan",
     icon: UserCheck,
-    title: 'Beralih ke Mode Pelayan (Pencatatan Pesanan)',
+    title: "Beralih ke Mode Pelayan (Pencatatan Pesanan)",
   },
   {
-    id: 'dapur' as const,
-    label: 'Dapur',
-    desc: 'Antrean pesanan',
+    id: "dapur" as const,
+    label: "Dapur",
+    desc: "Antrean pesanan",
     icon: ChefHat,
-    title: 'Beralih ke Mode Dapur (Layar Antrean KDS)',
+    title: "Beralih ke Mode Dapur (Layar Antrean KDS)",
   },
 ] as const;
 
@@ -63,7 +68,7 @@ function getClockSnapshot() {
 }
 
 function getServerClockSnapshot() {
-  return '';
+  return "";
 }
 
 export const TopBar: React.FC<TopBarProps> = ({
@@ -79,7 +84,7 @@ export const TopBar: React.FC<TopBarProps> = ({
   const currentDateTime = useSyncExternalStore(
     subscribeToClock,
     getClockSnapshot,
-    getServerClockSnapshot
+    getServerClockSnapshot,
   );
 
   // Close dropdown on click outside or escape key
@@ -87,22 +92,25 @@ export const TopBar: React.FC<TopBarProps> = ({
     if (!isRoleDropdownOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === "Escape") {
         setIsRoleDropdownOpen(false);
       }
     };
 
     const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
         setIsRoleDropdownOpen(false);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('mousedown', handleClickOutside);
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('mousedown', handleClickOutside);
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isRoleDropdownOpen]);
 
@@ -122,9 +130,6 @@ export const TopBar: React.FC<TopBarProps> = ({
               KOPI
             </span>
           </div>
-          <span className="text-[8px] sm:text-[10px] text-gray-400 tracking-wider uppercase mt-0.5 font-medium">
-            PONTIANAK
-          </span>
         </div>
       </div>
 
@@ -140,8 +145,8 @@ export const TopBar: React.FC<TopBarProps> = ({
               onClick={() => onRoleChange(role.id)}
               className={`px-2.5 lg:px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 min-h-9 ${
                 isSelected
-                  ? 'bg-gray-900 text-white shadow-2xs'
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? "bg-gray-900 text-white shadow-2xs"
+                  : "text-gray-500 hover:text-gray-700"
               }`}
               title={role.title}
             >
@@ -160,18 +165,20 @@ export const TopBar: React.FC<TopBarProps> = ({
           onClick={() => setIsRoleDropdownOpen((prev) => !prev)}
           className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer border ${
             isRoleDropdownOpen
-              ? 'bg-gray-900 text-white border-gray-900 shadow-2xs'
-              : 'bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200/80 active:bg-gray-200'
+              ? "bg-gray-900 text-white border-gray-900 shadow-2xs"
+              : "bg-gray-100 text-gray-800 border-gray-200 hover:bg-gray-200/80 active:bg-gray-200"
           }`}
           aria-haspopup="true"
           aria-expanded={isRoleDropdownOpen}
           title="Beralih peran / mode kerja"
         >
-          <ActiveIcon className={`w-3.5 h-3.5 shrink-0 ${isRoleDropdownOpen ? 'text-white' : 'text-gray-700'}`} />
+          <ActiveIcon
+            className={`w-3.5 h-3.5 shrink-0 ${isRoleDropdownOpen ? "text-white" : "text-gray-700"}`}
+          />
           <span>{activeRole.label}</span>
           <ChevronDown
             className={`w-3 h-3 transition-transform duration-200 ${
-              isRoleDropdownOpen ? 'rotate-180 text-white' : 'text-gray-500'
+              isRoleDropdownOpen ? "rotate-180 text-white" : "text-gray-500"
             }`}
           />
         </button>
@@ -201,20 +208,28 @@ export const TopBar: React.FC<TopBarProps> = ({
                       }}
                       className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs transition-colors cursor-pointer text-left ${
                         isSelected
-                          ? 'bg-gray-900 text-white font-medium shadow-2xs'
-                          : 'text-gray-700 hover:bg-gray-100 active:bg-gray-100'
+                          ? "bg-gray-900 text-white font-medium shadow-2xs"
+                          : "text-gray-700 hover:bg-gray-100 active:bg-gray-100"
                       }`}
                     >
                       <div className="flex items-center gap-2.5">
-                        <Icon className={`w-4 h-4 shrink-0 ${isSelected ? 'text-white' : 'text-gray-500'}`} />
+                        <Icon
+                          className={`w-4 h-4 shrink-0 ${isSelected ? "text-white" : "text-gray-500"}`}
+                        />
                         <div>
-                          <div className="font-semibold leading-tight">{role.label}</div>
-                          <div className={`text-[10px] leading-tight mt-0.5 ${isSelected ? 'text-gray-300' : 'text-gray-400'}`}>
+                          <div className="font-semibold leading-tight">
+                            {role.label}
+                          </div>
+                          <div
+                            className={`text-[10px] leading-tight mt-0.5 ${isSelected ? "text-gray-300" : "text-gray-400"}`}
+                          >
                             {role.desc}
                           </div>
                         </div>
                       </div>
-                      {isSelected && <Check className="w-3.5 h-3.5 text-white shrink-0 ml-2" />}
+                      {isSelected && (
+                        <Check className="w-3.5 h-3.5 text-white shrink-0 ml-2" />
+                      )}
                     </button>
                   );
                 })}
@@ -228,7 +243,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       <div className="hidden xl:flex items-center gap-2 bg-gray-50 border border-gray-200 px-3.5 py-1.5 rounded-lg text-xs text-gray-600 font-mono tabular-nums shadow-xs">
         <Clock className="w-3.5 h-3.5 text-gray-400" />
         <span className="tracking-wide">
-          {currentDateTime || 'Memuat waktu...'}
+          {currentDateTime || "Memuat waktu..."}
         </span>
       </div>
 
@@ -242,19 +257,21 @@ export const TopBar: React.FC<TopBarProps> = ({
           <span
             className={`w-2 h-2 rounded-full shrink-0 ${
               occupiedCount > 0
-                ? 'bg-emerald-500 ring-2 ring-emerald-100'
-                : 'bg-gray-300'
+                ? "bg-emerald-500 ring-2 ring-emerald-100"
+                : "bg-gray-300"
             }`}
           />
           <span className="font-medium text-gray-600 text-xs tabular-nums whitespace-nowrap">
-            <strong className="text-gray-900 font-semibold">{occupiedCount}</strong>
+            <strong className="text-gray-900 font-semibold">
+              {occupiedCount}
+            </strong>
             <span className="text-gray-400">/{totalTables}</span>
             <span className="hidden sm:inline text-gray-500 ml-1">Meja</span>
           </span>
         </div>
 
         {/* Rekap Kas Button (Visible in Mode Kasir & Mode Owner - Hidden in Mode Pelayan) */}
-        {(currentRole === 'kasir' || currentRole === 'owner') && (
+        {(currentRole === "kasir" || currentRole === "owner") && (
           <button
             id="btn-rekap-kas"
             onClick={onOpenRekap}
