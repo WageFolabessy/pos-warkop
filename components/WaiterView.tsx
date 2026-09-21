@@ -19,6 +19,8 @@ import {
   ListOrdered,
   RotateCcw,
   ArrowLeft,
+  ClipboardList,
+  Clock,
 } from 'lucide-react';
 
 interface WaiterViewProps {
@@ -65,8 +67,22 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
   const [showOrderReviewDrawer, setShowOrderReviewDrawer] = useState(false);
   const [successToast, setSuccessToast] = useState<string | null>(null);
 
+  const [showActiveOrdersSummary, setShowActiveOrdersSummary] = useState(false);
+
   const takeaway = tables.find((t) => t.isTakeaway);
   const physicalTables = tables.filter((t) => !t.isTakeaway);
+
+  // Active occupied tables with orders
+  const occupiedTables = useMemo(() => {
+    return tables.filter((t) => t.status === 'belum_lunas' && t.items.length > 0);
+  }, [tables]);
+
+  const totalActiveItemsCount = useMemo(() => {
+    return occupiedTables.reduce(
+      (sum, tbl) => sum + tbl.items.reduce((s, it) => s + it.quantity, 0),
+      0
+    );
+  }, [occupiedTables]);
 
   // In-cart counts mapping
   const cartItemCounts = useMemo(() => {
@@ -125,6 +141,33 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
          ========================================================================= */}
       {currentStep === 'tables' && (
         <div className="flex-1 flex flex-col h-full overflow-hidden">
+          {/* Sub-header: Ringkasan Pesanan Bar */}
+          <div className="bg-white border-b border-gray-200 px-3 py-2.5 sm:px-4 flex items-center justify-between gap-2 shrink-0">
+            <div>
+              <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium block">
+                Pelayan
+              </span>
+              <h2 className="font-semibold text-sm text-gray-900 leading-tight">
+                Daftar Meja & Pesanan
+              </h2>
+            </div>
+
+            <button
+              id="waiter-btn-all-orders-summary"
+              onClick={() => setShowActiveOrdersSummary(true)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50 hover:bg-gray-100 active:bg-gray-200 text-gray-700 transition-colors cursor-pointer text-xs font-medium min-h-10"
+              title="Lihat ringkasan seluruh pesanan aktif"
+            >
+              <ClipboardList className="w-3.5 h-3.5 text-[#0071e3]" />
+              <span>Ringkasan Pesanan</span>
+              {occupiedTables.length > 0 && (
+                <span className="ml-0.5 bg-[#0071e3] text-white text-[10px] font-mono font-semibold px-1.5 py-0.2 rounded-full">
+                  {occupiedTables.length}
+                </span>
+              )}
+            </button>
+          </div>
+
           <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3">
             {/* Takeaway Card */}
             <button
@@ -564,6 +607,167 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               >
                 <Send className="w-4 h-4" />
                 <span>Kirim Pesanan ({draftTotalCount})</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL DRAWER: RINGKASAN SELURUH PESANAN AKTIF (Semua Meja & Bungkus)
+         ========================================================================= */}
+      {showActiveOrdersSummary && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-150">
+          <div
+            className="fixed inset-0"
+            onClick={() => setShowActiveOrdersSummary(false)}
+          />
+          <div className="relative z-10 w-full max-w-xl max-h-[85vh] bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col animate-in zoom-in-95 duration-150">
+            {/* Modal Header */}
+            <div className="p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center text-[#0071e3] shrink-0 border border-gray-200">
+                  <ClipboardList className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-[10px] uppercase tracking-wider text-gray-500 font-medium block">
+                    Pelayan
+                  </span>
+                  <h3 className="font-semibold text-base text-gray-900 leading-tight">
+                    Ringkasan Pesanan Aktif
+                  </h3>
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowActiveOrdersSummary(false)}
+                className="w-8 h-8 rounded-full bg-white hover:bg-gray-100 border border-gray-200 flex items-center justify-center text-gray-500 cursor-pointer transition-colors"
+                title="Tutup"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Quick Stats Bar */}
+            <div className="px-4 py-2.5 bg-gray-50/50 border-b border-gray-200 flex items-center justify-between text-xs text-gray-600">
+              <div className="flex items-center gap-1.5">
+                <span className="font-medium text-gray-900 font-mono">{occupiedTables.length}</span>
+                <span>meja terisi</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="font-medium text-gray-900 font-mono">{totalActiveItemsCount}</span>
+                <span>total item dipesan</span>
+              </div>
+            </div>
+
+            {/* List of active orders per table */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {occupiedTables.length === 0 ? (
+                <div className="py-16 text-center text-gray-400 text-xs">
+                  <ClipboardList className="w-8 h-8 mx-auto mb-2 text-gray-300" />
+                  <p className="font-medium text-gray-600 text-sm">Tidak ada pesanan aktif saat ini</p>
+                  <p className="text-gray-400 mt-0.5">Semua meja berstatus kosong / pesanan sudah diselesaikan di kasir.</p>
+                </div>
+              ) : (
+                occupiedTables.map((tbl) => {
+                  const tblItemTotal = tbl.items.reduce((s, it) => s + it.quantity, 0);
+                  const doneCount = tbl.items.filter((it) => (tbl.completedItemIds || []).includes(it.menuItem.id)).length;
+
+                  return (
+                    <div
+                      key={tbl.targetId}
+                      className="border border-gray-200 rounded-xl p-3.5 bg-white space-y-2.5"
+                    >
+                      {/* Table Card Header */}
+                      <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-100">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-gray-900" />
+                          <h4 className="font-semibold text-sm text-gray-900">
+                            {tbl.label}
+                          </h4>
+                          <span className="text-xs text-gray-500">
+                            ({tblItemTotal} item)
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          {/* Kitchen badge */}
+                          {tbl.kitchenStatus === 'siap_saji' && (
+                            <span className="text-[10px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
+                              Siap Antar
+                            </span>
+                          )}
+                          {tbl.kitchenStatus === 'dimasak' && (
+                            <span className="text-[10px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full">
+                              {doneCount > 0 ? `${doneCount}/${tbl.items.length} Siap` : 'Diracik'}
+                            </span>
+                          )}
+                          {tbl.kitchenStatus === 'menunggu' && (
+                            <span className="text-[10px] text-gray-500 font-medium bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full">
+                              Antrean
+                            </span>
+                          )}
+
+                          {/* Quick open table button */}
+                          <button
+                            onClick={() => {
+                              setShowActiveOrdersSummary(false);
+                              handleSelectTable(tbl.targetId);
+                            }}
+                            className="text-xs font-medium text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2.5 py-1 rounded-full border border-gray-200 transition-colors flex items-center gap-1 cursor-pointer"
+                          >
+                            <span>Buka Meja</span>
+                            <ChevronRight className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Items per table */}
+                      <div className="space-y-1.5 pt-0.5">
+                        {tbl.items.map((it) => {
+                          const isDone = (tbl.completedItemIds || []).includes(it.menuItem.id);
+                          return (
+                            <div
+                              key={it.menuItem.id}
+                              className="flex items-start justify-between text-xs py-1 px-1.5 rounded hover:bg-gray-50"
+                            >
+                              <div className="flex-1 pr-2">
+                                <div className="flex items-center gap-1.5 flex-wrap">
+                                  <span className="font-mono font-semibold text-gray-900 w-5">
+                                    {it.quantity}x
+                                  </span>
+                                  <span className="text-gray-800 font-medium">
+                                    {it.menuItem.name}
+                                  </span>
+                                  {isDone && (
+                                    <span className="text-[9px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 px-1 rounded">
+                                      Siap
+                                    </span>
+                                  )}
+                                </div>
+                                {it.notes && (
+                                  <p className="text-[11px] text-gray-500 italic mt-0.5 pl-6">
+                                    Catatan: {it.notes}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-3 bg-gray-50 border-t border-gray-200 flex justify-end">
+              <button
+                onClick={() => setShowActiveOrdersSummary(false)}
+                className="px-5 py-2.5 rounded-full border border-gray-200 bg-white hover:bg-gray-100 text-gray-700 text-xs font-medium cursor-pointer transition-colors min-h-10"
+              >
+                Tutup
               </button>
             </div>
           </div>

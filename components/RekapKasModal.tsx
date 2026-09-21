@@ -1,8 +1,13 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { DailySummary, TransactionRecord, UserRole, ExpenseRecord } from '@/types/pos';
-import { formatIDR, formatReceiptTime } from '@/lib/formatters';
+import React, { useState } from "react";
+import {
+  DailySummary,
+  TransactionRecord,
+  UserRole,
+  ExpenseRecord,
+} from "@/types/pos";
+import { formatIDR, formatReceiptTime } from "@/lib/formatters";
 import {
   X,
   TrendingUp,
@@ -25,8 +30,8 @@ import {
   AlertCircle,
   Check,
   Edit2,
-} from 'lucide-react';
-import { ConfirmModal } from './ConfirmModal';
+} from "lucide-react";
+import { ConfirmModal } from "./ConfirmModal";
 
 interface RekapKasModalProps {
   isOpen: boolean;
@@ -67,15 +72,19 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
   const [expandedTxId, setExpandedTxId] = useState<string | null>(null);
 
   // Form state for adding petty cash expense
-  const [expenseDesc, setExpenseDesc] = useState('');
-  const [expenseAmount, setExpenseAmount] = useState('');
+  const [expenseDesc, setExpenseDesc] = useState("");
+  const [expenseAmount, setExpenseAmount] = useState("");
 
   // Editing modal awal (opening cash)
   const [isEditingOpeningCash, setIsEditingOpeningCash] = useState(false);
-  const [inputOpeningCash, setInputOpeningCash] = useState(String(openingCash || ''));
+  const [inputOpeningCash, setInputOpeningCash] = useState(
+    String(openingCash || ""),
+  );
 
   // Actual cash count (uang fisik di laci)
-  const [inputActualCash, setInputActualCash] = useState(actualCash !== null ? String(actualCash) : '');
+  const [inputActualCash, setInputActualCash] = useState(
+    actualCash !== null ? String(actualCash) : "",
+  );
 
   if (!isOpen) return null;
 
@@ -86,9 +95,11 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
 
     if (onAddExpense) {
       onAddExpense(expenseDesc.trim(), amountNum);
-      setFeedbackMessage(`Pengeluaran "${expenseDesc.trim()}" (${formatIDR(amountNum)}) berhasil dicatat.`);
-      setExpenseDesc('');
-      setExpenseAmount('');
+      setFeedbackMessage(
+        `Pengeluaran "${expenseDesc.trim()}" (${formatIDR(amountNum)}) berhasil dicatat.`,
+      );
+      setExpenseDesc("");
+      setExpenseAmount("");
     }
   };
 
@@ -97,26 +108,30 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
     const amountNum = Math.max(0, Number(inputOpeningCash) || 0);
     if (onUpdateOpeningCash) {
       onUpdateOpeningCash(amountNum);
-      setFeedbackMessage(`Modal awal kasir berhasil diperbarui menjadi ${formatIDR(amountNum)}.`);
+      setFeedbackMessage(
+        `Modal awal kasir berhasil diperbarui menjadi ${formatIDR(amountNum)}.`,
+      );
       setIsEditingOpeningCash(false);
     }
   };
 
   const handleSaveActualCash = (e: React.FormEvent) => {
     e.preventDefault();
-    if (inputActualCash.trim() === '') {
+    if (inputActualCash.trim() === "") {
       if (onUpdateActualCash) onUpdateActualCash(null);
       return;
     }
     const amountNum = Math.max(0, Number(inputActualCash) || 0);
     if (onUpdateActualCash) {
       onUpdateActualCash(amountNum);
-      setFeedbackMessage(`Hasil hitung uang fisik (${formatIDR(amountNum)}) berhasil disimpan.`);
+      setFeedbackMessage(
+        `Hasil hitung uang fisik (${formatIDR(amountNum)}) berhasil disimpan.`,
+      );
     }
   };
 
   const handleResetActualCash = () => {
-    setInputActualCash('');
+    setInputActualCash("");
     if (onUpdateActualCash) {
       onUpdateActualCash(null);
     }
@@ -126,8 +141,11 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
     window.print();
   };
 
-  const totalExpenses = dailySummary.totalExpenses ?? expenses.reduce((s, e) => s + e.amount, 0);
-  const expectedCashDrawer = dailySummary.expectedCashDrawer ?? (openingCash + dailySummary.cashRevenue - totalExpenses);
+  const totalExpenses =
+    dailySummary.totalExpenses ?? expenses.reduce((s, e) => s + e.amount, 0);
+  const expectedCashDrawer =
+    dailySummary.expectedCashDrawer ??
+    openingCash + dailySummary.cashRevenue - totalExpenses;
   const cashDiff = actualCash !== null ? actualCash - expectedCashDrawer : null;
 
   return (
@@ -146,8 +164,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     Rekap Kas Harian
                   </h3>
                   <span className="text-[10px] px-2 py-0.5 rounded-full font-medium uppercase tracking-wider flex items-center gap-1 bg-gray-100 text-gray-600 border border-gray-200">
-                    {currentRole === 'owner' && <ShieldCheck className="w-3 h-3 text-gray-500" />}
-                    {currentRole === 'owner' ? 'Pemilik' : 'Kasir'}
+                    {currentRole === "owner" && (
+                      <ShieldCheck className="w-3 h-3 text-gray-500" />
+                    )}
+                    {currentRole === "owner" ? "Pemilik" : "Kasir"}
                   </span>
                 </div>
                 <p className="text-xs text-gray-500">
@@ -213,7 +233,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   <button
                     type="button"
                     onClick={() => {
-                      setInputOpeningCash(String(openingCash || ''));
+                      setInputOpeningCash(String(openingCash || ""));
                       setIsEditingOpeningCash(!isEditingOpeningCash);
                     }}
                     className="text-[10px] text-[#0071e3] hover:underline font-medium cursor-pointer flex items-center gap-0.5"
@@ -337,7 +357,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                 )}
               </div>
 
-              <form onSubmit={handleSaveActualCash} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+              <form
+                onSubmit={handleSaveActualCash}
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5"
+              >
                 <div className="relative flex-1">
                   <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-gray-400 font-mono font-medium">
                     Rp
@@ -355,7 +378,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
 
                 <button
                   type="submit"
-                  disabled={inputActualCash.trim() === ''}
+                  disabled={inputActualCash.trim() === ""}
                   className="px-5 py-2.5 bg-gray-900 hover:bg-black disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold text-xs rounded-full transition-colors cursor-pointer min-h-11 whitespace-nowrap"
                 >
                   Simpan
@@ -367,10 +390,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                 <div
                   className={`p-3.5 rounded-xl border flex items-center justify-between text-xs animate-in fade-in duration-150 ${
                     cashDiff === 0
-                      ? 'bg-gray-50 border-gray-300 text-gray-900'
+                      ? "bg-gray-50 border-gray-300 text-gray-900"
                       : cashDiff < 0
-                      ? 'bg-red-50 border-red-200 text-red-950'
-                      : 'bg-gray-50 border-gray-300 text-gray-900'
+                        ? "bg-red-50 border-red-200 text-red-950"
+                        : "bg-gray-50 border-gray-300 text-gray-900"
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -382,17 +405,17 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     <div>
                       <span className="font-semibold block">
                         {cashDiff === 0
-                          ? 'UANG KAS PAS / COCOK!'
+                          ? "UANG KAS PAS / COCOK!"
                           : cashDiff < 0
-                          ? 'UANG KAS KURANG'
-                          : 'UANG KAS LEBIH'}
+                            ? "UANG KAS KURANG"
+                            : "UANG KAS LEBIH"}
                       </span>
                       <span className="text-[11px] opacity-80">
                         {cashDiff === 0
-                          ? 'Jumlah uang di laci sesuai dengan hitungan sistem.'
+                          ? "Jumlah uang di laci sesuai dengan hitungan sistem."
                           : cashDiff < 0
-                          ? 'Uang di laci lebih sedikit dari hitungan sistem.'
-                          : 'Uang di laci lebih banyak dari hitungan sistem.'}
+                            ? "Uang di laci lebih sedikit dari hitungan sistem."
+                            : "Uang di laci lebih banyak dari hitungan sistem."}
                       </span>
                     </div>
                   </div>
@@ -403,10 +426,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                     </span>
                     <span className="font-mono font-semibold text-sm tabular-nums">
                       {cashDiff === 0
-                        ? 'Rp 0'
+                        ? "Rp 0"
                         : cashDiff < 0
-                        ? `- ${formatIDR(Math.abs(cashDiff))}`
-                        : `+ ${formatIDR(cashDiff)}`}
+                          ? `- ${formatIDR(Math.abs(cashDiff))}`
+                          : `+ ${formatIDR(cashDiff)}`}
                     </span>
                   </div>
                 </div>
@@ -454,7 +477,11 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   </div>
                   <button
                     type="submit"
-                    disabled={!expenseDesc.trim() || !expenseAmount || Number(expenseAmount) <= 0}
+                    disabled={
+                      !expenseDesc.trim() ||
+                      !expenseAmount ||
+                      Number(expenseAmount) <= 0
+                    }
                     className="flex items-center justify-center gap-1.5 bg-gray-900 hover:bg-black disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold text-xs px-4 py-2 rounded-full cursor-pointer transition-colors disabled:cursor-not-allowed min-h-10 whitespace-nowrap"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -533,13 +560,19 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   <tbody className="divide-y divide-gray-100">
                     {dailySummary.itemSales.length === 0 ? (
                       <tr>
-                        <td colSpan={4} className="py-6 text-center text-gray-400">
+                        <td
+                          colSpan={4}
+                          className="py-6 text-center text-gray-400"
+                        >
                           Belum ada penjualan.
                         </td>
                       </tr>
                     ) : (
                       dailySummary.itemSales.map((sale) => (
-                        <tr key={sale.menuItem.id} className="hover:bg-gray-50 transition-colors">
+                        <tr
+                          key={sale.menuItem.id}
+                          className="hover:bg-gray-50 transition-colors"
+                        >
                           <td className="py-2.5 px-4 font-medium text-gray-900">
                             {sale.menuItem.name}
                           </td>
@@ -578,10 +611,15 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                   transactions.map((tx) => {
                     const isExpanded = expandedTxId === tx.id;
                     return (
-                      <div key={tx.id} className="p-3 hover:bg-gray-50 transition-colors">
+                      <div
+                        key={tx.id}
+                        className="p-3 hover:bg-gray-50 transition-colors"
+                      >
                         <div
                           className="flex items-center justify-between cursor-pointer"
-                          onClick={() => setExpandedTxId(isExpanded ? null : tx.id)}
+                          onClick={() =>
+                            setExpandedTxId(isExpanded ? null : tx.id)
+                          }
                         >
                           <div className="flex items-center gap-2.5">
                             <span className="text-[10px] font-medium text-gray-600 px-2 py-0.5 rounded-full bg-gray-100 border border-gray-200">
@@ -640,7 +678,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
             </div>
 
             {/* Reset Data (Khusus Pemilik) */}
-            {currentRole === 'owner' && (
+            {currentRole === "owner" && (
               <div className="p-3.5 bg-gray-50 border border-gray-200 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <RotateCcw className="w-4 h-4 text-gray-500" />
@@ -697,10 +735,15 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
           STRUK THERMAL 58MM UNTUK REKAP HARIAN (Z-REPORT)
           Hanya dirender saat print (@media print) ke printer thermal
          ========================================================================= */}
-      <div id="thermal-recap-receipt" className="hidden font-thermal text-xs text-black bg-white p-3 leading-tight">
+      <div
+        id="thermal-recap-receipt"
+        className="hidden font-thermal text-xs text-black bg-white p-3 leading-tight"
+      >
         {/* Header Struk Rekap */}
         <div className="text-center pb-2 border-b border-dashed border-black">
-          <h2 className="font-bold text-sm tracking-wider uppercase">RATU KOPI</h2>
+          <h2 className="font-bold text-sm tracking-wider uppercase">
+            RATU KOPI
+          </h2>
           <p className="text-[10px]">Jl. Puyuh No. 12, Pontianak</p>
           <p className="text-[10px] font-bold mt-1 uppercase tracking-wider">
             *** REKAP KAS HARIAN (LAPORAN PENUTUPAN) ***
@@ -708,14 +751,18 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
           <p className="text-[9px] text-gray-600 mt-0.5">
             Dicetak: {formatReceiptTime(new Date().toISOString())}
           </p>
-          <p className="text-[9px] uppercase">Oleh: {currentRole.toUpperCase()}</p>
+          <p className="text-[9px] uppercase">
+            Oleh: {currentRole.toUpperCase()}
+          </p>
         </div>
 
         {/* Ringkasan Finansial */}
         <div className="py-2 border-b border-dashed border-black space-y-1 font-mono text-[11px]">
           <div className="flex justify-between">
             <span>Total Omzet:</span>
-            <span className="font-bold">{formatIDR(dailySummary.totalRevenue)}</span>
+            <span className="font-bold">
+              {formatIDR(dailySummary.totalRevenue)}
+            </span>
           </div>
           <div className="flex justify-between text-[10px]">
             <span>Jumlah Struk:</span>
@@ -734,7 +781,7 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
             <span>{formatIDR(dailySummary.qrisRevenue)}</span>
           </div>
           <div className="flex justify-between text-[10px]">
-            <span>Kas Keluar (Kas Kecil):</span>
+            <span>Kas Keluar:</span>
             <span>- {formatIDR(totalExpenses)}</span>
           </div>
           <div className="flex justify-between text-xs font-bold pt-1 border-t border-dashed border-black">
@@ -751,10 +798,10 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
                 <span>STATUS SELISIH:</span>
                 <span>
                   {cashDiff === 0
-                    ? 'PAS (Rp 0)'
+                    ? "PAS (Rp 0)"
                     : cashDiff < 0
-                    ? `KURANG (${formatIDR(cashDiff)})`
-                    : `LEBIH (+${formatIDR(cashDiff)})`}
+                      ? `KURANG (${formatIDR(cashDiff)})`
+                      : `LEBIH (+${formatIDR(cashDiff)})`}
                 </span>
               </div>
             </div>
@@ -764,7 +811,9 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
         {/* Rincian Pengeluaran Kas Kecil */}
         {expenses.length > 0 && (
           <div className="py-2 border-b border-dashed border-black">
-            <div className="font-bold text-[10px] uppercase mb-1">Daftar Kas Keluar:</div>
+            <div className="font-bold text-[10px] uppercase mb-1">
+              Daftar Kas Keluar:
+            </div>
             <div className="space-y-0.5 text-[10px] font-mono">
               {expenses.map((exp) => (
                 <div key={exp.id} className="flex justify-between">
@@ -778,10 +827,14 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
 
         {/* Menu Terlaris */}
         <div className="py-2 border-b border-dashed border-black">
-          <div className="font-bold text-[10px] uppercase mb-1">Rincian Menu Terjual:</div>
+          <div className="font-bold text-[10px] uppercase mb-1">
+            Rincian Menu Terjual:
+          </div>
           <div className="space-y-0.5 text-[10px] font-mono">
             {dailySummary.itemSales.length === 0 ? (
-              <div className="text-[9px] text-gray-500 italic">Belum ada menu terjual</div>
+              <div className="text-[9px] text-gray-500 italic">
+                Belum ada menu terjual
+              </div>
             ) : (
               dailySummary.itemSales.slice(0, 15).map((sale) => (
                 <div key={sale.menuItem.id} className="flex justify-between">
@@ -801,16 +854,20 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
             <div>
               <p>Kasir Bertugas,</p>
               <div className="h-10" />
-              <p className="border-t border-dotted border-black pt-0.5">(...................)</p>
+              <p className="border-t border-dotted border-black pt-0.5">
+                (...................)
+              </p>
             </div>
             <div>
               <p>Pemilik Warkop,</p>
               <div className="h-10" />
-              <p className="border-t border-dotted border-black pt-0.5">(...................)</p>
+              <p className="border-t border-dotted border-black pt-0.5">
+                (...................)
+              </p>
             </div>
           </div>
           <p className="text-[8px] text-gray-500 mt-3 uppercase tracking-widest">
-            SIMPAN STRUK INI BERSAMA UANG KAS FISIK
+            SIMPAN STRUK INI BERSAMA UANG KAS
           </p>
         </div>
       </div>
@@ -824,9 +881,9 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
         cancelText="Batal"
         isDestructive={true}
         onConfirm={() => {
-          if (currentRole === 'owner') {
+          if (currentRole === "owner") {
             onResetAllData();
-            setFeedbackMessage('Semua data berhasil dikosongkan.');
+            setFeedbackMessage("Semua data berhasil dikosongkan.");
           }
           setIsResetAllConfirmOpen(false);
         }}
@@ -842,9 +899,9 @@ export const RekapKasModal: React.FC<RekapKasModalProps> = ({
         cancelText="Batal"
         isDestructive={false}
         onConfirm={() => {
-          if (currentRole === 'owner') {
+          if (currentRole === "owner") {
             onResetDemoData();
-            setFeedbackMessage('Data demo berhasil dimuat.');
+            setFeedbackMessage("Data demo berhasil dimuat.");
           }
           setIsResetDemoConfirmOpen(false);
         }}
