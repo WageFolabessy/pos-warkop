@@ -207,42 +207,42 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 >
                   <ShoppingBag className="w-4 h-4" />
                 </div>
-                <div>
-                  <span className="font-semibold text-sm text-gray-900 block">
-                    Bungkus
-                  </span>
-                  <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-xs text-gray-500">
-                      {takeaway?.status === 'belum_lunas' ? (
-                        <span className="font-mono">
-                          {takeaway.items.reduce((s, it) => s + it.quantity, 0)} item • {formatIDR(takeaway.items.reduce((s, it) => s + it.menuItem.price * it.quantity, 0))}
-                        </span>
-                      ) : (
-                        'Bawa pulang'
-                      )}
+                  <div>
+                    <span className="font-semibold text-sm text-gray-900 block whitespace-nowrap">
+                      Bungkus
                     </span>
-                    {takeaway?.kitchenStatus === 'siap_saji' && (
-                      <span className="text-[10px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">
-                        Siap Antar
+                    <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                      <span className="text-xs text-gray-500 whitespace-nowrap">
+                        {takeaway?.status === 'belum_lunas' ? (
+                          <span className="font-mono">
+                            {takeaway.items.reduce((s, it) => s + it.quantity, 0)} item • {formatIDR(takeaway.items.reduce((s, it) => s + it.menuItem.price * it.quantity, 0))}
+                          </span>
+                        ) : (
+                          'Bawa pulang'
+                        )}
                       </span>
-                    )}
-                    {takeaway?.kitchenStatus === 'dimasak' && (
-                      <span className="text-[10px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded">
-                        {(() => {
-                          const done = takeaway.items.filter((it) => (takeaway.completedItemIds || []).includes(it.menuItem.id)).length;
-                          return done > 0 ? `${done}/${takeaway.items.length} Siap` : 'Diracik';
-                        })()}
-                      </span>
-                    )}
+                      {takeaway?.kitchenStatus === 'siap_saji' && (
+                        <span className="text-[10px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded whitespace-nowrap shrink-0">
+                          Siap Antar
+                        </span>
+                      )}
+                      {takeaway?.kitchenStatus === 'dimasak' && (
+                        <span className="text-[10px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded whitespace-nowrap shrink-0">
+                          {(() => {
+                            const done = takeaway.items.filter((it) => (takeaway.completedItemIds || []).includes(it.menuItem.id)).length;
+                            return done > 0 ? `${done}/${takeaway.items.length} Siap` : 'Diracik';
+                          })()}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="flex items-center gap-1 text-gray-400">
-                <span className="text-xs font-medium">Pilih</span>
-                <ChevronRight className="w-4 h-4" />
-              </div>
-            </button>
+                <div className="flex items-center gap-1 text-gray-400 shrink-0">
+                  <span className="text-xs font-medium">Pilih</span>
+                  <ChevronRight className="w-4 h-4" />
+                </div>
+              </button>
 
             {/* 15 Physical Tables Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
@@ -266,23 +266,23 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    <div className="flex items-center justify-between w-full">
-                      <span className="font-semibold text-base text-gray-900">
+                    <div className="flex items-center justify-between w-full gap-1">
+                      <span className="font-semibold text-base text-gray-900 whitespace-nowrap">
                         {tbl.label}
                       </span>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 shrink-0">
                         {tbl.kitchenStatus === 'siap_saji' && (
-                          <span className="text-[9px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">
+                          <span className="text-[9px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded whitespace-nowrap">
                             Siap
                           </span>
                         )}
                         {tbl.kitchenStatus === 'dimasak' && (
-                          <span className="text-[9px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded">
+                          <span className="text-[9px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-1.5 py-0.5 rounded whitespace-nowrap">
                             {doneCount > 0 ? `${doneCount}/${tbl.items.length} Siap` : 'Diracik'}
                           </span>
                         )}
                         <span
-                          className={`w-2 h-2 rounded-full ${
+                          className={`w-2 h-2 rounded-full shrink-0 ${
                             isOccupied ? 'bg-gray-900' : 'bg-gray-300'
                           }`}
                         />
@@ -291,8 +291,10 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
 
                     <div className="mt-2">
                       {isOccupied ? (
-                        <div className="text-xs font-medium text-gray-700 font-mono">
-                          {totalItems} item • {formatIDR(tableSubtotal)}
+                        <div className="text-xs font-medium text-gray-700 font-mono flex flex-wrap items-baseline gap-1">
+                          <span className="whitespace-nowrap">{totalItems} item</span>
+                          <span className="text-gray-300">•</span>
+                          <span className="whitespace-nowrap font-semibold text-gray-900">{formatIDR(tableSubtotal)}</span>
                         </div>
                       ) : (
                         <div className="text-xs text-gray-500 font-medium">
@@ -764,34 +766,30 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                       className="border border-gray-200 rounded-xl p-3.5 bg-white space-y-2.5"
                     >
                       {/* Table Card Header */}
-                      <div className="flex items-center justify-between gap-2 pb-2 border-b border-gray-100">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-gray-900" />
-                          <h4 className="font-semibold text-sm text-gray-900">
-                            {tbl.label}
-                          </h4>
-                          <span className="text-xs text-gray-500 font-mono">
-                            ({tblItemTotal} item • {formatIDR(tblSubtotal)})
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          {/* Kitchen badge */}
-                          {tbl.kitchenStatus === 'siap_saji' && (
-                            <span className="text-[10px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full">
-                              Siap Antar
-                            </span>
-                          )}
-                          {tbl.kitchenStatus === 'dimasak' && (
-                            <span className="text-[10px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full">
-                              {doneCount > 0 ? `${doneCount}/${tbl.items.length} Siap` : 'Diracik'}
-                            </span>
-                          )}
-                          {tbl.kitchenStatus === 'menunggu' && (
-                            <span className="text-[10px] text-gray-500 font-medium bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full">
-                              Antrean
-                            </span>
-                          )}
+                      <div className="pb-2.5 border-b border-gray-100 space-y-1">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <div className="w-2 h-2 rounded-full bg-gray-900 shrink-0" />
+                            <h4 className="font-semibold text-sm sm:text-base text-gray-900 whitespace-nowrap">
+                              {tbl.label}
+                            </h4>
+                            {/* Kitchen badge */}
+                            {tbl.kitchenStatus === 'siap_saji' && (
+                              <span className="text-[10px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
+                                Siap Antar
+                              </span>
+                            )}
+                            {tbl.kitchenStatus === 'dimasak' && (
+                              <span className="text-[10px] text-gray-600 font-medium bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
+                                {doneCount > 0 ? `${doneCount}/${tbl.items.length} Siap` : 'Diracik'}
+                              </span>
+                            )}
+                            {tbl.kitchenStatus === 'menunggu' && (
+                              <span className="text-[10px] text-gray-500 font-medium bg-gray-50 border border-gray-200 px-2 py-0.5 rounded-full whitespace-nowrap shrink-0">
+                                Antrean
+                              </span>
+                            )}
+                          </div>
 
                           {/* Quick open table button */}
                           <button
@@ -799,11 +797,20 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                               setShowActiveOrdersSummary(false);
                               handleSelectTable(tbl.targetId);
                             }}
-                            className="text-xs font-medium text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2.5 py-1 rounded-full border border-gray-200 transition-colors flex items-center gap-1 cursor-pointer"
+                            className="text-xs font-medium text-gray-700 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-2.5 py-1 rounded-full border border-gray-200 transition-colors flex items-center gap-1 cursor-pointer whitespace-nowrap shrink-0"
                           >
                             <span>Buka Meja</span>
-                            <ChevronRight className="w-3.5 h-3.5" />
+                            <ChevronRight className="w-3.5 h-3.5 shrink-0" />
                           </button>
+                        </div>
+
+                        {/* Sub-header: Item count & total price */}
+                        <div className="flex items-center gap-1.5 text-xs text-gray-500 font-mono pl-4">
+                          <span className="whitespace-nowrap">{tblItemTotal} item</span>
+                          <span className="text-gray-300">•</span>
+                          <span className="font-semibold text-gray-900 whitespace-nowrap">
+                            {formatIDR(tblSubtotal)}
+                          </span>
                         </div>
                       </div>
 
