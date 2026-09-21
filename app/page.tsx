@@ -139,6 +139,7 @@ export default function POSPage() {
           activeTable={activeTable}
           draftItems={draftItems}
           draftTotalCount={draftTotalCount}
+          draftSubtotal={draftSubtotal}
           onSelectTarget={selectTarget}
           onAddItem={addItemToDraft}
           onUpdateQuantity={updateQuantity}

@@ -3,9 +3,9 @@
 import React, { useState, useMemo } from 'react';
 import { TableOrder, MenuItem, OrderItem, Category } from '@/types/pos';
 import { MENU_ITEMS } from '@/data/menu';
+import { formatIDR } from '@/lib/formatters';
 import { ItemNotesModal } from './ItemNotesModal';
 import {
-  Users,
   ShoppingBag,
   Search,
   X,
@@ -20,7 +20,6 @@ import {
   RotateCcw,
   ArrowLeft,
   ClipboardList,
-  Clock,
 } from 'lucide-react';
 
 interface WaiterViewProps {
@@ -29,6 +28,7 @@ interface WaiterViewProps {
   activeTable: TableOrder | null;
   draftItems: OrderItem[];
   draftTotalCount: number;
+  draftSubtotal?: number;
   onSelectTarget: (targetId: string) => void;
   onAddItem: (item: MenuItem) => void;
   onUpdateQuantity: (menuItemId: string, delta: number) => void;
@@ -51,6 +51,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
   activeTable,
   draftItems,
   draftTotalCount,
+  draftSubtotal,
   onSelectTarget,
   onAddItem,
   onUpdateQuantity,
@@ -83,6 +84,21 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
       0
     );
   }, [occupiedTables]);
+
+  const totalActiveRevenue = useMemo(() => {
+    return occupiedTables.reduce(
+      (sum, tbl) => sum + tbl.items.reduce((s, it) => s + it.menuItem.price * it.quantity, 0),
+      0
+    );
+  }, [occupiedTables]);
+
+  // Current draft order total price
+  const currentSubtotal = useMemo(() => {
+    return (
+      draftSubtotal ??
+      draftItems.reduce((sum, it) => sum + it.menuItem.price * it.quantity, 0)
+    );
+  }, [draftSubtotal, draftItems]);
 
   // In-cart counts mapping
   const cartItemCounts = useMemo(() => {
@@ -197,9 +213,13 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   </span>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="text-xs text-gray-500">
-                      {takeaway?.status === 'belum_lunas'
-                        ? `${takeaway.items.reduce((s, it) => s + it.quantity, 0)} item`
-                        : 'Bawa pulang'}
+                      {takeaway?.status === 'belum_lunas' ? (
+                        <span className="font-mono">
+                          {takeaway.items.reduce((s, it) => s + it.quantity, 0)} item • {formatIDR(takeaway.items.reduce((s, it) => s + it.menuItem.price * it.quantity, 0))}
+                        </span>
+                      ) : (
+                        'Bawa pulang'
+                      )}
                     </span>
                     {takeaway?.kitchenStatus === 'siap_saji' && (
                       <span className="text-[10px] text-gray-700 font-semibold bg-gray-100 border border-gray-200 px-1.5 py-0.5 rounded">
@@ -228,6 +248,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
               {physicalTables.map((tbl) => {
                 const totalItems = tbl.items.reduce((sum, it) => sum + it.quantity, 0);
+                const tableSubtotal = tbl.items.reduce((sum, it) => sum + it.menuItem.price * it.quantity, 0);
                 const isOccupied = tbl.status === 'belum_lunas';
                 const isSelected = activeTargetId === tbl.targetId;
                 const doneCount = tbl.items.filter((it) => (tbl.completedItemIds || []).includes(it.menuItem.id)).length;
@@ -270,8 +291,8 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
 
                     <div className="mt-2">
                       {isOccupied ? (
-                        <div className="text-xs font-medium text-gray-700">
-                          {totalItems} item
+                        <div className="text-xs font-medium text-gray-700 font-mono">
+                          {totalItems} item • {formatIDR(tableSubtotal)}
                         </div>
                       ) : (
                         <div className="text-xs text-gray-500 font-medium">
@@ -328,7 +349,11 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                 className="flex items-center gap-1.5 bg-[#0071e3] hover:bg-[#0077ED] text-white px-3 py-1.5 rounded-full text-xs font-semibold cursor-pointer min-h-10"
               >
                 <ListOrdered className="w-3.5 h-3.5" />
-                <span>{draftTotalCount} item</span>
+                <span>
+                  {draftTotalCount > 0
+                    ? `${draftTotalCount} item • ${formatIDR(currentSubtotal)}`
+                    : '0 item'}
+                </span>
               </button>
             </div>
           </div>
@@ -402,6 +427,9 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                       <h3 className="font-semibold text-xs sm:text-sm text-gray-900 leading-snug pr-6">
                         {item.name}
                       </h3>
+                      <span className="text-xs font-mono font-medium text-gray-600 mt-1 block">
+                        {formatIDR(item.price)}
+                      </span>
 
                       {/* Notes Preview if available */}
                       {existingOrderItem?.notes && (
@@ -455,7 +483,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                   {activeTable?.label || 'Pesanan'}
                 </span>
                 <span className="font-semibold text-sm text-gray-900">
-                  {draftTotalCount} Item Dipilih
+                  {draftTotalCount} Item • {formatIDR(currentSubtotal)}
                 </span>
               </button>
             </div>
@@ -492,7 +520,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
             <div className="p-3.5 border-b border-gray-200 flex items-center justify-between">
               <div>
                 <span className="text-[10px] uppercase tracking-wider text-gray-500 block">
-                  Pesanan
+                  Ringkasan Pesanan
                 </span>
                 <h3 className="font-semibold text-base text-gray-900">
                   {activeTable?.label || 'Meja'} ({draftTotalCount} item)
@@ -520,7 +548,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
             </div>
 
             {/* Items list */}
-            <div className="flex-1 overflow-y-auto p-4 divide-y divide-gray-100 space-y-3">
+            <div className="flex-1 overflow-y-auto p-4 divide-y divide-gray-100">
               {draftItems.length === 0 ? (
                 <div className="py-12 text-center text-gray-400 text-xs">
                   Belum ada item dipilih.
@@ -528,85 +556,134 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               ) : (
                 draftItems.map((it) => {
                   const isItemDone = (activeTable?.completedItemIds || []).includes(it.menuItem.id);
+                  const lineSubtotal = it.menuItem.price * it.quantity;
+
                   return (
-                    <div key={it.menuItem.id} className="pt-3 first:pt-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
+                    <div key={it.menuItem.id} className="py-3 first:pt-0 last:pb-0">
+                      <div className="flex items-center justify-between gap-3">
+                        {/* Kolom Kiri: Info Menu, Detail Harga & Jumlah, Catatan */}
+                        <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            <span className="font-medium text-xs sm:text-sm text-gray-900 block">
+                            <span className="font-medium text-xs sm:text-sm text-gray-900 leading-snug">
                               {it.menuItem.name}
                             </span>
                             {isItemDone && (
-                              <span className="text-[10px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 px-1.5 py-0.2 rounded shrink-0">
+                              <span className="text-[10px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 px-1.5 py-0.5 rounded shrink-0">
                                 Siap antar
                               </span>
                             )}
                           </div>
-                        {/* Custom note */}
-                        {it.notes ? (
-                          <div className="flex items-center gap-1 mt-1 text-[11px] text-gray-600 italic bg-gray-50 px-2 py-0.5 rounded border border-gray-200">
-                            <span>Catatan: {it.notes}</span>
-                            <button
-                              onClick={() => setEditingNotesItem(it)}
-                              className="underline text-gray-500 ml-1 font-sans not-italic text-[10px] cursor-pointer"
-                            >
-                              Edit
-                            </button>
-                          </div>
-                        ) : (
-                          <button
-                            onClick={() => setEditingNotesItem(it)}
-                            className="text-[11px] text-gray-400 hover:text-gray-700 underline mt-0.5 block cursor-pointer"
-                          >
-                            + Tambah Catatan
-                          </button>
-                        )}
-                      </div>
 
-                      {/* Stepper (+ / - / delete) */}
-                      <div className="flex items-center gap-2 shrink-0">
-                        <div className="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden">
-                          <button
-                            onClick={() => onUpdateQuantity(it.menuItem.id, -1)}
-                            className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 cursor-pointer"
-                          >
-                            <Minus className="w-3.5 h-3.5" />
-                          </button>
-                          <span className="w-7 text-center font-mono font-semibold text-xs text-gray-900">
-                            {it.quantity}
-                          </span>
-                          <button
-                            onClick={() => onUpdateQuantity(it.menuItem.id, 1)}
-                            className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-100 cursor-pointer"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
+                          {/* Detail Harga Satuan & Subtotal Baris */}
+                          <div className="flex items-center gap-1.5 mt-0.5 text-xs">
+                            <span className="font-mono text-gray-500 tabular-nums">
+                              {it.quantity}x @ {formatIDR(it.menuItem.price)}
+                            </span>
+                            <span className="text-gray-300">•</span>
+                            <span className="font-mono font-semibold text-gray-900 tabular-nums">
+                              {formatIDR(lineSubtotal)}
+                            </span>
+                          </div>
+
+                          {/* Catatan Khusus */}
+                          {it.notes ? (
+                            <div className="flex items-center gap-1 mt-1 text-[11px] text-gray-600 italic bg-gray-50 px-2 py-0.5 rounded border border-gray-200 w-fit max-w-full">
+                              <span className="truncate">Catatan: {it.notes}</span>
+                              <button
+                                type="button"
+                                onClick={() => setEditingNotesItem(it)}
+                                className="underline text-[#0071e3] hover:text-[#0077ED] ml-1 font-sans not-italic text-[10px] shrink-0 cursor-pointer"
+                              >
+                                Edit
+                              </button>
+                            </div>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => setEditingNotesItem(it)}
+                              className="text-[11px] text-gray-400 hover:text-gray-700 underline mt-0.5 block cursor-pointer"
+                            >
+                              + Tambah Catatan
+                            </button>
+                          )}
                         </div>
 
-                        <button
-                          onClick={() => onRemoveItem(it.menuItem.id)}
-                          className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-600 rounded-full cursor-pointer"
-                          title="Hapus"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        {/* Kolom Kanan: Stepper Counter & Tombol Trash (Vertically Centered) */}
+                        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 self-center">
+                          {/* Stepper Counter */}
+                          <div className="flex items-center border border-gray-200 rounded-full bg-gray-50 overflow-hidden shadow-2xs">
+                            <button
+                              type="button"
+                              onClick={() => onUpdateQuantity(it.menuItem.id, -1)}
+                              className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
+                              title="Kurangi 1"
+                              aria-label="Kurangi jumlah"
+                            >
+                              <Minus className="w-3.5 h-3.5" />
+                            </button>
+                            <span className="w-7 h-8 flex items-center justify-center text-center font-mono font-semibold text-xs text-gray-900 tabular-nums select-none">
+                              {it.quantity}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => onUpdateQuantity(it.menuItem.id, 1)}
+                              className="w-8 h-8 flex items-center justify-center text-gray-600 hover:bg-gray-200 active:bg-gray-300 transition-colors cursor-pointer"
+                              title="Tambah 1"
+                              aria-label="Tambah jumlah"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+
+                          {/* Tombol Trash */}
+                          <button
+                            type="button"
+                            onClick={() => onRemoveItem(it.menuItem.id)}
+                            className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-colors cursor-pointer shrink-0"
+                            title="Hapus menu ini"
+                            aria-label="Hapus menu ini"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
+                  );
+                })
+              )}
+            </div>
 
             {/* Bottom action inside drawer */}
-            <div className="p-3.5 bg-gray-50 border-t border-gray-200">
+            <div className="p-3.5 sm:p-4 bg-gray-50 border-t border-gray-200">
+              {/* Ringkasan Total Tagihan Pesanan */}
+              {draftItems.length > 0 && (
+                <div className="mb-3 space-y-1.5 text-xs">
+                  <div className="flex justify-between text-gray-500">
+                    <span>Total Item</span>
+                    <span className="font-mono font-medium text-gray-700 tabular-nums">
+                      {draftTotalCount} item
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-baseline pt-2 border-t border-gray-200">
+                    <span className="font-semibold text-xs uppercase tracking-wide text-gray-700">
+                      Total Pesanan
+                    </span>
+                    <span className="text-xl sm:text-2xl font-bold font-mono text-gray-900 tabular-nums">
+                      {formatIDR(currentSubtotal)}
+                    </span>
+                  </div>
+                </div>
+              )}
+
               <button
                 disabled={draftTotalCount === 0}
                 onClick={handleSendOrder}
-                className="w-full flex items-center justify-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 px-4 rounded-full cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm min-h-12"
+                className="w-full flex items-center justify-center gap-2 bg-[#0071e3] hover:bg-[#0077ED] disabled:bg-gray-200 disabled:text-gray-400 text-white font-semibold py-3 px-4 rounded-full cursor-pointer disabled:cursor-not-allowed text-xs sm:text-sm min-h-12 shadow-sm transition-all active:scale-[0.99]"
               >
                 <Send className="w-4 h-4" />
-                <span>Kirim Pesanan ({draftTotalCount})</span>
+                <span>
+                  Kirim Pesanan ke Kasir • {formatIDR(currentSubtotal)}
+                </span>
               </button>
             </div>
           </div>
@@ -650,13 +727,20 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
 
             {/* Quick Stats Bar */}
             <div className="px-4 py-2.5 bg-gray-50/50 border-b border-gray-200 flex items-center justify-between text-xs text-gray-600">
-              <div className="flex items-center gap-1.5">
-                <span className="font-medium text-gray-900 font-mono">{occupiedTables.length}</span>
-                <span>meja terisi</span>
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-medium text-gray-900 font-mono">{occupiedTables.length}</span>
+                  <span>meja terisi</span>
+                </div>
+                <span className="text-gray-300">•</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-medium text-gray-900 font-mono">{totalActiveItemsCount}</span>
+                  <span>item dipesan</span>
+                </div>
               </div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-medium text-gray-900 font-mono">{totalActiveItemsCount}</span>
-                <span>total item dipesan</span>
+              <div className="flex items-center gap-1.5 font-mono">
+                <span className="text-gray-500">Total:</span>
+                <span className="font-semibold text-gray-900">{formatIDR(totalActiveRevenue)}</span>
               </div>
             </div>
 
@@ -671,6 +755,7 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
               ) : (
                 occupiedTables.map((tbl) => {
                   const tblItemTotal = tbl.items.reduce((s, it) => s + it.quantity, 0);
+                  const tblSubtotal = tbl.items.reduce((s, it) => s + it.menuItem.price * it.quantity, 0);
                   const doneCount = tbl.items.filter((it) => (tbl.completedItemIds || []).includes(it.menuItem.id)).length;
 
                   return (
@@ -685,8 +770,8 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                           <h4 className="font-semibold text-sm text-gray-900">
                             {tbl.label}
                           </h4>
-                          <span className="text-xs text-gray-500">
-                            ({tblItemTotal} item)
+                          <span className="text-xs text-gray-500 font-mono">
+                            ({tblItemTotal} item • {formatIDR(tblSubtotal)})
                           </span>
                         </div>
 
@@ -726,30 +811,39 @@ export const WaiterView: React.FC<WaiterViewProps> = ({
                       <div className="space-y-1.5 pt-0.5">
                         {tbl.items.map((it) => {
                           const isDone = (tbl.completedItemIds || []).includes(it.menuItem.id);
+                          const lineSubtotal = it.menuItem.price * it.quantity;
                           return (
                             <div
                               key={it.menuItem.id}
-                              className="flex items-start justify-between text-xs py-1 px-1.5 rounded hover:bg-gray-50"
+                              className="flex items-center justify-between text-xs py-1.5 px-2 rounded hover:bg-gray-50 gap-2"
                             >
-                              <div className="flex-1 pr-2">
+                              <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-1.5 flex-wrap">
-                                  <span className="font-mono font-semibold text-gray-900 w-5">
+                                  <span className="font-mono font-semibold text-gray-900 shrink-0">
                                     {it.quantity}x
                                   </span>
                                   <span className="text-gray-800 font-medium">
                                     {it.menuItem.name}
                                   </span>
                                   {isDone && (
-                                    <span className="text-[9px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 px-1 rounded">
+                                    <span className="text-[9px] font-semibold bg-gray-100 text-gray-700 border border-gray-200 px-1 rounded shrink-0">
                                       Siap
                                     </span>
                                   )}
                                 </div>
                                 {it.notes && (
-                                  <p className="text-[11px] text-gray-500 italic mt-0.5 pl-6">
+                                  <p className="text-[11px] text-gray-500 italic mt-0.5 pl-5">
                                     Catatan: {it.notes}
                                   </p>
                                 )}
+                              </div>
+                              <div className="text-right shrink-0">
+                                <span className="font-mono font-semibold text-gray-900 block tabular-nums">
+                                  {formatIDR(lineSubtotal)}
+                                </span>
+                                <span className="font-mono text-[10px] text-gray-400 block tabular-nums">
+                                  @{formatIDR(it.menuItem.price)}
+                                </span>
                               </div>
                             </div>
                           );
