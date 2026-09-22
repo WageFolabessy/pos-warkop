@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+
 import {
   ReceiptText,
   Clock,
@@ -121,16 +122,11 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header className="no-print h-14 lg:h-16 w-full bg-white text-gray-900 px-3 sm:px-6 flex items-center justify-between border-b border-gray-200 z-30 select-none shadow-xs relative">
       {/* Brand Identity */}
       <div className="flex items-center gap-3 shrink-0">
-        <div className="flex flex-col">
-          <div className="flex items-baseline gap-1 sm:gap-1.5 leading-none">
-            <span className="font-semibold text-lg sm:text-xl text-gray-900 tracking-tight">
-              Ratu
-            </span>
-            <span className="font-semibold text-lg sm:text-xl text-gray-600 tracking-wide">
-              KOPI
-            </span>
-          </div>
-        </div>
+        <img
+          src="/header-logo.png"
+          alt="Logo"
+          className="h-8 sm:h-10 w-auto object-contain"
+        />
       </div>
 
       {/* Desktop Role Switcher: [Owner] / [Kasir] / [Pelayan] / [Dapur] */}
