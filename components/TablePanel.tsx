@@ -113,7 +113,8 @@ export const TablePanel: React.FC<TablePanelProps> = ({
       </div>
 
       {/* 15 Table Grid Cards - Modern Commercial Layout */}
-      <div className="flex-1 overflow-y-auto p-3 pb-20 space-y-2">
+      {/* pb-28 memberi ruang agar Meja terakhir tidak tertutup floating bar fixed di bawah */}
+      <div className="flex-1 overflow-y-auto p-3 pb-28 space-y-2">
         <div className="grid grid-cols-2 gap-2">
           {physicalTables.map((table) => {
             const { totalItems, totalPrice } = getTableSummary(table);
