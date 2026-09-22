@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState, useMemo } from 'react';
-import { MenuItem, Category } from '@/types/pos';
-import { MENU_ITEMS } from '@/data/menu';
-import { formatIDR } from '@/lib/formatters';
-import { Search, X, ArrowLeft } from 'lucide-react';
+import React, { useState, useMemo } from "react";
+import { MenuItem, Category } from "@/types/pos";
+import { MENU_ITEMS } from "@/data/menu";
+import { formatIDR } from "@/lib/formatters";
+import { Search, X, ArrowLeft } from "lucide-react";
 
 const CATEGORIES: { id: Category; label: string }[] = [
-  { id: 'all', label: 'Semua' },
-  { id: 'minuman', label: 'Minuman' },
-  { id: 'makanan', label: 'Makanan' },
-  { id: 'cemilan', label: 'Cemilan' },
+  { id: "all", label: "Semua" },
+  { id: "minuman", label: "Minuman" },
+  { id: "makanan", label: "Makanan" },
+  { id: "cemilan", label: "Cemilan" },
 ];
 
 interface MenuCatalogPanelProps {
@@ -26,19 +26,23 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
   activeTargetLabel,
   onBackToTables,
   cartItemCounts = {},
-  className = '',
+  className = "",
 }) => {
-  const [selectedCategory, setSelectedCategory] = useState<Category>('all');
-  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState<Category>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const filteredItems = useMemo(() => {
     return MENU_ITEMS.filter((item) => {
       const isCemilanMatch =
-        (selectedCategory === 'cemilan' || selectedCategory === 'camilan') &&
-        (item.category === 'cemilan' || item.category === 'camilan');
+        (selectedCategory === "cemilan" || selectedCategory === "camilan") &&
+        (item.category === "cemilan" || item.category === "camilan");
       const matchesCategory =
-        selectedCategory === 'all' || item.category === selectedCategory || isCemilanMatch;
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+        selectedCategory === "all" ||
+        item.category === selectedCategory ||
+        isCemilanMatch;
+      const matchesSearch = item.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   }, [selectedCategory, searchQuery]);
@@ -60,7 +64,7 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
           </button>
 
           <div className="flex items-center gap-1.5 text-xs font-medium text-gray-700 bg-gray-50 px-2.5 py-1 rounded-full border border-gray-200">
-            <span>{activeTargetLabel || 'Meja'}</span>
+            <span>{activeTargetLabel || "Meja"}</span>
           </div>
         </div>
       )}
@@ -78,8 +82,8 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-4 py-2 rounded-full text-xs font-medium transition-colors whitespace-nowrap cursor-pointer min-h-10 flex items-center justify-center ${
                   isActive
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'
+                    ? "bg-gray-900 text-white"
+                    : "bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900"
                 }`}
               >
                 {cat.label}
@@ -101,7 +105,7 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
           />
           {searchQuery && (
             <button
-              onClick={() => setSearchQuery('')}
+              onClick={() => setSearchQuery("")}
               className="absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 cursor-pointer"
               title="Hapus pencarian"
             >
@@ -115,8 +119,12 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
       <div className="flex-1 overflow-y-auto p-3 sm:p-4 pb-28 lg:pb-4">
         {filteredItems.length === 0 ? (
           <div className="h-64 flex flex-col items-center justify-center text-gray-500">
-            <p className="text-sm font-medium text-gray-700">Menu tidak ditemukan</p>
-            <p className="text-xs text-gray-400 mt-0.5">Coba gunakan kata kunci lain</p>
+            <p className="text-sm font-medium text-gray-700">
+              Menu tidak ditemukan
+            </p>
+            <p className="text-xs text-gray-400 mt-0.5">
+              Coba gunakan kata kunci lain
+            </p>
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3">
@@ -149,7 +157,7 @@ export const MenuCatalogPanel: React.FC<MenuCatalogPanelProps> = ({
                       {formatIDR(item.price)}
                     </span>
                     <span className="text-[10px] text-gray-400 uppercase tracking-wider font-medium group-hover:text-gray-600">
-                      + Tambah
+                      +
                     </span>
                   </div>
                 </button>
