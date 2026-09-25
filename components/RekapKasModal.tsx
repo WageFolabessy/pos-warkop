@@ -13,14 +13,12 @@ import {
   TrendingUp,
   Receipt,
   Banknote,
-  QrCode,
   RotateCcw,
   Clock,
   ChevronDown,
   ChevronUp,
   Trash2,
   CheckCircle2,
-  Lock,
   ShieldCheck,
   Printer,
   Plus,
@@ -28,7 +26,6 @@ import {
   Wallet,
   Coins,
   AlertCircle,
-  Check,
   Edit2,
 } from "lucide-react";
 import { ConfirmModal } from "./ConfirmModal";

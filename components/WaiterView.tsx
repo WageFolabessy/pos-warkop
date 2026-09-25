@@ -5,7 +5,6 @@ import { TableOrder, MenuItem, OrderItem, Category } from "@/types/pos";
 import { MENU_ITEMS } from "@/data/menu";
 import { ItemNotesModal } from "./ItemNotesModal";
 import {
-  Users,
   ShoppingBag,
   Search,
   X,
@@ -20,7 +19,6 @@ import {
   RotateCcw,
   ArrowLeft,
   ClipboardList,
-  Clock,
 } from "lucide-react";
 
 interface WaiterViewProps {
@@ -29,6 +27,7 @@ interface WaiterViewProps {
   activeTable: TableOrder | null;
   draftItems: OrderItem[];
   draftTotalCount: number;
+  draftSubtotal?: number;
   onSelectTarget: (targetId: string) => void;
   onAddItem: (item: MenuItem) => void;
   onUpdateQuantity: (menuItemId: string, delta: number) => void;

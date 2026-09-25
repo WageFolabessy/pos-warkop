@@ -6,6 +6,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
+import Image from "next/image";
 
 import {
   ReceiptText,
@@ -122,9 +123,13 @@ export const TopBar: React.FC<TopBarProps> = ({
     <header className="no-print h-14 lg:h-16 w-full bg-white text-gray-900 px-3 sm:px-6 flex items-center justify-between border-b border-gray-200 z-30 select-none shadow-xs relative">
       {/* Brand Identity */}
       <div className="flex items-center gap-3 shrink-0">
-        <img
+        <Image
           src="/header-logo.png"
           alt="Logo"
+          width={160}
+          height={40}
+          unoptimized
+          priority
           className="h-8 sm:h-10 w-auto object-contain"
         />
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { PaymentMethod, TransactionRecord, OrderItem } from '@/types/pos';
 import { formatIDR } from '@/lib/formatters';
 import {
@@ -42,11 +42,15 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   onPaymentSuccess,
 }) => {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('tunai');
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [prevItems, setPrevItems] = useState(items);
   const [paymentMode, setPaymentMode] = useState<'all' | 'split'>('all');
   const [selectedQuantities, setSelectedQuantities] = useState<Record<string, number>>({});
 
   // Initialize or reset split selection when modal opens or items change
-  useEffect(() => {
+  if (isOpen !== prevIsOpen || items !== prevItems) {
+    setPrevIsOpen(isOpen);
+    setPrevItems(items);
     if (isOpen) {
       setPaymentMode('all');
       const initialMap: Record<string, number> = {};
@@ -55,7 +59,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
       });
       setSelectedQuantities(initialMap);
     }
-  }, [isOpen, items]);
+  }
 
   // Handle quantity change for split bill
   const handleUpdateSplitQuantity = (itemId: string, delta: number, maxQty: number) => {
@@ -116,12 +120,14 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
     );
   }, [paymentMode, subtotal, effectiveItems]);
 
-  const [cashReceived, setCashReceived] = useState<number>(subtotal);
+  const [prevEffectiveSubtotal, setPrevEffectiveSubtotal] = useState(effectiveSubtotal);
+  const [cashReceived, setCashReceived] = useState<number>(effectiveSubtotal);
 
   // Sync cashReceived when effective subtotal changes
-  useEffect(() => {
+  if (prevEffectiveSubtotal !== effectiveSubtotal) {
+    setPrevEffectiveSubtotal(effectiveSubtotal);
     setCashReceived(effectiveSubtotal);
-  }, [effectiveSubtotal]);
+  }
 
   // Quick preset amounts (higher than effectiveSubtotal)
   const presets = useMemo(() => {
@@ -195,11 +201,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <button
                 type="button"
                 onClick={() => setPaymentMode('all')}
-                className={`flex-1 py-1.5 px-3 rounded-full font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  paymentMode === 'all'
+                className={`flex-1 py-1.5 px-3 rounded-full font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${paymentMode === 'all'
                     ? 'bg-white text-gray-900 font-semibold shadow-xs'
                     : 'text-gray-500 hover:text-gray-700'
-                }`}
+                  }`}
               >
                 <span>Semua ({formatIDR(subtotal)})</span>
               </button>
@@ -207,11 +212,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <button
                 type="button"
                 onClick={() => setPaymentMode('split')}
-                className={`flex-1 py-1.5 px-3 rounded-full font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${
-                  paymentMode === 'split'
+                className={`flex-1 py-1.5 px-3 rounded-full font-medium transition-all cursor-pointer flex items-center justify-center gap-1.5 ${paymentMode === 'split'
                     ? 'bg-white text-gray-900 font-semibold shadow-xs'
                     : 'text-gray-500 hover:text-gray-700'
-                }`}
+                  }`}
               >
                 <Split className="w-3.5 h-3.5" />
                 <span>Pisah Tagihan</span>
@@ -262,9 +266,8 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   return (
                     <div
                       key={it.menuItem.id}
-                      className={`p-2.5 flex items-center justify-between gap-2 transition-colors ${
-                        isChecked ? 'bg-gray-50/60' : 'hover:bg-gray-50'
-                      }`}
+                      className={`p-2.5 flex items-center justify-between gap-2 transition-colors ${isChecked ? 'bg-gray-50/60' : 'hover:bg-gray-50'
+                        }`}
                     >
                       {/* Checkbox & Name */}
                       <div
@@ -272,13 +275,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                         className="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer select-none"
                       >
                         <div
-                          className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${
-                            isChecked
+                          className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 transition-colors ${isChecked
                               ? 'bg-gray-900 border-gray-900 text-white'
                               : 'border-gray-300 bg-white'
-                          }`}
+                            }`}
                         >
-                          {isChecked && <Check className="w-3 h-3 stroke-[3]" />}
+                          {isChecked && <Check className="w-3 h-3 stroke-3" />}
                         </div>
                         <div className="min-w-0">
                           <span className="text-xs font-medium text-gray-900 block truncate">
@@ -359,11 +361,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   setPaymentMethod('tunai');
                   setCashReceived(effectiveSubtotal);
                 }}
-                className={`py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${
-                  paymentMethod === 'tunai'
+                className={`py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${paymentMethod === 'tunai'
                     ? 'bg-gray-900 text-white'
                     : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
-                }`}
+                  }`}
               >
                 <Banknote className="w-4 h-4" />
                 <span>Tunai</span>
@@ -372,11 +373,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               <button
                 id="tab-qris"
                 onClick={() => setPaymentMethod('qris')}
-                className={`py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${
-                  paymentMethod === 'qris'
+                className={`py-2.5 px-4 rounded-xl font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-colors cursor-pointer ${paymentMethod === 'qris'
                     ? 'bg-gray-900 text-white'
                     : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
-                }`}
+                  }`}
               >
                 <QrCode className="w-4 h-4" />
                 <span>QRIS</span>
@@ -419,11 +419,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   <button
                     id="preset-cash-exact"
                     onClick={() => setCashReceived(effectiveSubtotal)}
-                    className={`py-2 px-3 rounded-lg text-xs font-semibold border transition-colors cursor-pointer text-center font-mono ${
-                      cashReceived === effectiveSubtotal
+                    className={`py-2 px-3 rounded-lg text-xs font-semibold border transition-colors cursor-pointer text-center font-mono ${cashReceived === effectiveSubtotal
                         ? 'bg-gray-900 border-gray-900 text-white font-semibold'
                         : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                    }`}
+                      }`}
                   >
                     Uang Pas ({formatIDR(effectiveSubtotal)})
                   </button>
@@ -433,11 +432,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                       key={amount}
                       id={`preset-cash-${amount}`}
                       onClick={() => setCashReceived(amount)}
-                      className={`py-2 px-3 rounded-lg text-xs font-semibold border transition-colors cursor-pointer text-center font-mono ${
-                        cashReceived === amount
+                      className={`py-2 px-3 rounded-lg text-xs font-semibold border transition-colors cursor-pointer text-center font-mono ${cashReceived === amount
                           ? 'bg-gray-900 border-gray-900 text-white font-semibold'
                           : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                      }`}
+                        }`}
                     >
                       {formatIDR(amount)}
                     </button>
@@ -447,11 +445,10 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
               {/* Kembalian Display Block */}
               <div
-                className={`p-4 rounded-xl border transition-colors ${
-                  isCashSufficient
+                className={`p-4 rounded-xl border transition-colors ${isCashSufficient
                     ? 'bg-gray-50 border-gray-200 text-gray-900'
                     : 'bg-red-50 border-red-200 text-red-950'
-                }`}
+                  }`}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
